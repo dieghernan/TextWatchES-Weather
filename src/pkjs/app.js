@@ -42,9 +42,9 @@ function locationSuccess(pos) {
       console.log("Icon is " + icon);
       // Assemble dictionary using our keys
       var dictionary = {
-        "WeatherTemp": temperature,
-        "WeatherCond": conditions,
-        "WeatherIcon":icon
+        "KEY_TEMPERATURE": temperature,
+        "KEY_CONDITIONS": conditions,
+        "KEY_ICON":icon
       };
 
       // Send to Pebble

@@ -1,37 +1,52 @@
 {
     "author": "dieghernan",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-clay": "^1.0.1"
+    },
     "keywords": [],
-    "name": "textwatches",
+    "name": "textwatches_weather",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "TextWatchES Weather",
+        "displayName": "TextWatchES_Weather",
         "enableMultiJS": true,
         "messageKeys": [
+            "APIKey",
             "ForegroundColor",
             "BackgroundColor",
-            "WeatherTemp",
-            "WeatherCond",
-            "WeatherIcon"
+            "KEY_TEMPERATURE",
+            "KEY_CONDITIONS",
+            "KEY_ICON"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "fonts/meteocons-webfont.ttf",
-                    "name": "FONT_METEOCON_26",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "images/iconmenu.png",
+                    "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
                     "targetPlatforms": null,
                     "type": "bitmap"
+                },
+                {
+                    "file": "fonts/meteocons-webfont.ttf",
+                    "name": "WEATHER_ICON_26",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/meteocons-webfont.ttf",
+                    "name": "WEATHER_ICON_36",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/meteocons-webfont.ttf",
+                    "name": "WEATHER_ICON_32",
+                    "targetPlatforms": null,
+                    "type": "font"
                 }
             ]
         },
@@ -39,7 +54,7 @@
         "targetPlatforms": [
             "chalk"
         ],
-        "uuid": "782012b5-260e-448f-ae3b-eb774658f747",
+        "uuid": "169d8c6a-af73-4ce8-aa06-7514941b9d5e",
         "watchapp": {
             "watchface": true
         }

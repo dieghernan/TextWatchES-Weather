@@ -3,7 +3,8 @@ module.exports = [
     "type": "heading",
     "defaultValue": "Configuración"
   },
-   {
+ 
+  {
     "type": "section",
     "items": [
       {
@@ -24,8 +25,7 @@ module.exports = [
       }
     ]
   },
-
-  {
+ {
     "type": "submit",
     "defaultValue": "Save Settings"
   }

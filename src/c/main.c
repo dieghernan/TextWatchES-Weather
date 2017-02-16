@@ -1,6 +1,6 @@
 #include <pebble.h>
-#include "TextWatch_main.h"
-#include "num2words-es.h"
+#include "main.h"
+#include "num2words-en.h"
 #define BUFFER_SIZE 44
 
 #include "iconmap.h"
@@ -209,9 +209,9 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   static char icon_buffer[8];
   
   // Read tuples for data
-  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_WeatherTemp);
-  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_WeatherCond);
-  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_WeatherIcon);
+  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_KEY_TEMPERATURE);
+  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_KEY_CONDITIONS);
+  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_KEY_ICON);
   // If all data is available, use it
   if(temp_tuple && conditions_tuple) {
     //Temp Layer
@@ -236,11 +236,11 @@ static void updateweather(DictionaryIterator *iter, void *context) {
   static char temperature_buffer[8];
   static char icon_buffer[8];
   
-   // Read tuples for data
-  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_WeatherTemp);
-  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_WeatherCond);
-  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_WeatherIcon);
-   // If all data is available, use it
+  // Read tuples for data
+  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_KEY_TEMPERATURE);
+  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_KEY_CONDITIONS);
+  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_KEY_ICON);
+  // If all data is available, use it
   if(temp_tuple && conditions_tuple) {
     //Temp Layer
     snprintf(temperature_buffer, sizeof(temperature_buffer), "%dc", (int)temp_tuple->value->int32);
@@ -417,7 +417,7 @@ void display_time(struct tm *t) {
 	char textLine2[BUFFER_SIZE];
 	char textLine3[BUFFER_SIZE];
 	
-	time_to_3words_es(t->tm_hour, t->tm_min, textLine1, textLine2, textLine3,BUFFER_SIZE);
+	time_to_3words(t->tm_hour, t->tm_min, textLine1, textLine2, textLine3,BUFFER_SIZE);
 	
 	if (needToUpdateLine(&line1, line1Str, textLine1)) {
 		updateLineTo(&line1, line1Str, textLine1);	
@@ -514,7 +514,7 @@ static void prv_init(void) {
   
   
   // Create GFont
-  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_METEOCON_26));
+  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_WEATHER_ICON_26));
   //Create layer for icons
   s_wicon_layer=text_layer_create( 
    GRect(110,  bounds.size.h - 44, 30, 30));
