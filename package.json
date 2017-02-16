@@ -1,0 +1,21 @@
+{
+    "author": "diego.hernangomezherrero@gmail",
+    "dependencies": {},
+    "keywords": [],
+    "name": "textwatches_weather",
+    "pebble": {
+        "displayName": "TextWatchES_Weather",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "uuid": "782012b5-260e-448f-ae3b-eb774658f747",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
