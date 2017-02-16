@@ -1,20 +1,35 @@
 {
-    "author": "diego.hernangomezherrero@gmail",
+    "author": "dieghernan",
     "dependencies": {},
     "keywords": [],
-    "name": "textwatches_weather",
+    "name": "textwatches",
     "pebble": {
-        "displayName": "TextWatchES_Weather",
+        "capabilities": [
+            "location",
+            "configurable"
+        ],
+        "displayName": "TextWatchES Weather",
         "enableMultiJS": true,
         "messageKeys": [],
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "file": "images/iconmenu.png",
+                    "menuIcon": true,
+                    "name": "iconmenu",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
         },
         "sdkVersion": "3",
+        "targetPlatforms": [
+            "chalk"
+        ],
         "uuid": "782012b5-260e-448f-ae3b-eb774658f747",
         "watchapp": {
-            "watchface": false
+            "watchface": true
         }
     },
     "version": "1.0.0"
