@@ -10,7 +10,13 @@
         ],
         "displayName": "TextWatchES Weather",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "ForegroundColor",
+            "BackgroundColor",
+            "WeatherTemp",
+            "WeatherCond",
+            "WeatherIcon"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
