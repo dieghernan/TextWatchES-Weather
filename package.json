@@ -21,6 +21,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/meteocons-webfont.ttf",
+                    "name": "FONT_METEOCON_26",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "images/iconmenu.png",
                     "menuIcon": true,
                     "name": "iconmenu",
