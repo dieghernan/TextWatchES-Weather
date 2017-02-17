@@ -105,17 +105,14 @@ static bool PoppedDownAtInit;
 
 //Init_Clay
 ClaySettings settings;
-
-// Initialize the default settings
+  // Initialize the default settings
 static void prv_default_settings() { 
   settings.BackgroundColor = GColorBlack;
   settings.ForegroundColor = GColorWhite;
   settings.WeatherUnit = false;
   
 }
-
-//End_CrStruct
-// Draw time indicators
+  // Draw time indicators
 static void back_update_proc(Layer *layer, GContext *ctx) {
 
 	time_t now = time(NULL);
@@ -142,20 +139,14 @@ char iterdatemonth;
 	graphics_draw_text(ctx, &iterdatemonth, fonts_get_system_font(FONT_KEY_GOTHIC_24), 
 					   GRect(0, bounds.size.h - 30, 180, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
-
-
-
-
-
-// Read settings from persistent storage
+  // Read settings from persistent storage
 static void prv_load_settings() {
   // Load the default settings
   prv_default_settings();
   // Read settings from persistent storage, if they exist
   persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
-
-// Save the settings to persistent storage
+  // Save the settings to persistent storage
 static void prv_save_settings() {
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
   // Update the display based on new settings
@@ -166,20 +157,14 @@ static void prv_save_settings() {
 
   
 }
-
-// Update the display elements
+  // Update the display elements
 static void prv_update_display() {
   // Background color
   window_set_background_color(s_main_window, settings.BackgroundColor);  
   
 
    }
-
-
-
-
-
-// Handle the response from AppMessage
+  // Handle the response from AppMessage
 static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
   // Background Color
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
@@ -224,11 +209,21 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
     
   }  
 }
-
-//AppMessage for update weather
-
+//End Clay
 
 
+// Configure the first line of text
+void configureLineLayer(TextLayer *textlayer, bool right) {
+	text_layer_set_text_color(textlayer, settings.ForegroundColor);
+	text_layer_set_background_color(textlayer, GColorClear);
+        if (right) {
+          text_layer_set_text_alignment(textlayer, GTextAlignmentRight);
+        } else {
+          text_layer_set_text_alignment(textlayer, GTextAlignmentCenter);
+        }
+}
+
+//Init: Animations
 void makeScrollUp(struct tm *t){
 
 	GRect from = layer_get_bounds((Layer *)scroll);
@@ -252,7 +247,6 @@ void makeScrollUp(struct tm *t){
 	// reset PoppedDown indicator
 	PoppedDownNow = false;
 }
-
 void makeScrollDown(){
 
 	GRect from = layer_get_bounds((Layer *)scroll);
@@ -272,29 +266,14 @@ void makeScrollDown(){
 	animation_set_curve(property_animation_get_animation(scroll_down), AnimationCurveEaseOut);
 	animation_schedule(property_animation_get_animation(scroll_down));
 }
-
-
-
-// Configure the first line of text
-void configureLineLayer(TextLayer *textlayer, bool right) {
-	text_layer_set_text_color(textlayer, settings.ForegroundColor);
-	text_layer_set_background_color(textlayer, GColorClear);
-        if (right) {
-          text_layer_set_text_alignment(textlayer, GTextAlignmentRight);
-        } else {
-          text_layer_set_text_alignment(textlayer, GTextAlignmentCenter);
-        }
-}
-
-// Text Animation handler
+  // Text Animation handler
 void animationStoppedHandler(struct Animation *animation, bool finished, void *context) {
 	Layer *current = (Layer *)context;
 	GRect rect = layer_get_frame(current);
 	rect.origin.x = bounds.size.w;
 	layer_set_frame(current, rect);
 }
-
-// Animate text line
+  // Animate text line
 void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
 	if (line->nextAnimation != NULL)
 		property_animation_destroy(line->nextAnimation);
@@ -324,14 +303,17 @@ void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
 	
 	animation_schedule(property_animation_get_animation(line->currentAnimation));
 }
-
-// Pop down to center before initial display when only 2 lines of text
+  // Pop down to center before initial display when only 2 lines of text
 void makePopDown(){
 	
 	GRect rect = layer_get_bounds((Layer *)scroll);
 	rect.origin.y = 21;
 	layer_set_bounds(scroll, rect);
 }
+//End Animations
+
+
+//Build watchface
 static void prv_window_load(Window *window) {
    Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
@@ -343,8 +325,6 @@ static void prv_window_load(Window *window) {
  
   prv_update_display();
 }
-
-	
 
 // Update text line
 void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value) {
@@ -368,7 +348,6 @@ void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value) {
 	makeAnimationsForLayers(line, current, next);
 }
 
-
 // Check to see if the current text line needs to be updated
 bool needToUpdateLine(Line *line, char lineStr[2][BUFFER_SIZE], char *nextValue) {
 	char *currentStr;
@@ -381,7 +360,6 @@ bool needToUpdateLine(Line *line, char lineStr[2][BUFFER_SIZE], char *nextValue)
 	}
 	return false;
 }
-
 
 // Update screen based on new time
 void display_time(struct tm *t) {
@@ -402,8 +380,6 @@ void display_time(struct tm *t) {
 		updateLineTo(&line3, line3Str, textLine3);	
 	}
 }
-
-
 // Update graphics when timer ticks
 static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
 
@@ -418,18 +394,20 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
 	// Recenter screen if last time was 3 lines, but new time is 2 lines
 	// Don't do this if time was just initialized already centered
   //optimized for spanish
-	
+
+  //TagDev: Optimize for other languages
 		if(t->tm_min == 0 || t->tm_min == 20 || t->tm_min == 30  ){
 			if(PoppedDownNow == false){
 				makeScrollDown();
 			}
 		}
-	
+
 		// Prepare for next time being 3 lines, if current time is 2 lines
 		if(t->tm_min == 15 || t->tm_min == 20 || t->tm_min == 30  ){
 			makeScrollUp(t);
 			}
- // Get weather update every 30 minutes
+  //End TagDev
+
   // Get weather update every 30 minutes
 if(t->tm_min % 30 == 0) {
   // Begin dictionary
@@ -443,12 +421,10 @@ if(t->tm_min % 30 == 0) {
   app_message_outbox_send();
 }
 }
-
 // Window Unload event
 static void prv_window_unload(Window *window) {
  layer_destroy(back_layer);
 }
-
 static void prv_init(void) {
   prv_load_settings();
   
@@ -483,14 +459,11 @@ static void prv_init(void) {
     text_layer_set_background_color(s_temp_layer, GColorClear);
     text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
     text_layer_set_text_alignment(s_temp_layer, GTextAlignmentRight);
-    //text_layer_set_text(s_temp_layer, "");
     text_layer_set_font(s_temp_layer,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
-       layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_temp_layer));
+      layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_temp_layer));
 
   // Create icon layer
-  
-  
-  // Create GFont
+    // Create GFont
   s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERFONT_24));
   //Create layer for icons
   s_wicon_layer=text_layer_create( 
@@ -562,11 +535,11 @@ static void prv_init(void) {
 	// inititialize PoppedDown indicators
 	PoppedDownNow = false;
 	PoppedDownAtInit = false;
-	//////////////////////////////////////
+	
   
   // If initial display of time is only 2 lines of text, display centered
   // optimized for spanish
-
+  //TagDev: Optimize
 		if(t->tm_min <= 15 || t->tm_min == 20 || t->tm_min == 30 ){
 			makePopDown();
 			
@@ -578,7 +551,6 @@ static void prv_init(void) {
   
   
 }
-
 static void prv_deinit(void) {
 	window_destroy(s_main_window);
 	tick_timer_service_unsubscribe();
@@ -593,7 +565,6 @@ static void prv_deinit(void) {
   text_layer_destroy(s_wicon_layer);
 	layer_destroy(scroll);
 }
-
 int main(void) {
   prv_init();
   app_event_loop();
