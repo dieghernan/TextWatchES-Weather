@@ -1,5 +1,5 @@
 #include <pebble.h>
-#include "num2words-en.h"
+#include "num2words-es.h"
 #include "string.h"
 
 #define true 1
@@ -153,7 +153,7 @@ static const char* const MIN_ES2[]={
 "y nueve"
 };
 
-void time_to_3words(int hours, int minutes, char *line1, char *line2, char *line3, size_t length){
+void time_to_3words_es(int hours, int minutes, char *line1, char *line2, char *line3, size_t length){
 
   //hour - line1
    //shift 1 hour the label for this minutes

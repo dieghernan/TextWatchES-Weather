@@ -7,6 +7,8 @@
 typedef struct ClaySettings {
   GColor BackgroundColor;
   GColor ForegroundColor;
+    
+    
 } __attribute__((__packed__)) ClaySettings;
 
 static void prv_default_settings();

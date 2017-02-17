@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "main.h"
-#include "num2words-en.h"
+#include "num2words-es.h"
 #define BUFFER_SIZE 44
 
 #include "iconmap.h"
@@ -110,6 +110,7 @@ ClaySettings settings;
 static void prv_default_settings() { 
   settings.BackgroundColor = GColorBlack;
   settings.ForegroundColor = GColorWhite;
+  
 }
 
 //End_CrStruct
@@ -127,7 +128,6 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
 
 	// Display day of week
 	char iterweekday;
-	//trftime(&tempstring, 10, "%A", t);
   strcpy(&iterweekday, WEEKDAY_ES[t->tm_wday]);
 	graphics_context_set_text_color(ctx, settings.ForegroundColor);
 	graphics_draw_text(ctx, &iterweekday, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),
@@ -163,6 +163,10 @@ static void prv_save_settings() {
  text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
   text_layer_set_text_color(s_wicon_layer , settings.ForegroundColor);
   layer_set_update_proc(back_layer, back_update_proc);
+  
+  
+  
+  
 }
 
 // Update the display elements
@@ -206,54 +210,25 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   
   // Store incoming information
   static char temperature_buffer[8];
-  static char icon_buffer[8];
   
   // Read tuples for data
-  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_KEY_TEMPERATURE);
-  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_KEY_CONDITIONS);
-  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_KEY_ICON);
+  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_WeatherTemp);
+  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_WeatherCond);
+
   // If all data is available, use it
   if(temp_tuple && conditions_tuple) {
     //Temp Layer
-    snprintf(temperature_buffer, sizeof(temperature_buffer), "%dc", (int)temp_tuple->value->int32);
+    snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp_tuple->value->cstring);
     text_layer_set_text(s_temp_layer, temperature_buffer);
     
     //Translate condition value
-    int condint=(int)conditions_tuple->value->int32;
-    snprintf(icon_buffer, sizeof(weathericon_tuple), "%s", weathericon_tuple->value->cstring);
-      
-    code_to_text(condint,icon_buffer,s_wicon_layer);
+     conditions_yahoo((int)conditions_tuple->value->int32,s_wicon_layer);
     
   }  
 }
 
 //AppMessage for update weather
 
-// Handle the response from AppMessage
-static void updateweather(DictionaryIterator *iter, void *context) {
-    
-  // Store incoming information
-  static char temperature_buffer[8];
-  static char icon_buffer[8];
-  
-  // Read tuples for data
-  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_KEY_TEMPERATURE);
-  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_KEY_CONDITIONS);
-  Tuple *weathericon_tuple=dict_find(iter,MESSAGE_KEY_KEY_ICON);
-  // If all data is available, use it
-  if(temp_tuple && conditions_tuple) {
-    //Temp Layer
-    snprintf(temperature_buffer, sizeof(temperature_buffer), "%dc", (int)temp_tuple->value->int32);
-    text_layer_set_text(s_temp_layer, temperature_buffer);
-    
-    //Translate condition value
-    int condint=(int)conditions_tuple->value->int32;
-    snprintf(icon_buffer, sizeof(weathericon_tuple), "%s", weathericon_tuple->value->cstring);
-      
-    code_to_text(condint,icon_buffer,s_wicon_layer);
-    
-  }  
-}
 
 
 void makeScrollUp(struct tm *t){
@@ -417,7 +392,7 @@ void display_time(struct tm *t) {
 	char textLine2[BUFFER_SIZE];
 	char textLine3[BUFFER_SIZE];
 	
-	time_to_3words(t->tm_hour, t->tm_min, textLine1, textLine2, textLine3,BUFFER_SIZE);
+	time_to_3words_es(t->tm_hour, t->tm_min, textLine1, textLine2, textLine3,BUFFER_SIZE);
 	
 	if (needToUpdateLine(&line1, line1Str, textLine1)) {
 		updateLineTo(&line1, line1Str, textLine1);	
@@ -514,7 +489,7 @@ static void prv_init(void) {
   
   
   // Create GFont
-  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_WEATHER_ICON_26));
+  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_METEOICON_26));
   //Create layer for icons
   s_wicon_layer=text_layer_create( 
    GRect(110,  bounds.size.h - 44, 30, 30));

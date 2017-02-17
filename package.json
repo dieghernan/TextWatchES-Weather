@@ -13,12 +13,10 @@
         "displayName": "TextWatchES_Weather",
         "enableMultiJS": true,
         "messageKeys": [
-            "APIKey",
             "ForegroundColor",
             "BackgroundColor",
-            "KEY_TEMPERATURE",
-            "KEY_CONDITIONS",
-            "KEY_ICON"
+            "WeatherTemp",
+            "WeatherCond"
         ],
         "projectType": "native",
         "resources": {
@@ -32,19 +30,7 @@
                 },
                 {
                     "file": "fonts/meteocons-webfont.ttf",
-                    "name": "WEATHER_ICON_26",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/meteocons-webfont.ttf",
-                    "name": "WEATHER_ICON_36",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/meteocons-webfont.ttf",
-                    "name": "WEATHER_ICON_32",
+                    "name": "FONT_METEOICON_26",
                     "targetPlatforms": null,
                     "type": "font"
                 }
