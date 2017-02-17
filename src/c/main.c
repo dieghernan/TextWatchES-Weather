@@ -220,7 +220,7 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
     text_layer_set_text(s_temp_layer, temperature_buffer);
     
     //Translate condition value
-     conditions_yahoo((int)conditions_tuple->value->int32,s_wicon_layer);
+    conditions_yahoo((int)conditions_tuple->value->int32,s_wicon_layer);
     
   }  
 }
@@ -452,10 +452,14 @@ static void prv_window_unload(Window *window) {
 static void prv_init(void) {
   prv_load_settings();
   
+ 
+
+    
   // Listen for AppMessages
   app_message_register_inbox_received(prv_inbox_received_handler);
   app_message_open(128, 128);
-	
+  
+ 
   // Configure main window
 	s_main_window = window_create();
 	window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -474,7 +478,7 @@ static void prv_init(void) {
   
   // Create temperature Layer
   s_temp_layer = text_layer_create(
-      GRect(0,  bounds.size.h - 44, middlescreen-25, 30));
+      GRect(0,  bounds.size.h - 44, middlescreen-20, 30));
   // Style the text
     text_layer_set_background_color(s_temp_layer, GColorClear);
     text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
@@ -487,10 +491,10 @@ static void prv_init(void) {
   
   
   // Create GFont
-  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_METEOICON_26));
+  s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERFONT_24));
   //Create layer for icons
   s_wicon_layer=text_layer_create( 
-   GRect(110,  bounds.size.h - 44, 30, 30));
+   GRect(middlescreen+20,  bounds.size.h - 40, 25, 30));
   
   text_layer_set_background_color(s_wicon_layer, GColorClear);
   text_layer_set_text_color(s_wicon_layer, settings.ForegroundColor);
@@ -499,7 +503,6 @@ static void prv_init(void) {
   //Sample
   //text_layer_set_text(s_wicon_layer, "4");
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_wicon_layer));
-  
   
   
   
