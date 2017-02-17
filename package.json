@@ -23,18 +23,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "fonts/weatherfontcustom.ttf",
-                    "name": "FONT_WEATHERFONT_20",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/weatherfontcustom.ttf",
-                    "name": "FONT_WEATHERFONT_24",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -42,8 +30,8 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "fonts/meteocons-webfont.ttf",
-                    "name": "FONT_METEOICON_26",
+                    "file": "fonts/weatherfontcustom.ttf",
+                    "name": "FONT_WEATHERFONT_24",
                     "targetPlatforms": null,
                     "type": "font"
                 }
