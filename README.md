@@ -21,7 +21,9 @@ I am not planning on give continuity to this project, but if anyone would like t
 
 Screenshots
 ------------
-
+![banner](store/assets/ScShot1.png)
+![banner](store/assets/ScShot2.png)
+![banner](store/assets/ScShot3.png)
 
 Attributions
 --------------------
