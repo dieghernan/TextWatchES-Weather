@@ -10,13 +10,14 @@
             "location",
             "configurable"
         ],
-        "displayName": "TextWatchES_Weather",
+        "displayName": "TextWatchES Weather",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
             "BackgroundColor",
             "WeatherTemp",
-            "WeatherCond"
+            "WeatherCond",
+            "WeatherUnit"
         ],
         "projectType": "native",
         "resources": {

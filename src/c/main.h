@@ -7,6 +7,7 @@
 typedef struct ClaySettings {
   GColor BackgroundColor;
   GColor ForegroundColor;
+  bool WeatherUnit;
     
     
 } __attribute__((__packed__)) ClaySettings;
@@ -20,3 +21,4 @@ static void prv_window_load(Window *window);
 static void prv_window_unload(Window *window);
 static void prv_init(void);
 static void prv_deinit(void);
+

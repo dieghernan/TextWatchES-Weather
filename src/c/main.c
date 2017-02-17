@@ -110,6 +110,7 @@ ClaySettings settings;
 static void prv_default_settings() { 
   settings.BackgroundColor = GColorBlack;
   settings.ForegroundColor = GColorWhite;
+  settings.WeatherUnit = false;
   
 }
 
@@ -146,7 +147,6 @@ char iterdatemonth;
 
 
 
-
 // Read settings from persistent storage
 static void prv_load_settings() {
   // Load the default settings
@@ -163,21 +163,19 @@ static void prv_save_settings() {
  text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
   text_layer_set_text_color(s_wicon_layer , settings.ForegroundColor);
   layer_set_update_proc(back_layer, back_update_proc);
-  
-  
-  
+
   
 }
 
 // Update the display elements
 static void prv_update_display() {
   // Background color
-  window_set_background_color(s_main_window, settings.BackgroundColor);
- 
+  window_set_background_color(s_main_window, settings.BackgroundColor);  
+  
 
    }
 
-  
+
 
 
 

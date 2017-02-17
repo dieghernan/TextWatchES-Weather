@@ -3,13 +3,16 @@ var clayConfig = require('./config');
 var clay = new Clay(clayConfig);
 
 //TagDev: Include on clay and make it customizable;
+var settings = {};
+var units = 'c';
 
+ try {
+    settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
+    units = unitsToString(settings.WeatherUnit);
+  } catch (e) {}
 
-// TagDev: Set this up on Clay
-var units="c";
-
-
-
+//End TagDev
+console.log("units are" + units);
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
@@ -92,5 +95,10 @@ Pebble.addEventListener('appmessage',
     getWeather();
   }                     
 );
-
+function unitsToString(unit) {
+  if (unit) {
+    return 'f';
+  }
+  return 'c';
+}
 
