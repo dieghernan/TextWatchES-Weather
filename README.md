@@ -29,7 +29,7 @@ Attributions
 --------------------
 Fonts for Icons: [Weather Icons](https://erikflowers.github.io/weather-icons) by Eric Flowers, modified and fitted to regular alphabet, instead of Unicode values
 
-[![banner](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)
+Weather  [![banner](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)
 
 License
 --------
