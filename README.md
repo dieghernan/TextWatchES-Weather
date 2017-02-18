@@ -8,17 +8,20 @@
 For Time Round only
 --------------------
 
-Por fin en español! TextWatch ES + Weather displays the time in natural language (Spanish-Castilian) and display the weather condition and temperature (in C or F). 
+Por fin en español! TextWatch ES + Weather displays the time in natural language (Spanish-Castilian) and allows you to check the weather condition and temperature (in C or F) on a glance. 
 
 Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_Watch_Deluxe) by [wackyneighbor](https://github.com/wackyneighbor) I evolved it to fit my own preferences:
   * Simple
+  + Clean
   * Weather Added
   * Spanish only
+  * Pebble Time Round only
   
 
 Devs Help
 --------------------
-I am not planning on give continuity to this project, but if anyone would like to modify the code (translations and enhacements) I just tag the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
+I am not planning on give continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
+
   * Supported in square Pebbles (Classic, Steel, Time Sq)
   * Translation for other languages
   * Improve the response from the Config (developed under Pebble Clay). Units updates after the main screen of the watch is restarted, not after saving settings.
