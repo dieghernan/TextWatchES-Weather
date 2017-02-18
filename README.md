@@ -1,5 +1,3 @@
-# TextWatchES Weather
-
 ![banner](store/assets/BannerTextWatchES-Weather.png)
 
 
