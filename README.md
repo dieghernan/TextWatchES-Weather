@@ -20,7 +20,7 @@ Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text
 
 Devs Help
 --------------------
-I am not planning on give continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
+I am not planning on giving continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
 
   * Supported in square Pebbles (Classic, Steel, Time Sq)
   * Translation for other languages
