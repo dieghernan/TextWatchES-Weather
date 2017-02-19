@@ -4,8 +4,7 @@
 [Download it now!](https://apps.getpebble.com/en_US/application/58a7d8de6ca3876a5e00053b)
 --------------------
 
-
-For Time Round only
+All Classic and Time models supported
 --------------------
 
 Por fin en español! TextWatch ES + Weather displays the time in natural language (Spanish-Castilian) and allows you to check the weather condition and temperature (in C or F) on a glance. 
@@ -15,14 +14,14 @@ Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text
   + Clean
   * Weather Added
   * Spanish only
-  * Pebble Time Round only
+  * ~~Pebble Time Round only~~ All Classic and Time models suported
   
 
 Devs Help
 --------------------
 I am not planning on giving continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
 
-  * Supported in square Pebbles (Classic, Steel, Time Sq)
+  * ~~Supported in square Pebbles (Classic, Steel, Time Sq)~~
   * Translation for other languages
   * Improve the response from the Config (developed under Pebble Clay). Units updates after the main screen of the watch is restarted, not after saving settings.
   * Improve the customization: More weather providers (Yahoo based on this app)
@@ -32,6 +31,13 @@ Screenshots
 ![banner](store/assets/ScShot1.png)
 ![banner](store/assets/ScShot2.png)
 ![banner](store/assets/ScShot3.png)
+
+![banner](store/assets/ScShotT1.png)
+![banner](store/assets/ScShotT2.png)
+![banner](store/assets/ScShotT3.png)
+
+![banner](store/assets/ScShotClass1.png)
+![banner](store/assets/ScShotClass2.png)
 
 Attributions
 --------------------
