@@ -17,6 +17,10 @@ Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text
   * ~~Pebble Time Round only~~ All Classic and Time models suported
   
 
+
+
+![banner](store/assets/BannerTextWatchES-Weather-Time.png)
+
 Devs Help
 --------------------
 I am not planning on giving continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
@@ -26,18 +30,9 @@ I am not planning on giving continuity to this project, but if anyone would like
   * Improve the response from the Config (developed under Pebble Clay). Units updates after the main screen of the watch is restarted, not after saving settings.
   * Improve the customization: More weather providers (Yahoo based on this app)
 
-Screenshots
-------------
-![banner](store/assets/ScShot1.png)
-![banner](store/assets/ScShot2.png)
-![banner](store/assets/ScShot3.png)
 
-![banner](store/assets/ScShotT1.png)
-![banner](store/assets/ScShotT2.png)
-![banner](store/assets/ScShotT3.png)
+![banner](store/assets/BannerTextWatchES-WeatherClass.png)
 
-![banner](store/assets/ScShotClass1.png)
-![banner](store/assets/ScShotClass2.png)
 
 Attributions
 --------------------
