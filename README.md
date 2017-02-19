@@ -6,7 +6,7 @@ Introducing
 
 
 [Download it now!](https://apps.getpebble.com/en_US/application/58a94da90dfc32d35b0002f8)
---------------------
+
 
 All Classic and Time models supported
 --------------------
@@ -34,9 +34,9 @@ I am not planning on giving continuity to this project, but if anyone would like
 
 Attributions
 --------------------
-Fonts for Icons: 
+Fonts in use: 
 * [Weather Icons](https://erikflowers.github.io/weather-icons) by Eric Flowers, modified and fitted to regular alphabet, instead of Unicode values
-* [Montserrat](https://github.com/JulietaUla/Montserrat) by Julieta Ulanovsky used in Pebble Classic and Time (not Round) under [SIL](https://raw.githubusercontent.com/JulietaUla/Montserrat/dba6da5ce15bda0709635c964879e22ef0b14432/OFL.txt)
+* [Montserrat Font](https://github.com/JulietaUla/Montserrat) by Julieta Ulanovsky used in Pebble Classic and Time (not Round) under [SIL](https://raw.githubusercontent.com/JulietaUla/Montserrat/dba6da5ce15bda0709635c964879e22ef0b14432/OFL.txt)
 
 [![banner](https://poweredby.yahoo.com/white.png)](https://www.yahoo.com/?ilc=401)
 
