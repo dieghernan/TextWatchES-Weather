@@ -23,12 +23,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "fonts/Montserrat-Light.otf",
-                    "name": "FONT_MONT_LIGHT_28",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -38,6 +32,12 @@
                 {
                     "file": "fonts/weatherfontcustom.ttf",
                     "name": "FONT_WEATHERFONT_24",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Montserrat-Light.otf",
+                    "name": "FONT_MONT_LIGHT_28",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -54,5 +54,5 @@
             "watchface": true
         }
     },
-    "version": "1.0.0"
+    "version": "2.0.0"
 }
