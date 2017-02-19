@@ -9,7 +9,7 @@ All Classic and Time models supported
 
 Por fin en español! TextWatch ES + Weather displays the time in natural language (Spanish-Castilian) and allows you to check the weather condition and temperature (in C or F) on a glance. 
 
-Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_Watch_Deluxe) by [wackyneighbor](https://github.com/wackyneighbor) I evolved it to fit my own preferences:
+Based primarly on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_Watch_Deluxe) by [wackyneighbor](https://github.com/wackyneighbor). I evolved it to fit my own preferences:
   * Simple
   + Clean
   * Weather Added
