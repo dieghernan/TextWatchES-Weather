@@ -7,6 +7,8 @@
 
 
 
+
+
 //Init_StrMonthDat: Create strings for Months and Days
 static const char* const MONTHS_ES[] = {
 "Ene ",
@@ -98,6 +100,9 @@ PropertyAnimation *scroll_up;
 
 static TextLayer *s_temp_layer;
 static GFont s_weather_font;
+static GFont montserrat_font;
+
+
 static TextLayer *s_wicon_layer;
 
 static bool PoppedDownNow;
@@ -129,7 +134,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   strcpy(&iterweekday, WEEKDAY_ES[t->tm_wday]);
 	graphics_context_set_text_color(ctx, settings.ForegroundColor);
 	graphics_draw_text(ctx, &iterweekday, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),
-					   GRect(0, bounds.size.h - 48, 180, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+					   GRect(0, bounds.size.h - 48, bounds.size.w, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
   
 char iterdatemonth;
 	// Display date
@@ -137,7 +142,7 @@ char iterdatemonth;
     strcat(&iterdatemonth, DAYS_ES[t->tm_mday]);
 	graphics_context_set_text_color(ctx, settings.ForegroundColor);
 	graphics_draw_text(ctx, &iterdatemonth, fonts_get_system_font(FONT_KEY_GOTHIC_24), 
-					   GRect(0, bounds.size.h - 30, 180, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+					   GRect(0, bounds.size.h - 30, bounds.size.w, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
   // Read settings from persistent storage
 static void prv_load_settings() {
@@ -369,7 +374,9 @@ void display_time(struct tm *t) {
 	char textLine3[BUFFER_SIZE];
 	
 	time_to_3words_es(t->tm_hour, t->tm_min, textLine1, textLine2, textLine3,BUFFER_SIZE);
-	
+
+  
+  
 	if (needToUpdateLine(&line1, line1Str, textLine1)) {
 		updateLineTo(&line1, line1Str, textLine1);	
 	}
@@ -447,14 +454,19 @@ static void prv_init(void) {
   
   Layer *root = window_get_root_layer(s_main_window);
 	bounds = layer_get_bounds(root);
-	int offset = (bounds.size.h - 145) / 2;
+	int offset = PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,0);
+  int offsetl23=PBL_IF_ROUND_ELSE(0,20);
   int middlescreen=bounds.size.w/2;
-  	
+  //Adjust screen
+  int offsetweatherh=PBL_IF_RECT_ELSE(30,20);
+  int offsetweatherv=PBL_IF_RECT_ELSE(10,0);
+
+  
   //Layers for weather
   
   // Create temperature Layer
   s_temp_layer = text_layer_create(
-      GRect(0,  bounds.size.h - 44, middlescreen-20, 30));
+      GRect(0,  bounds.size.h - 44+offsetweatherv, middlescreen-offsetweatherh, 30));
   // Style the text
     text_layer_set_background_color(s_temp_layer, GColorClear);
     text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
@@ -467,7 +479,7 @@ static void prv_init(void) {
   s_weather_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERFONT_24));
   //Create layer for icons
   s_wicon_layer=text_layer_create( 
-   GRect(middlescreen+20,  bounds.size.h - 40, 25, 30));
+   GRect(middlescreen+offsetweatherh,  bounds.size.h - 40+offsetweatherv, 25, 30));
   
   text_layer_set_background_color(s_wicon_layer, GColorClear);
   text_layer_set_text_color(s_wicon_layer, settings.ForegroundColor);
@@ -493,24 +505,38 @@ static void prv_init(void) {
   
 	// 2nd line layer
 	line2.currentLayer = text_layer_create(
-                        GRect(0, 37 + offset, bounds.size.w, 50));
+                        GRect(0, 37 + offset+offsetl23, bounds.size.w, 50));
 	line2.nextLayer = text_layer_create(
-                        GRect(bounds.size.w, 37 + offset, bounds.size.w, 50));
+                        GRect(bounds.size.w, 37 + offset+offsetl23, bounds.size.w, 50));
 	configureLineLayer(line2.currentLayer, false);
 	configureLineLayer(line2.nextLayer, false);
 
 	// 3rd line layer
 	line3.currentLayer = text_layer_create(
-                        GRect(0, 74 + offset, bounds.size.w, 50));
+                        GRect(0, 74 + offset+offsetl23, bounds.size.w, 50));
 	line3.nextLayer = text_layer_create(
-                        GRect(bounds.size.w, 74 + offset, bounds.size.w, 50));
+                        GRect(bounds.size.w, 74 + offset+offsetl23, bounds.size.w, 50));
 	configureLineLayer(line3.currentLayer, false);
 	configureLineLayer(line3.nextLayer, false);
+ 
+  //Configure 
+  
 
-  text_layer_set_font(line2.currentLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
-  text_layer_set_font(line2.nextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
-  text_layer_set_font(line3.currentLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
-  text_layer_set_font(line3.nextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+  
+  
+  
+
+  // Select GFont
+  montserrat_font = PBL_IF_RECT_ELSE(     
+      fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_MONT_LIGHT_28)),
+      fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));                  
+    
+  text_layer_set_font(line2.currentLayer,montserrat_font);
+  text_layer_set_font(line2.nextLayer,montserrat_font);
+  text_layer_set_font(line3.currentLayer, montserrat_font);
+  text_layer_set_font(line3.nextLayer, montserrat_font);
+
+    
   
   	// Configure text time on init
 	time_t now = time(NULL);

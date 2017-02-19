@@ -23,6 +23,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/Montserrat-Light.otf",
+                    "name": "FONT_MONT_LIGHT_28",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -39,6 +45,8 @@
         },
         "sdkVersion": "3",
         "targetPlatforms": [
+            "aplite",
+            "basalt",
             "chalk"
         ],
         "uuid": "169d8c6a-af73-4ce8-aa06-7514941b9d5e",
