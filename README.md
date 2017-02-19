@@ -5,7 +5,7 @@ Introducing
 ![banner](store/assets/BannerTextWatchES-Weather.png)
 
 
-[Download it now!](https://apps.getpebble.com/en_US/application/58a7d8de6ca3876a5e00053b)
+[Download it now!](https://apps.getpebble.com/en_US/application/58a94da90dfc32d35b0002f8)
 --------------------
 
 All Classic and Time models supported
