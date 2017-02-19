@@ -38,7 +38,7 @@ Fonts in use:
 * [Weather Icons](https://erikflowers.github.io/weather-icons) by Eric Flowers, modified and fitted to regular alphabet, instead of Unicode values
 * [Montserrat Font](https://github.com/JulietaUla/Montserrat) by Julieta Ulanovsky used in Pebble Classic and Time (not Round) under [SIL](https://raw.githubusercontent.com/JulietaUla/Montserrat/dba6da5ce15bda0709635c964879e22ef0b14432/OFL.txt)
 
-[![banner](https://poweredby.yahoo.com/white.png)](https://www.yahoo.com/?ilc=401)
+[![banner](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)
 
 License
 --------
