@@ -26,9 +26,9 @@ Devs Help
 I am not planning on giving continuity to this project, but if anyone would like to modify the code (translations and enhacements) I tagged the lines of the code that should be somehow modified with the tag TagDev. Summary of enhacements:
 
   * ~~Supported in square Pebbles (Classic, Steel, Time Sq)~~
-  * Translation for other languages
-  * Improve the response from the Config (developed under Pebble Clay). Units updates after the main screen of the watch is restarted, not after saving settings.
-  * Improve the customization: More weather providers (Yahoo based on this app)
+  * Translation to other languages
+  * Improve the response from the Config page (developed under Pebble Clay). Units updates after the main screen of the watch is restarted, not after saving settings.
+  * Improve the customization: More weather providers (Yahoo based on this app), etc.
 
 ![banner](store/assets/BannerTextWatchES-WeatherClass.png)
 
