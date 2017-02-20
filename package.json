@@ -23,6 +23,18 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GOTH_L_32",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GOTH_L_30",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -34,12 +46,6 @@
                     "name": "FONT_WEATHERFONT_24",
                     "targetPlatforms": null,
                     "type": "font"
-                },
-                {
-                    "file": "fonts/Montserrat-Light.otf",
-                    "name": "FONT_MONT_LIGHT_28",
-                    "targetPlatforms": null,
-                    "type": "font"
                 }
             ]
         },
@@ -49,10 +55,10 @@
             "basalt",
             "chalk"
         ],
-        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
+        "uuid": "58f0cfb6-48c9-4968-9b70-20fcdce48bd4",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "2.0.0"
+    "version": "2.1.0"
 }
