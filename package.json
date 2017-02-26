@@ -4,34 +4,45 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "textwatches_weather",
+    "name": "textwatch-clima",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "TextWatchES Weather",
+        "displayName": "TextWatch Clima",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
             "BackgroundColor",
             "WeatherTemp",
             "WeatherCond",
-            "WeatherUnit"
+            "WeatherUnit",
+            "Lang",
+            "DateFormat"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GOTH_L_32",
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GOTH_L_30",
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_34",
                     "targetPlatforms": null,
+                    "trackingAdjust": -1,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_39",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
@@ -46,6 +57,27 @@
                     "name": "FONT_WEATHERFONT_24",
                     "targetPlatforms": null,
                     "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_30",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_34",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_39",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
                 }
             ]
         },
@@ -53,12 +85,13 @@
         "targetPlatforms": [
             "aplite",
             "basalt",
-            "chalk"
+            "chalk",
+            "diorite"
         ],
-        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
+        "uuid": "1cb7dbd5-7b18-4aa8-917a-28932e9fca04",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "2.1.0"
+    "version": "3.0.0"
 }

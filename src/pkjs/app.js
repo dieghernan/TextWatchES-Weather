@@ -2,17 +2,11 @@ var Clay = require('pebble-clay');
 var clayConfig = require('./config');
 var clay = new Clay(clayConfig);
 
-//TagDev: Include on clay and make it customizable;
-var settings = {};
-var units = 'c';
 
- try {
-    settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
-    units = unitsToString(settings.WeatherUnit);
-  } catch (e) {}
 
-//End TagDev
-console.log("units are" + units);
+
+
+
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
@@ -22,6 +16,10 @@ var xhrRequest = function (url, type, callback) {
   xhr.send();
 };
 function locationSuccess(pos) {
+  
+  var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
+   var units = unitsToString(settings.WeatherUnit);
+  console.log("units are" + units);
   // Construct URL
  
     //Get JSON from Yahoo Weather
@@ -95,6 +93,15 @@ Pebble.addEventListener('appmessage',
     getWeather();
   }                     
 );
+
+Pebble.addEventListener('webviewclosed',
+  function(e) {
+    console.log("Updating config!");
+    getWeather();
+  }                     
+);                   
+              
+                        
 function unitsToString(unit) {
   if (unit) {
     return 'f';
