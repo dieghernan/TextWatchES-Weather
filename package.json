@@ -32,6 +32,7 @@
                     "type": "bitmap"
                 },
                 {
+                    "characterRegex": "[a-z ]",
                     "file": "fonts/weatherfontcustom.ttf",
                     "name": "FONT_WEATHERFONT_24",
                     "targetPlatforms": null,
