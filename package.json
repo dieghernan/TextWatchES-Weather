@@ -40,7 +40,7 @@
                 {
                     "characterRegex": "[a-z ]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -56,7 +56,7 @@
                 {
                     "characterRegex": "[a-z ]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -64,7 +64,7 @@
                 {
                     "characterRegex": "[a-z ]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
+                    "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
@@ -80,7 +80,7 @@
                 {
                     "characterRegex": "[a-z ]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
