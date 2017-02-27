@@ -44,3 +44,8 @@ Fonts in use:
 License
 --------
 License [MIT](https://github.com/dieghernan/TextWatchES_Weather/blob/master/MIT%20License)
+
+Screenshots
+----------
+![banner](store/store/ScrShClass.gif)
+
