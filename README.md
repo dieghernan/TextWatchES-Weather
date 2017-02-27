@@ -47,5 +47,5 @@ License [MIT](https://github.com/dieghernan/TextWatchES_Weather/blob/master/MIT%
 
 Screenshots
 ----------
-![](store/store/ScrShClass.gif)
+![](store/ScrShClass.gif)
 
