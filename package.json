@@ -25,27 +25,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -1,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_34",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -1,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -1,
-                    "type": "font"
-                },
-                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -60,7 +39,7 @@
                 },
                 {
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -74,9 +53,30 @@
                 },
                 {
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_39",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -1,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_34",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -1,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_30",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 }
             ]
@@ -88,7 +88,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "1cb7dbd5-7b18-4aa8-917a-28932e9fca04",
+        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
         "watchapp": {
             "watchface": true
         }
