@@ -28,7 +28,7 @@ static const char* const HOUR_EN[] = {
   "one"
 };
 static const char* const MIN_EN1[]={
-"o clock",
+"o'clock",
 "one",
 "two",
 "three",
