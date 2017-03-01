@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "test",
+    "name": "textwatch-clima",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "test",
+        "displayName": "TextWatch Clima",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -95,10 +95,10 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "daf157a3-270a-4bba-8839-98f96c0e04cd",
+        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "3.0.0"
+    "version": "3.1.0"
 }
