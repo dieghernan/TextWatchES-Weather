@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "textwatch-clima",
+    "name": "test",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "TextWatch Clima",
+        "displayName": "test",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -32,13 +32,14 @@
                     "type": "bitmap"
                 },
                 {
+                    "characterRegex": "[a-z ]",
                     "file": "fonts/weatherfontcustom.ttf",
                     "name": "FONT_WEATHERFONT_24",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
@@ -46,7 +47,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_34",
                     "targetPlatforms": null,
@@ -54,7 +55,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
@@ -62,7 +63,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
@@ -70,7 +71,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_34",
                     "targetPlatforms": null,
@@ -78,7 +79,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ]",
+                    "characterRegex": "[a-z' ]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
@@ -94,7 +95,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
+        "uuid": "daf157a3-270a-4bba-8839-98f96c0e04cd",
         "watchapp": {
             "watchface": true
         }

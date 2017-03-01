@@ -549,7 +549,7 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   if(temp_tuple && conditions_tuple) {
      //Temp Layer
     	snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp_tuple->value->cstring);
-    	text_layer_set_text(s_temp_layer, temperature_buffer);
+     	text_layer_set_text(s_temp_layer, temperature_buffer);
     
     	//Translate condition code from Yahoo to character - here I applied a customized font
    	 	conditions_yahoo((int)conditions_tuple->value->int32,s_wicon_layer);

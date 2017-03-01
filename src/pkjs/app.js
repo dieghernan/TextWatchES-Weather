@@ -19,7 +19,7 @@ function locationSuccess(pos) {
   
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
    var units = unitsToString(settings.WeatherUnit);
-  console.log("units are" + units);
+
   // Construct URL
  
     //Get JSON from Yahoo Weather
@@ -39,7 +39,7 @@ function locationSuccess(pos) {
       var json = JSON.parse(responseText);
       console.log("units are " + units );
       
-      var temperature = Math.round(json.query.results.channel.item.condition.temp) + units;
+      var temperature = Math.round(json.query.results.channel.item.condition.temp) +"°" + units;
       console.log("Temperature is " + temperature);
    
       // Conditions item.condition.code
