@@ -35,7 +35,9 @@ Fonts in use:
 License [MIT](https://github.com/dieghernan/TextWatchES_Weather/blob/master/MIT%20License)
 
 # Screenshots
-![](store/ScrShClass.gif) 
-![](store/ScrShTime.gif)  
+![](store/ScrShClass.gif)
+
+![](store/ScrShTime.gif)
+
 ![](store/ScrShRound.gif) 
 
