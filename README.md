@@ -1,4 +1,3 @@
-# Introducing
 ![banner](store/BannerRound.png)
 
 [Download it now!](https://apps.getpebble.com/en_US/application/58a94da90dfc32d35b0002f8)
