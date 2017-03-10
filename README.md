@@ -14,7 +14,7 @@ Based loosely on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_
  * Multilingual: Spanish / English (more at request)
  * Temperature on Centigrades or Fahrenheit
  * Date format: DD MM / MM DD
- * Classic, Time and Pebble 2 models suported
+* Classic, Time and Pebble 2 models suported
 
 ![banner](store/BannerTime.png)
 
