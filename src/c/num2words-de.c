@@ -6,10 +6,12 @@
 #define false 0
 
 // Options
-#define DEBUG false
+#define DEBUG         false
+#define OFFICIAL_TIME false   // dev directive to switch between official and colloquial time
 #include <stddef.h>
 #include <string.h>
 
+/* Colloquial way of expressing the hour */
 
 static const char* const HOUR_DE[] = {
   "zwölf",
@@ -153,6 +155,150 @@ const char* const MIN_DE2[]={
 "vor"
 };
 
+/* Formal way of expressing the hour */
+
+static const char* const HOUR_DE_FORMAL[] = {
+  "zwölf h",
+  "eins h",
+  "zwei h",
+  "drei h",
+  "vier h",
+  "fünf h",
+  "sechs h",
+  "sieben h",
+  "acht h",
+  "neun h",
+  "zehn h",
+  "elf h",
+  "zwölf h",
+  "eins h"
+};
+static const char* const MIN_DE1_FORMAL[]={
+"",
+"eins",
+"zwei",
+"drei",
+"vier",
+"fünf",
+"sechs",
+"sieben",
+"acht",
+"neun",
+"zehn",
+"elf",
+"zwölf",
+"drei",
+"vier",
+"fünf",
+"sech",
+"sieb",
+"acht",
+"neun",
+"zwanzig",
+"einu.",
+"zweiu.",
+"dreiu.",
+"vieru.",
+"fünfu.",
+"sechsu.",
+"siebenu.",
+"achtu.",
+"neunu.",
+"dreißig",
+"einu.",
+"zweiu.",
+"dreiu.",
+"vieru.",
+"fünfu.",
+"sechsu.",
+"siebenu.",
+"achtu.",
+"neunu.",
+"vierzig",
+"einu.",
+"zweiu.",
+"dreiu.",
+"vieru.",
+"fünfu.",
+"sechsu.",
+"siebenu.",
+"achtu.",
+"neunu.",
+"fünfzig",
+"einu.",
+"zweiu.",
+"dreiu.",
+"vieru.",
+"fünfu.",
+"sechsu.",
+"siebenu.",
+"achtu.",
+"neunu.",
+};
+
+const char* const MIN_DE2_FORMAL[]={
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"zehn",
+"zehn",
+"zehn",
+"zehn",
+"zehn",
+"zehn",
+"zehn",
+"",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"zwanzig",
+"",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"dreißig",
+"",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"vierzig",
+"",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+"fünfzig",
+};
+
 
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_DE[] = {
@@ -221,24 +367,35 @@ const char* const WEEKDAY_DE[] = {
 
 void time_to_3words_DE(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
 
+#if OFFICIAL_TIME
+
+  strcpy(line1, HOUR_DE_FORMAL[hours]);
+  strcpy(line2,MIN_DE1_FORMAL[minutes]);
+  strcpy(line3,MIN_DE2_FORMAL[minutes]); 
+  *LineBold=1; 
+
+#else
+
   //hour - line1
-   //shift 1 hour the label for this minutes
+  //shift 1 hour the label for this minutes
   if ( minutes>20) {hours=(hours+1);                                                                
   }
   hours=hours % 12;
 
-if (minutes==0 ){
-  strcpy(line1, HOUR_DE[hours]);
-  strcpy(line2,MIN_DE1[minutes]);
-  strcpy(line3,MIN_DE2[minutes]); 
-  *LineBold=1; 
-}
-else {
-  strcpy(line1,MIN_DE1[minutes]);
-  strcpy(line2,MIN_DE2[minutes]);
-  strcpy(line3, HOUR_DE[hours]); 
-  *LineBold=3; 
-}
+  if (minutes==0 ){
+    strcpy(line1, HOUR_DE[hours]);
+    strcpy(line2,MIN_DE1[minutes]);
+    strcpy(line3,MIN_DE2[minutes]); 
+    *LineBold=1; 
+  }
+  else {
+    strcpy(line1,MIN_DE1[minutes]);
+    strcpy(line2,MIN_DE2[minutes]);
+    strcpy(line3, HOUR_DE[hours]); 
+    *LineBold=3; 
+  }
+
+#endif
   
 }
 
