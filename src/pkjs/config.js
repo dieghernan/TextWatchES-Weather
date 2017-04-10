@@ -89,6 +89,6 @@ module.exports = [
       
  {
     "type": "submit",
-    "defaultValue": "Guardar"
+    "defaultValue": "OK"
   }
 ];
