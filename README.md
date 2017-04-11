@@ -13,7 +13,7 @@ Based loosely on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_
  * Multilingual: 
    * Spanish
    * English 
-   * German
+   * German (thanks to [rodher](https://github.com/rodher)
    * (more at request)
  * Temperature on Centigrades or Fahrenheit
  * Date format: DD MM / MM DD
