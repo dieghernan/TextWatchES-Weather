@@ -10,7 +10,11 @@ Based loosely on [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_
 * Clean
 * Weather Conditions and Temperature
 * Customizable
- * Multilingual: Spanish / English (more at request)
+ * Multilingual: 
+   * Spanish
+   * English 
+   * German
+   * (more at request)
  * Temperature on Centigrades or Fahrenheit
  * Date format: DD MM / MM DD
 * Classic, Time and Pebble 2 models suported
