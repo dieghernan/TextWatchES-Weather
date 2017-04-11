@@ -8,6 +8,7 @@
 //Include languages
 #include "num2words-es.h"
 #include "num2words-en.h"
+#include "num2words-de.h"
 
 ///////////////////////////
 // 1. Define structures////
@@ -68,6 +69,28 @@ static void prv_default_settings() {
 }
 ///////////////////////////
 //////End Configuration///
+///////////////////////////
+
+///////////////////////////
+//////Define Function  ///
+///////////////////////////
+
+static int lim1(){
+  bool issquare=PBL_IF_RECT_ELSE(true,false);
+  if (settings.LangKey==3){return 6;}
+  else if (issquare){return 8;}
+  else return 9;  
+}
+
+static int lim2(){
+  bool issquare=PBL_IF_RECT_ELSE(true,false);
+  if (settings.LangKey==3){return 8;}
+  else if (issquare){return 9;}
+  else return 12;  
+}
+
+///////////////////////////
+//////End Function  ///
 ///////////////////////////
 
 ////////////////////////////
@@ -224,19 +247,20 @@ void configureLineLayer(TextLayer *textlayer) {
 void configureLayer(TextLayer *textlayer, char *Text, int bold, int ref) {
   int lenstring;
   lenstring=strlen(Text);
-  bool issquare=PBL_IF_RECT_ELSE(true,false);
   text_layer_set_overflow_mode(textlayer, GTextOverflowModeFill);
+  
+  int limtofirst=lim1();
+  int limtosec=lim2();
   
   // Update font depending of it is an hour - bold and the lenght, so size will be reduced to fit bounds of the layer
   // Also, squares and round Pebbles fits different lengths - taken into account
-  if (issquare){
       if (bold==ref){
-        if (lenstring<8){
+        if (lenstring<limtofirst){
           //Bold and big
           text_layer_set_font(textlayer,Bold);        
         }
         //Bold reduced1
-        else if (lenstring<9){
+        else if (lenstring<limtosec){
           text_layer_set_font(textlayer,BoldReduced1);                             
         }
         //Bold Reduced 2
@@ -244,12 +268,12 @@ void configureLayer(TextLayer *textlayer, char *Text, int bold, int ref) {
           text_layer_set_font(textlayer,BoldReduced2);
         }
       }
-      else {if (lenstring<8){
+      else {if (lenstring<limtofirst){
         //Light and big
         text_layer_set_font(textlayer,Light);  
       }
       //Light reduced 1
-      else if (lenstring<9) {
+      else if (lenstring<limtosec) {
         text_layer_set_font(textlayer,LightReduced1);
       }
        //Light Reduced 2
@@ -258,28 +282,7 @@ void configureLayer(TextLayer *textlayer, char *Text, int bold, int ref) {
       }
     }
   }
-  else { 
-       if (bold==ref){
-        if (lenstring<9){
-          //Bold and big
-          text_layer_set_font(textlayer,Bold);        
-        }
-        //Bold reduced
-        else {
-          text_layer_set_font(textlayer,BoldReduced1); 
-        }
-      }
-      else {if (lenstring<9){
-        //Light and big
-        text_layer_set_font(textlayer,Light);  
-      }
-      //Light reduced
-      else {
-        text_layer_set_font(textlayer,LightReduced1);
-      } 
-    }
-  };
-}
+
 //Vertical alignment
 static void verticalAlignTextLayer(TextLayer *layer, int inity) {
   GRect frame = layer_get_frame(text_layer_get_layer(layer));
@@ -319,6 +322,9 @@ void display_time(struct tm *t, int atinit) {
   }
   else if (settings.LangKey==2){   //English
     time_to_3words_EN(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
+  }
+  else if (settings.LangKey==3){   //German
+    time_to_3words_DE(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
   };
     
   // Configure fonts  
@@ -371,6 +377,9 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   else if (settings.LangKey==2){      //English
     Animations_EN(t->tm_min, &LBef, &Lnow, &LAft);                         
   }
+  else if (settings.LangKey==3){      //German
+    Animations_DE(t->tm_min, &LBef, &Lnow, &LAft);                         
+  }
   
  	// Recenter screen if last time was 3 lines, but new time is 2 lines
 	// Don't do this if time was just initialized already centered
@@ -412,6 +421,9 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   }
   else if (settings.LangKey==2){  //English
     WriteDate_EN(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
+  }
+  else if (settings.LangKey==3){  //German
+    WriteDate_DE(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
   }
   
   // Display day of week
@@ -473,6 +485,9 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
     PopatInit_ES(t->tm_min, &LenAfterSave);}
   else if (settings.LangKey==2){
     PopatInit_EN(t->tm_min, &LenAfterSave);
+  }
+  else if (settings.LangKey==3){
+    PopatInit_DE(t->tm_min, &LenAfterSave);
   }
   //Update text if language has changed
   //Adjust position using animations
@@ -667,6 +682,9 @@ static void prv_init(void) {
     PopatInit_ES(t->tm_min, &LenInit_END);}
   else if (settings.LangKey==2){  //English
     PopatInit_EN(t->tm_min, &LenInit_END);
+  }
+  else if (settings.LangKey==3){  //German
+    PopatInit_DE(t->tm_min, &LenInit_END);
   }
   
   // Check Line3 at init

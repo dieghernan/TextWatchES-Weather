@@ -39,7 +39,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
@@ -47,7 +47,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_34",
                     "targetPlatforms": null,
@@ -55,7 +55,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
@@ -63,7 +63,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
@@ -71,7 +71,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_34",
                     "targetPlatforms": null,
@@ -79,7 +79,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
@@ -100,5 +100,5 @@
             "watchface": true
         }
     },
-    "version": "3.1.0"
+    "version": "4.0.0"
 }
