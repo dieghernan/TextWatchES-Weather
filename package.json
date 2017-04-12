@@ -39,23 +39,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -2,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[a-z' ]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_34",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -2,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
@@ -63,15 +47,31 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_34",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_30",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
+                    "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_34",
                     "targetPlatforms": null,
@@ -79,9 +79,9 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z' ]",
+                    "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
@@ -95,10 +95,10 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
+        "uuid": "0b9325b7-8d95-4599-8d1a-f77e7651b121",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "3.1.0"
+    "version": "4.1.0"
 }

@@ -8,6 +8,7 @@
 //Include languages
 #include "num2words-es.h"
 #include "num2words-en.h"
+#include "num2words-de.h"
 
 ///////////////////////////
 // 1. Define structures////
@@ -52,6 +53,7 @@ PropertyAnimation *scroll_up;
 static bool PoppedDownNow;
 static bool PoppedDownAtInit;
 GRect bounds;
+static int offsetpebble;
 
 ///////////////////////////
 //////Init Configuration///
@@ -68,6 +70,25 @@ static void prv_default_settings() {
 }
 ///////////////////////////
 //////End Configuration///
+///////////////////////////
+
+///////////////////////////
+//////Define Function  ///
+///////////////////////////
+
+static int limit(int nline){
+  
+  int isround=PBL_IF_ROUND_ELSE(1, 0);
+  if (isround==1){ 
+    if (nline==1){return 130;}
+    else if (nline==2){return 160;}
+    else return 150;
+  }
+  else return 123;
+}
+
+///////////////////////////
+//////End Function  ///
 ///////////////////////////
 
 ////////////////////////////
@@ -174,8 +195,88 @@ void makePopDown(){
 ////////////////////////////
 ////Init: Layer updating////
 ////////////////////////////
+//Vertical alignment
+static void verticalAlignTextLayer(TextLayer *layer, int inity) {
+  GRect frame = layer_get_frame(text_layer_get_layer(layer));
+  GSize content = text_layer_get_content_size(layer);
+    // Adjust position of the layer so visually all the text are aligned to the bottom
+  // This is neccesary cuz Pebble works aligning to the top - doesnt like how it looks
+  int offsetv;
+  
+  //Handle nulls, no need to change
+  if (content.h==0){
+    offsetv=0;
+  }
+  else {
+    offsetv=39-content.h;
+  }
+  layer_set_frame(text_layer_get_layer(layer),
+           GRect(frame.origin.x, inity + offsetv, frame.size.w, frame.size.h));
+}
+
+void sizeandbold(TextLayer *linelayer, int linr, int linb) {
+  if (linr==linb){text_layer_set_font(linelayer,Bold);}
+  else {text_layer_set_font(linelayer,Light);}
+ 
+  int evlimit=limit(linr);
+  
+  const char * textonlayer;
+  textonlayer=text_layer_get_text(linelayer); 
+  char textget[BUFFER_SIZE];
+  snprintf(textget, sizeof(textget), "%s",textonlayer);
+  GSize sizetext=text_layer_get_content_size(linelayer);
+  int width=sizetext.w;
+  APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text is %s width text is %d and width layer is %d",textget,width,evlimit);
+  
+if (linr==linb){
+  if (width>evlimit){
+    text_layer_set_font(linelayer,BoldReduced1);
+    GSize sizetext2=text_layer_get_content_size(linelayer);
+    int width2=sizetext2.w;
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width2,evlimit);
+    if (width2>evlimit ){
+      text_layer_set_font(linelayer,BoldReduced2);
+    GSize sizetext3=text_layer_get_content_size(linelayer);
+    int width3=sizetext3.w;
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width3,evlimit);
+    }    
+  }
+}
+
+  else {
+    if (width>evlimit){
+    text_layer_set_font(linelayer,LightReduced1);
+    GSize sizetext2=text_layer_get_content_size(linelayer);
+    int width2=sizetext2.w;
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width2,evlimit);
+    if (width2>evlimit ){
+      text_layer_set_font(linelayer,LightReduced2);
+       GSize sizetext3=text_layer_get_content_size(linelayer);
+      int width3=sizetext3.w;
+      APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width3,evlimit);
+    }    
+    }
+  }
+  
+  int offsetline=0;
+  if (linr==2){
+    offsetline=37;
+  }
+  else if (linr==3){
+    offsetline=74;
+  }
+  
+  
+    //Adjust vertical alignment
+ 	  verticalAlignTextLayer(linelayer, offsetpebble+offsetline);
+  
+  
+};
+
+
+
 // Update text line
-void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value) {
+void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value, int linref, int linbold) {
 	TextLayer *next, *current;
 	GRect rect = layer_get_frame((Layer *)line->currentLayer);
 	current = (rect.origin.x == 0) ? line->currentLayer : line->nextLayer;
@@ -192,7 +293,9 @@ void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value) {
 		memcpy(lineStr[0], value, strlen(value));
 		text_layer_set_text(next, lineStr[0]);
 	}
-	
+  sizeandbold(next,linref,linbold);
+  
+  
 	makeAnimationsForLayers(line, current, next);
 }
 // Check to see if the current text line needs to be updated
@@ -220,84 +323,8 @@ void configureLineLayer(TextLayer *textlayer) {
 	text_layer_set_background_color(textlayer, GColorClear);
   text_layer_set_text_alignment(textlayer, GTextAlignmentCenter);
 }
-// Configure font of text
-void configureLayer(TextLayer *textlayer, char *Text, int bold, int ref) {
-  int lenstring;
-  lenstring=strlen(Text);
-  bool issquare=PBL_IF_RECT_ELSE(true,false);
-  text_layer_set_overflow_mode(textlayer, GTextOverflowModeFill);
-  
-  // Update font depending of it is an hour - bold and the lenght, so size will be reduced to fit bounds of the layer
-  // Also, squares and round Pebbles fits different lengths - taken into account
-  if (issquare){
-      if (bold==ref){
-        if (lenstring<8){
-          //Bold and big
-          text_layer_set_font(textlayer,Bold);        
-        }
-        //Bold reduced1
-        else if (lenstring<9){
-          text_layer_set_font(textlayer,BoldReduced1);                             
-        }
-        //Bold Reduced 2
-        else {
-          text_layer_set_font(textlayer,BoldReduced2);
-        }
-      }
-      else {if (lenstring<8){
-        //Light and big
-        text_layer_set_font(textlayer,Light);  
-      }
-      //Light reduced 1
-      else if (lenstring<9) {
-        text_layer_set_font(textlayer,LightReduced1);
-      }
-       //Light Reduced 2
-      else {
-        text_layer_set_font(textlayer,LightReduced2);
-      }
-    }
-  }
-  else { 
-       if (bold==ref){
-        if (lenstring<9){
-          //Bold and big
-          text_layer_set_font(textlayer,Bold);        
-        }
-        //Bold reduced
-        else {
-          text_layer_set_font(textlayer,BoldReduced1); 
-        }
-      }
-      else {if (lenstring<9){
-        //Light and big
-        text_layer_set_font(textlayer,Light);  
-      }
-      //Light reduced
-      else {
-        text_layer_set_font(textlayer,LightReduced1);
-      } 
-    }
-  };
-}
-//Vertical alignment
-static void verticalAlignTextLayer(TextLayer *layer, int inity) {
-  GRect frame = layer_get_frame(text_layer_get_layer(layer));
-  GSize content = text_layer_get_content_size(layer);
-    // Adjust position of the layer so visually all the text are aligned to the bottom
-  // This is neccesary cuz Pebble works aligning to the top - doesnt like how it looks
-  int offsetv;
-  
-  //Handle nulls, no need to change
-  if (content.h==0){
-    offsetv=0;
-  }
-  else {
-    offsetv=39-content.h;
-  }
-  layer_set_frame(text_layer_get_layer(layer),
-           GRect(frame.origin.x, inity + offsetv, frame.size.w, frame.size.h));
-}
+
+
 ////////////////////////////
 ////End: Layer formatting//
 ////////////////////////////
@@ -319,35 +346,22 @@ void display_time(struct tm *t, int atinit) {
   }
   else if (settings.LangKey==2){   //English
     time_to_3words_EN(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
+  }
+  else if (settings.LangKey==3){   //German
+    time_to_3words_DE(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
   };
     
-  // Configure fonts  
-  configureLayer(line1.currentLayer,textLine1,LineToPutinBold,1);
-  configureLayer(line2.currentLayer,textLine2,LineToPutinBold,2);
-  configureLayer(line3.currentLayer,textLine3,LineToPutinBold,3);
-  configureLayer(line1.nextLayer,textLine1,LineToPutinBold,1);
-  configureLayer(line2.nextLayer,textLine2,LineToPutinBold,2);
-  configureLayer(line3.nextLayer,textLine3,LineToPutinBold,3);
-  
-  //Adjust vertical alignment
- 	int offset = PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,5);
-  
-  verticalAlignTextLayer(line1.currentLayer, offset);
-  verticalAlignTextLayer(line1.nextLayer,    offset);
-  verticalAlignTextLayer(line2.currentLayer, 37+offset);
-  verticalAlignTextLayer(line2.nextLayer,    37+offset);
-  verticalAlignTextLayer(line3.currentLayer, 74+offset);
-  verticalAlignTextLayer(line3.nextLayer,    74+offset);
+ 
 
   //Update lines
   if (needToUpdateLine(&line1, line1Str, textLine1)) {
-		updateLineTo(&line1, line1Str, textLine1);
+		updateLineTo(&line1, line1Str, textLine1,1,LineToPutinBold);
   }
 	if (needToUpdateLine(&line2, line2Str, textLine2)) {
-		updateLineTo(&line2, line2Str, textLine2);
+		updateLineTo(&line2, line2Str, textLine2,2,LineToPutinBold);
 	}
 	if (needToUpdateLine(&line3, line3Str, textLine3)) {
-		updateLineTo(&line3, line3Str, textLine3);	
+		updateLineTo(&line3, line3Str, textLine3,3,LineToPutinBold);	
   }
 }
 // Update graphics when timer ticks
@@ -370,6 +384,9 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   }
   else if (settings.LangKey==2){      //English
     Animations_EN(t->tm_min, &LBef, &Lnow, &LAft);                         
+  }
+  else if (settings.LangKey==3){      //German
+    Animations_DE(t->tm_min, &LBef, &Lnow, &LAft);                         
   }
   
  	// Recenter screen if last time was 3 lines, but new time is 2 lines
@@ -412,6 +429,9 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   }
   else if (settings.LangKey==2){  //English
     WriteDate_EN(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
+  }
+  else if (settings.LangKey==3){  //German
+    WriteDate_DE(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
   }
   
   // Display day of week
@@ -473,6 +493,9 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
     PopatInit_ES(t->tm_min, &LenAfterSave);}
   else if (settings.LangKey==2){
     PopatInit_EN(t->tm_min, &LenAfterSave);
+  }
+  else if (settings.LangKey==3){
+    PopatInit_DE(t->tm_min, &LenAfterSave);
   }
   //Update text if language has changed
   //Adjust position using animations
@@ -579,7 +602,8 @@ static void prv_init(void) {
   prv_load_settings();
     // Listen for AppMessages
   app_message_register_inbox_received(prv_inbox_received_handler);
-  app_message_open(128, 128);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+
   // Configure main window
 	s_main_window = window_create();
 	window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -601,7 +625,7 @@ static void prv_init(void) {
 	
   //Set bounds and offsets
 	bounds = layer_get_bounds(root);
-	int offset = PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,5);
+	offsetpebble= PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,5);
 	int middlescreen=bounds.size.w/2;
  	int offsetweatherh=PBL_IF_RECT_ELSE(30,20);
   int offsetweatherv=PBL_IF_RECT_ELSE(10,0);
@@ -610,18 +634,18 @@ static void prv_init(void) {
   // Scroll
 	scroll = layer_create(bounds); 
   // 1st line layer
-	line1.currentLayer = text_layer_create(GRect(0, offset, bounds.size.w, 50));
-	line1.nextLayer = text_layer_create(GRect(bounds.size.w, offset, bounds.size.w, 50));
+	line1.currentLayer = text_layer_create(GRect(0, offsetpebble, bounds.size.w, 50));
+	line1.nextLayer = text_layer_create(GRect(bounds.size.w, offsetpebble, bounds.size.w, 50));
 	configureLineLayer(line1.currentLayer);
 	configureLineLayer(line1.nextLayer);
   // 2nd line layer
-	line2.currentLayer = text_layer_create(GRect(0, 37 + offset, bounds.size.w, 50));
-	line2.nextLayer = text_layer_create(GRect(bounds.size.w, 37 + offset, bounds.size.w, 50));
+	line2.currentLayer = text_layer_create(GRect(0, 37 + offsetpebble, bounds.size.w, 50));
+	line2.nextLayer = text_layer_create(GRect(bounds.size.w, 37 + offsetpebble, bounds.size.w, 50));
 	configureLineLayer(line2.currentLayer);
 	configureLineLayer(line2.nextLayer);
 	// 3rd line layer
-	line3.currentLayer = text_layer_create(GRect(0, 74 + offset, bounds.size.w, 50));
-	line3.nextLayer = text_layer_create(GRect(bounds.size.w, 74 + offset, bounds.size.w, 50));
+	line3.currentLayer = text_layer_create(GRect(0, 74 + offsetpebble, bounds.size.w, 50));
+	line3.nextLayer = text_layer_create(GRect(bounds.size.w, 74 + offsetpebble, bounds.size.w, 50));
 	configureLineLayer(line3.currentLayer);
 	configureLineLayer(line3.nextLayer);
   // Load layers
@@ -667,6 +691,9 @@ static void prv_init(void) {
     PopatInit_ES(t->tm_min, &LenInit_END);}
   else if (settings.LangKey==2){  //English
     PopatInit_EN(t->tm_min, &LenInit_END);
+  }
+  else if (settings.LangKey==3){  //German
+    PopatInit_DE(t->tm_min, &LenInit_END);
   }
   
   // Check Line3 at init
