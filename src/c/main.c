@@ -37,6 +37,8 @@ static TextLayer *s_wicon_layer;
 static char line1Str[2][BUFFER_SIZE];
 static char line2Str[2][BUFFER_SIZE];
 static char line3Str[2][BUFFER_SIZE];
+  // Weather information
+  static char temperature_buffer[8];
 
 //Fonts
 static GFont s_weather_font;
@@ -46,6 +48,8 @@ static GFont BoldReduced2;
 static GFont Light;
 static GFont LightReduced1;
 static GFont LightReduced2;
+static GFont WDay;
+static GFont FontDate;
 
 //Others
 PropertyAnimation *scroll_down;
@@ -415,14 +419,20 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
 }
 // Proc to update Date and Month layer
 static void back_update_proc(Layer *layer, GContext *ctx) {
+
+     // Colors
+  graphics_context_set_text_color(ctx,settings.ForegroundColor); 
+  
+  
   time_t now = time(NULL);
   struct tm *t   = localtime(&now);
-  GRect bounds = layer_get_bounds(layer);
+  GRect bounds2layer = layer_get_bounds(layer);
   
+  //Translate
   char WeekDay_END[BUFFER_SIZE];
   char Date_END[BUFFER_SIZE];
   char Month_END[BUFFER_SIZE];
-
+  
   // Set language
   if (settings.LangKey==1){        //Spanish
     WriteDate_ES(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);
@@ -434,13 +444,13 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
     WriteDate_DE(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
   }
   
-  // Display day of week
-  graphics_context_set_text_color(ctx, settings.ForegroundColor);
-	graphics_draw_text(ctx, WeekDay_END, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),
-					   GRect(0, bounds.size.h - 48, bounds.size.w, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-   
-	// Display date
-  char builddate[BUFFER_SIZE];
+  
+  //Draw day of the week
+  GRect WDay_rect=GRect(bounds2layer.origin.x,bounds2layer.origin.y,bounds2layer.size.w,bounds2layer.size.h);
+  graphics_draw_text(ctx, WeekDay_END, WDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  
+  //Draw date
+    char builddate[BUFFER_SIZE];
   //Build based on config settings
   if (settings.DateFormat==1){  //DD MM
     strcpy(builddate,Date_END);
@@ -452,9 +462,31 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
     strcat(builddate," ");
     strcat(builddate,Date_END);
   }
-  graphics_context_set_text_color(ctx, settings.ForegroundColor);
-	graphics_draw_text(ctx, builddate, fonts_get_system_font(FONT_KEY_GOTHIC_24), 
-					   GRect(0, bounds.size.h - 30, bounds.size.w, 30), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  GRect Date=GRect(WDay_rect.origin.x,WDay_rect.origin.y+20,WDay_rect.size.w,WDay_rect.size.h);
+  graphics_draw_text(ctx, builddate, FontDate, Date, GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+  
+  int offsetx=PBL_IF_ROUND_ELSE(0, 10);
+  int offsety=PBL_IF_ROUND_ELSE(0, 10);
+  
+  
+  //Draw Rect for temp
+  GRect temprect=GRect(WDay_rect.origin.x,
+                       WDay_rect.origin.y+offsety,
+                       WDay_rect.size.w/2-25-offsetx,
+                       WDay_rect.size.h);
+  
+  graphics_draw_text(ctx, temperature_buffer, FontDate, temprect, GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
+  
+  
+  
+  //Draw Rect for cond
+  GRect condrect=GRect(WDay_rect.size.w/2+25+offsetx,
+                       WDay_rect.origin.y+offsety,
+                       WDay_rect.size.w,
+                       WDay_rect.size.h);
+  
+  graphics_draw_text(ctx, "e", s_weather_font, condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  
 } // End build
 //////////////////////////////////////
 ///// End: Updating time and date////
@@ -562,8 +594,7 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   // Save the new settings to persistent storage
   prv_save_settings(LangChanged,LangBefSave);
  
-  // Weather information
-  static char temperature_buffer[8];
+
   // Read tuples for data
   Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_WeatherTemp);
   Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_WeatherCond);
@@ -590,7 +621,7 @@ static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
 
-  back_layer = layer_create(bounds);
+  back_layer = layer_create(GRect(0,bounds.size.h-45,bounds.size.w, 45));
 	layer_set_update_proc(back_layer, back_update_proc);
 	layer_add_child(window_layer, back_layer);  
 }
@@ -618,7 +649,9 @@ static void prv_init(void) {
   Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
-  s_weather_font=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WEATHERFONT_24));
+  s_weather_font=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_22));
+  WDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
+  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
     
   window_stack_push(s_main_window, true);
   Layer *root = window_get_root_layer(s_main_window);

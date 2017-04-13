@@ -25,6 +25,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/weatherfontcustom2.ttf",
+                    "name": "FONT_WICON_22",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
@@ -32,10 +38,10 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[a-z ]",
-                    "file": "fonts/weatherfontcustom.ttf",
-                    "name": "FONT_WEATHERFONT_24",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
                     "targetPlatforms": null,
+                    "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
@@ -60,6 +66,13 @@
                     "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_16",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
