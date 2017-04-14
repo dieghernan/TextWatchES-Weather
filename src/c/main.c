@@ -2,13 +2,11 @@
 #include "main.h"
 #define BUFFER_SIZE 44
 
-//Include weather icons
-#include "iconmap.h"
-
 //Include languages
 #include "num2words-es.h"
 #include "num2words-en.h"
 #include "num2words-de.h"
+
 
 ///////////////////////////
 // 1. Define structures////
@@ -30,25 +28,24 @@ Line line3;
 static Window *s_main_window;
 Layer *back_layer;
 Layer *scroll;
-static TextLayer *s_temp_layer;
-static TextLayer *s_wicon_layer;
+
 
 // Chars
 static char line1Str[2][BUFFER_SIZE];
 static char line2Str[2][BUFFER_SIZE];
 static char line3Str[2][BUFFER_SIZE];
   // Weather information
-  static char temperature_buffer[8];
+char tempstring[44], condstringday[44],condstringnight[44];
 
 //Fonts
-static GFont s_weather_font;
+static GFont FontCond;
 static GFont Bold;
 static GFont BoldReduced1;
 static GFont BoldReduced2;
 static GFont Light;
 static GFont LightReduced1;
 static GFont LightReduced2;
-static GFont WDay;
+static GFont FontWDay;
 static GFont FontDate;
 
 //Others
@@ -57,7 +54,7 @@ PropertyAnimation *scroll_up;
 static bool PoppedDownNow;
 static bool PoppedDownAtInit;
 GRect bounds;
-static int offsetpebble;
+static int offsetpebble, s_loop;
 
 ///////////////////////////
 //////Init Configuration///
@@ -71,6 +68,10 @@ static void prv_default_settings() {
   settings.WeatherUnit = false;
   settings.LangKey=1; 
   settings.DateFormat=1;
+  settings.IsNightNow=false;
+  settings.HourSunrise    =600;
+  settings.HourSunset    =1700;
+  settings.GPSOn=false;
 }
 ///////////////////////////
 //////End Configuration///
@@ -89,6 +90,19 @@ static int limit(int nline){
     else return 150;
   }
   else return 123;
+}
+
+// Callback for js request
+void request_watchjs(){
+  //Starting loop at 0
+  s_loop=0;
+  // Begin dictionary
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+  // Add a key-value pair
+  dict_write_uint8(iter, 0, 0);
+  // Send the message!
+  app_message_outbox_send(); 
 }
 
 ///////////////////////////
@@ -230,19 +244,19 @@ void sizeandbold(TextLayer *linelayer, int linr, int linb) {
   snprintf(textget, sizeof(textget), "%s",textonlayer);
   GSize sizetext=text_layer_get_content_size(linelayer);
   int width=sizetext.w;
-  APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text is %s width text is %d and width layer is %d",textget,width,evlimit);
+  
   
 if (linr==linb){
   if (width>evlimit){
     text_layer_set_font(linelayer,BoldReduced1);
     GSize sizetext2=text_layer_get_content_size(linelayer);
     int width2=sizetext2.w;
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width2,evlimit);
+   
     if (width2>evlimit ){
       text_layer_set_font(linelayer,BoldReduced2);
-    GSize sizetext3=text_layer_get_content_size(linelayer);
-    int width3=sizetext3.w;
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width3,evlimit);
+ 
+
+    
     }    
   }
 }
@@ -252,12 +266,11 @@ if (linr==linb){
     text_layer_set_font(linelayer,LightReduced1);
     GSize sizetext2=text_layer_get_content_size(linelayer);
     int width2=sizetext2.w;
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width2,evlimit);
-    if (width2>evlimit ){
+      if (width2>evlimit ){
       text_layer_set_font(linelayer,LightReduced2);
-       GSize sizetext3=text_layer_get_content_size(linelayer);
-      int width3=sizetext3.w;
-      APP_LOG(APP_LOG_LEVEL_DEBUG,"Layer Text in 2 is %s width text is %d and width layer is %d",textget,width3,evlimit);
+
+  
+     
     }    
     }
   }
@@ -373,6 +386,22 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   if (units_changed & MINUTE_UNIT ) {
 	  layer_mark_dirty(back_layer);  
 	}
+  
+  int s_hours=t->tm_hour;
+  int s_minutes=t->tm_min;
+  
+  
+  // Evaluate if is day or night
+  int nowthehouris=s_hours*100+s_minutes;
+  if (settings.HourSunrise<=nowthehouris && nowthehouris<=settings.HourSunset){
+    settings.IsNightNow=false;  
+    }
+  else {
+    settings.IsNightNow=true;
+  }
+  
+  
+  
 	
 	// Update text time
 	display_time(t,0);
@@ -422,6 +451,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
 
      // Colors
   graphics_context_set_text_color(ctx,settings.ForegroundColor); 
+  graphics_context_set_stroke_color(ctx, settings.ForegroundColor);
   
   
   time_t now = time(NULL);
@@ -447,7 +477,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   
   //Draw day of the week
   GRect WDay_rect=GRect(bounds2layer.origin.x,bounds2layer.origin.y,bounds2layer.size.w,bounds2layer.size.h);
-  graphics_draw_text(ctx, WeekDay_END, WDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, WeekDay_END, FontWDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
   
   //Draw date
     char builddate[BUFFER_SIZE];
@@ -472,11 +502,10 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   //Draw Rect for temp
   GRect temprect=GRect(WDay_rect.origin.x,
                        WDay_rect.origin.y+offsety,
-                       WDay_rect.size.w/2-25-offsetx,
+                       WDay_rect.size.w/2-20-offsetx,
                        WDay_rect.size.h);
   
-  graphics_draw_text(ctx, temperature_buffer, FontDate, temprect, GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
-  
+  graphics_draw_text(ctx, tempstring, FontDate, temprect, GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
   
   
   //Draw Rect for cond
@@ -485,7 +514,13 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
                        WDay_rect.size.w,
                        WDay_rect.size.h);
   
-  graphics_draw_text(ctx, "e", s_weather_font, condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  if (settings.IsNightNow){
+    graphics_draw_text(ctx, condstringnight, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  }
+  else {
+    graphics_draw_text(ctx, condstringday, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  }
+ 
   
 } // End build
 //////////////////////////////////////
@@ -546,6 +581,15 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
 }
 // Handle the response from AppMessage
 static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
+   s_loop=s_loop+1;
+  if (s_loop==1){
+      //Clean vars  
+        strcpy(tempstring, "");
+        strcpy(condstringday, "");
+        strcpy(condstringnight, "");
+  }
+  
+  
   // Background Color
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
   if (bg_color_t) {
@@ -556,7 +600,47 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
  	Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
   if (fg_color_t) {
     settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
+  }   
+  
+//Control of data from http
+  // Weather Cond
+  Tuple *wcond_t=dict_find(iter, MESSAGE_KEY_WeatherCondDay);
+    if (wcond_t){ 
+    snprintf(condstringday , sizeof(condstringday), "%s", wcond_t->value->cstring);
+  }
+  Tuple *n_wcond_t=dict_find(iter, MESSAGE_KEY_WeatherCondNight);
+    if (n_wcond_t){ 
+    snprintf(condstringnight , sizeof(condstringnight), "%s", n_wcond_t->value->cstring);
+  }
+  // Weather Temp
+  Tuple *wtemp_t=dict_find(iter, MESSAGE_KEY_WeatherTemp);
+ if (wtemp_t){ 
+    snprintf(tempstring, sizeof(tempstring), "%s", wtemp_t->value->cstring);
+  }
+   //Hour Sunrise and Sunset
+  Tuple *sunrise_t=dict_find(iter, MESSAGE_KEY_HourSunrise);
+  if (sunrise_t){
+    settings.HourSunrise=(int)sunrise_t->value->int32;
+  }
+  Tuple *sunset_t=dict_find(iter, MESSAGE_KEY_HourSunset);
+  if (sunset_t){
+    settings.HourSunset=(int)sunset_t->value->int32;
   }  
+  
+ 
+  //Control of data gathered for http
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "After loop %d temp is %s Cond is %s Sunrise is %d Sunset is %d", s_loop,tempstring,condstringday,settings.HourSunrise,settings.HourSunset);
+  
+  if (strcmp(tempstring, "") !=0 && strcmp(condstringday, "") !=0 && strcmp(condstringnight, "")){
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"GPS fully working at loop %d",s_loop);
+    settings.GPSOn=true;
+  }  
+  else {
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Missing info at loop %d, GPS false",s_loop);
+    settings.GPSOn=false;
+  }
+  //End data gathered
+  
   
   // Store language applied before refreshing
   int LangBefSave=settings.LangKey;
@@ -582,8 +666,7 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
 	text_layer_set_text_color(line2.nextLayer, settings.ForegroundColor);
 	text_layer_set_text_color(line3.currentLayer, settings.ForegroundColor);
 	text_layer_set_text_color(line3.nextLayer, settings.ForegroundColor);
- 	text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
-	text_layer_set_text_color(s_wicon_layer , settings.ForegroundColor);
+
   
   // Mark if language has changed
   int LangChanged=0;
@@ -595,19 +678,7 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   prv_save_settings(LangChanged,LangBefSave);
  
 
-  // Read tuples for data
-  Tuple *temp_tuple = dict_find(iter, MESSAGE_KEY_WeatherTemp);
-  Tuple *conditions_tuple = dict_find(iter, MESSAGE_KEY_WeatherCond);
-  
-  // If all data is available, use it
-  if(temp_tuple && conditions_tuple) {
-     //Temp Layer
-    	snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp_tuple->value->cstring);
-     	text_layer_set_text(s_temp_layer, temperature_buffer);
-    
-    	//Translate condition code from Yahoo to character - here I applied a customized font
-   	 	conditions_yahoo((int)conditions_tuple->value->int32,s_wicon_layer);
-  }  
+
 }
 /////////////////////////////////////////
 ////End: Handle Settings and Weather////
@@ -633,7 +704,7 @@ static void prv_init(void) {
   prv_load_settings();
     // Listen for AppMessages
   app_message_register_inbox_received(prv_inbox_received_handler);
-  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  app_message_open(256, 256);
 
   // Configure main window
 	s_main_window = window_create();
@@ -649,8 +720,8 @@ static void prv_init(void) {
   Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
-  s_weather_font=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_22));
-  WDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
+  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_22));
+  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
   FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
     
   window_stack_push(s_main_window, true);
@@ -659,9 +730,6 @@ static void prv_init(void) {
   //Set bounds and offsets
 	bounds = layer_get_bounds(root);
 	offsetpebble= PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,5);
-	int middlescreen=bounds.size.w/2;
- 	int offsetweatherh=PBL_IF_RECT_ELSE(30,20);
-  int offsetweatherv=PBL_IF_RECT_ELSE(10,0);
 
   // Create layers
   // Scroll
@@ -690,22 +758,7 @@ static void prv_init(void) {
 	layer_add_child(scroll, (Layer *)line3.currentLayer);
 	layer_add_child(scroll, (Layer *)line3.nextLayer);
  
-  // Create temperature Layer
-  s_temp_layer = text_layer_create(GRect(0,  bounds.size.h - 44+offsetweatherv, middlescreen-offsetweatherh, 30));
-  // Style the text
-  text_layer_set_background_color(s_temp_layer, GColorClear);
-  text_layer_set_text_color(s_temp_layer, settings.ForegroundColor);
-  text_layer_set_text_alignment(s_temp_layer, GTextAlignmentRight);
-  text_layer_set_font(s_temp_layer,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
-  layer_add_child( back_layer,text_layer_get_layer(s_temp_layer));
 
- 	//Create layer for conditions
-  s_wicon_layer=text_layer_create(GRect(middlescreen+offsetweatherh,  bounds.size.h - 40+offsetweatherv, 25, 30));
-  text_layer_set_background_color(s_wicon_layer, GColorClear);
-  text_layer_set_text_color(s_wicon_layer, settings.ForegroundColor);
-  text_layer_set_text_alignment(s_wicon_layer, GTextAlignmentLeft);
-  text_layer_set_font(s_wicon_layer, s_weather_font);
- 	layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_wicon_layer)); 
 
  	// Configure text time on init
 	time_t now = time(NULL);
@@ -748,8 +801,6 @@ static void prv_deinit(void) {
 	text_layer_destroy(line2.nextLayer);
 	text_layer_destroy(line3.currentLayer);
 	text_layer_destroy(line3.nextLayer);
-  text_layer_destroy(s_temp_layer);
-  text_layer_destroy(s_wicon_layer);
 	layer_destroy(scroll);
 }
 int main(void) {

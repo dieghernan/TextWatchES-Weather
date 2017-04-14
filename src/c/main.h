@@ -10,6 +10,10 @@ typedef struct ClaySettings {
   bool WeatherUnit;
   int LangKey;
   int DateFormat;
+  bool IsNightNow;
+  bool GPSOn;
+  int HourSunrise;
+  int HourSunset;
     
     
 } __attribute__((__packed__)) ClaySettings;
