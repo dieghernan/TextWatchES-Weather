@@ -27,11 +27,7 @@
  * Implementation of [pmkey.xyz](https://www.pmkey.xyz)    
 
 # Screenshots
-![](store/ScrShClass.gif)
-
-![](store/ScrShTime.gif)
-
-![](store/ScrShRound.gif) 
+![](store/ScrShClass.gif) ![](store/ScrShTime.gif) ![](store/ScrShRound.gif) 
 
 # Attributions
 ## Fonts: 
