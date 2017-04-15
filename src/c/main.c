@@ -47,6 +47,7 @@ static GFont LightReduced1;
 static GFont LightReduced2;
 static GFont FontWDay;
 static GFont FontDate;
+static GFont FontSymbol;
 
 //Others
 PropertyAnimation *scroll_down;
@@ -54,7 +55,7 @@ PropertyAnimation *scroll_up;
 static bool PoppedDownNow;
 static bool PoppedDownAtInit;
 GRect bounds;
-static int offsetpebble, s_loop;
+static int offsetpebble, s_loop,s_countdown;
 
 ///////////////////////////
 //////Init Configuration///
@@ -63,8 +64,11 @@ static int offsetpebble, s_loop;
 ClaySettings settings;
 // Initialize the default settings
 static void prv_default_settings() { 
-  settings.BackgroundColor = GColorBlack;
+  settings.BackgroundColor = GColorOxfordBlue;
   settings.ForegroundColor = GColorWhite;
+  settings.BackgroundColorNight=GColorWhite;
+  settings.ForegroundColorNight=GColorOxfordBlue;
+  settings.NightTheme=false;
   settings.WeatherUnit = false;
   settings.LangKey=1; 
   settings.DateFormat=1;
@@ -72,6 +76,9 @@ static void prv_default_settings() {
   settings.HourSunrise    =600;
   settings.HourSunset    =1700;
   settings.GPSOn=false;
+  settings.UpSlider=30;
+  settings.DisplayTemp=false;
+  settings.BTOn=true;
 }
 ///////////////////////////
 //////End Configuration///
@@ -80,6 +87,8 @@ static void prv_default_settings() {
 ///////////////////////////
 //////Define Function  ///
 ///////////////////////////
+
+
 
 static int limit(int nline){
   
@@ -103,6 +112,26 @@ void request_watchjs(){
   dict_write_uint8(iter, 0, 0);
   // Send the message!
   app_message_outbox_send(); 
+}
+
+///BT Connection
+static void bluetooth_callback(bool connected) {
+   settings.BTOn=connected;
+ }
+static void onreconnection(bool before, bool now){
+  if (!before && now){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "BT reconnected, requesting weather");
+    request_watchjs();  
+  }  
+}
+
+static GColor ColorSelect(bool isactive, bool gpsstate, bool isnight, GColor ColorDay, GColor ColorNight){
+  if (isactive && isnight && gpsstate){
+    return ColorNight;   
+  }
+  else {
+    return ColorDay;
+  }  
 }
 
 ///////////////////////////
@@ -336,7 +365,7 @@ bool needToUpdateLine(Line *line, char lineStr[2][BUFFER_SIZE], char *nextValue)
 ////////////////////////////
 // Configure line of text
 void configureLineLayer(TextLayer *textlayer) {
-	text_layer_set_text_color(textlayer, settings.ForegroundColor);
+	text_layer_set_text_color(textlayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
 	text_layer_set_background_color(textlayer, GColorClear);
   text_layer_set_text_alignment(textlayer, GTextAlignmentCenter);
 }
@@ -390,14 +419,46 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int s_hours=t->tm_hour;
   int s_minutes=t->tm_min;
   
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "Tick at %d", t->tm_min);
+    s_loop=0;
+  if (s_countdown==0){
+   //Reset
+   s_countdown=settings.UpSlider;
+ }
+  else {
+    s_countdown=s_countdown-1;  
+  }
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Countdown to update %d", s_countdown);
   
   // Evaluate if is day or night
   int nowthehouris=s_hours*100+s_minutes;
   if (settings.HourSunrise<=nowthehouris && nowthehouris<=settings.HourSunset){
     settings.IsNightNow=false;  
+     APP_LOG(APP_LOG_LEVEL_DEBUG, "Day");
     }
   else {
     settings.IsNightNow=true;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Night");
+  }
+    // Extra catch on sunrise and sunset
+  if (nowthehouris==settings.HourSunrise || nowthehouris==settings.HourSunset){
+      s_countdown=1;
+  }
+  
+    if (settings.GPSOn && settings.NightTheme){
+    //Extra catch around 1159 to gather information of today
+     if (nowthehouris==1159 && s_countdown>5) {s_countdown=1;};
+    // Change Color of background	
+    layer_mark_dirty(back_layer);
+    window_set_background_color(s_main_window,ColorSelect(settings.NightTheme, settings.IsNightNow, settings.GPSOn,settings.BackgroundColor, settings.BackgroundColorNight));
+      text_layer_set_text_color(line1.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line1.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line2.currentLayer,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line2.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line3.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line3.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+
   }
   
   
@@ -435,23 +496,37 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
 		  makeScrollUp(t);
 		}
   
-  // Get weather update every 30 minutes
-	if(t->tm_min % 30 == 0) {
-  	// Begin dictionary
-  	DictionaryIterator *iter;
-  	app_message_outbox_begin(&iter);
- 		// Add a key-value pair
-  	dict_write_uint8(iter, 0, 0);
-    // Send the message!
- 		app_message_outbox_send();
+if(s_countdown== 0 || s_countdown==5) {
+    if (settings.DisplayTemp ){
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather at %d", t->tm_min);
+      request_watchjs();    
+    }  
 	}
+  
+    if (!settings.GPSOn){
+    if (settings.DisplayTemp ){
+      if (settings.UpSlider>15){
+        if(s_countdown % 15 == 0){
+          APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempt to request GPS on %d", t->tm_min);
+          request_watchjs();    
+        }
+      }      
+    }
+  } 
 }
 // Proc to update Date and Month layer
 static void back_update_proc(Layer *layer, GContext *ctx) {
 
      // Colors
-  graphics_context_set_text_color(ctx,settings.ForegroundColor); 
-  graphics_context_set_stroke_color(ctx, settings.ForegroundColor);
+  graphics_context_set_text_color(ctx,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+
+  
+    //For weather and loc check wheter the app is connected
+  //If it was disconnected fetch new values
+  onreconnection(settings.BTOn, connection_service_peek_pebble_app_connection());
+
+  // Update connection toggle
+  bluetooth_callback(connection_service_peek_pebble_app_connection()); 
   
   
   time_t now = time(NULL);
@@ -503,26 +578,54 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   GRect temprect=GRect(WDay_rect.origin.x,
                        WDay_rect.origin.y+offsety,
                        WDay_rect.size.w/2-20-offsetx,
-                       WDay_rect.size.h);
-  
-  graphics_draw_text(ctx, tempstring, FontDate, temprect, GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
-  
-  
+                       WDay_rect.size.h);  
   //Draw Rect for cond
   GRect condrect=GRect(WDay_rect.size.w/2+25+offsetx,
                        WDay_rect.origin.y+offsety,
                        WDay_rect.size.w,
                        WDay_rect.size.h);
   
-  if (settings.IsNightNow){
-    graphics_draw_text(ctx, condstringnight, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+  //If Bluetooth off and some info was requested display warning
+  if (!settings.BTOn){
+    if (settings.DisplayTemp){
+
+      graphics_draw_text(ctx, "a",
+                         FontSymbol, 
+                         temprect,
+                         GTextOverflowModeWordWrap, GTextAlignmentRight, NULL
+                        );
+    }    
   }
+  //If connected but GPS off then display warning
   else {
-    graphics_draw_text(ctx, condstringday, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
-  }
- 
-  
+    if (!settings.GPSOn){
+      if (settings.DisplayTemp){
+        graphics_draw_text(ctx, "b", 
+                           FontSymbol, 
+                           temprect,
+                           GTextOverflowModeWordWrap, GTextAlignmentRight, NULL
+                          );
+      }    
+    }
+    // If BT on and GPS on display according with preferences
+    else{
+      //If weather active create text
+      if (settings.DisplayTemp){
+        // Create temp display
+        graphics_draw_text(ctx, tempstring, FontWDay, temprect, GTextOverflowModeTrailingEllipsis, GTextAlignmentRight, NULL);
+        // Create condition display
+          if (settings.IsNightNow){
+            graphics_draw_text(ctx, condstringnight, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+          }
+        else {
+          graphics_draw_text(ctx, condstringday, FontCond,condrect, GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+        }
+      }
+    }    
+  }  
 } // End build
+
+
 //////////////////////////////////////
 ///// End: Updating time and date////
 /////////////////////////////////////
@@ -590,17 +693,58 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   }
   
   
-  // Background Color
+// Background Color
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
   if (bg_color_t) {
     settings.BackgroundColor = GColorFromHEX(bg_color_t->value->int32);
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached BK");
 	}
 
+  Tuple *nbg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColorNight);
+  if (nbg_color_t) {
+    settings.BackgroundColorNight = GColorFromHEX(nbg_color_t->value->int32);
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached BK Night");
+	}
+  
   // Foreground Color
  	Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
   if (fg_color_t) {
     settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
-  }   
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached FG");
+  }  
+  Tuple *nfg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColorNight);
+  if (nfg_color_t) {
+     settings.ForegroundColorNight = GColorFromHEX(nfg_color_t->value->int32);
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached FG Night");
+	} 
+ // Get display handlers
+  Tuple *frequpdate=dict_find(iter, MESSAGE_KEY_UpSlider);
+  if (frequpdate){
+    settings.UpSlider=(int)frequpdate->value->int32;
+    //Restart the counter
+    s_countdown=settings.UpSlider;
+
+  }
+  
+  Tuple *distemp_t=dict_find(iter,MESSAGE_KEY_DisplayTemp);
+  if (distemp_t){
+    if (distemp_t->value->int32==0){
+      settings.DisplayTemp=false;
+    }
+    else settings.DisplayTemp=true;
+  }
+  
+  
+  Tuple *disntheme_t=dict_find(iter,MESSAGE_KEY_NightTheme);
+  if (disntheme_t){
+    if (disntheme_t->value->int32==0){
+      settings.NightTheme=false;
+      APP_LOG(APP_LOG_LEVEL_DEBUG,"NTHeme off");
+    }
+    else {
+      APP_LOG(APP_LOG_LEVEL_DEBUG,"NTHeme on");
+      settings.NightTheme=true;}
+  }
   
 //Control of data from http
   // Weather Cond
@@ -632,11 +776,11 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "After loop %d temp is %s Cond is %s Sunrise is %d Sunset is %d", s_loop,tempstring,condstringday,settings.HourSunrise,settings.HourSunset);
   
   if (strcmp(tempstring, "") !=0 && strcmp(condstringday, "") !=0 && strcmp(condstringnight, "")){
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"GPS fully working at loop %d",s_loop);
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"GPS on at loop %d",s_loop);
     settings.GPSOn=true;
   }  
   else {
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Missing info at loop %d, GPS false",s_loop);
+    APP_LOG(APP_LOG_LEVEL_DEBUG,"Missing info at loop %d, GPS off",s_loop);
     settings.GPSOn=false;
   }
   //End data gathered
@@ -658,14 +802,14 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   }
   
   //Update colors
-  window_set_background_color(s_main_window, settings.BackgroundColor);
+  window_set_background_color(s_main_window, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.BackgroundColor, settings.BackgroundColorNight)); 
 	layer_mark_dirty(back_layer);
-	text_layer_set_text_color(line1.currentLayer, settings.ForegroundColor);
-	text_layer_set_text_color(line1.nextLayer, settings.ForegroundColor);
-	text_layer_set_text_color(line2.currentLayer, settings.ForegroundColor);
-	text_layer_set_text_color(line2.nextLayer, settings.ForegroundColor);
-	text_layer_set_text_color(line3.currentLayer, settings.ForegroundColor);
-	text_layer_set_text_color(line3.nextLayer, settings.ForegroundColor);
+	text_layer_set_text_color(line1.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line1.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line2.currentLayer,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line2.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line3.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	text_layer_set_text_color(line3.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
 
   
   // Mark if language has changed
@@ -698,10 +842,40 @@ static void prv_window_load(Window *window) {
 }
 // Window Unload event
 static void prv_window_unload(Window *window) {
- 	layer_destroy(back_layer);
+  layer_destroy(back_layer); 
+  text_layer_destroy(line1.currentLayer);
+	text_layer_destroy(line1.nextLayer);
+	text_layer_destroy(line2.currentLayer);
+	text_layer_destroy(line2.nextLayer);
+	text_layer_destroy(line3.currentLayer);
+	text_layer_destroy(line3.nextLayer);
+	layer_destroy(scroll);
+  window_destroy(s_main_window);
+  
+  fonts_unload_custom_font(Bold);
+  fonts_unload_custom_font(BoldReduced1);
+  fonts_unload_custom_font(BoldReduced2);
+  fonts_unload_custom_font(Light);
+  fonts_unload_custom_font(LightReduced1);
+  fonts_unload_custom_font(LightReduced2);
+  fonts_unload_custom_font(FontCond);
+  fonts_unload_custom_font(FontSymbol);
+  fonts_unload_custom_font(FontDate); 
+  fonts_unload_custom_font(FontWDay); 
+  
 }
 static void prv_init(void) {
   prv_load_settings();
+  
+  //Starting loop at 0
+  s_loop=0;
+  s_countdown=settings.UpSlider;
+  //Clean vars
+  strcpy(tempstring, "");
+  strcpy(condstringday, "");
+  strcpy(condstringnight, "");
+  
+  
     // Listen for AppMessages
   app_message_register_inbox_received(prv_inbox_received_handler);
   app_message_open(256, 256);
@@ -720,9 +894,10 @@ static void prv_init(void) {
   Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
-  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_22));
+  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
   FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
   FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
+  FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
     
   window_stack_push(s_main_window, true);
   Layer *root = window_get_root_layer(s_main_window);
@@ -766,6 +941,10 @@ static void prv_init(void) {
 	display_time(t,1);
 	// Register for minute ticks
 	tick_timer_service_subscribe(MINUTE_UNIT, time_timer_tick);
+  
+  connection_service_subscribe((ConnectionHandlers) {
+    .pebble_app_connection_handler = bluetooth_callback
+  });
 	
   // initialize PoppedDown indicators
 	PoppedDownNow = false;
@@ -792,16 +971,9 @@ static void prv_init(void) {
 	}
 }
 static void prv_deinit(void) {
-	window_destroy(s_main_window);
 	tick_timer_service_unsubscribe();
 	app_message_deregister_callbacks();    //Destroy the callbacks for clean up
-	text_layer_destroy(line1.currentLayer);
-	text_layer_destroy(line1.nextLayer);
-	text_layer_destroy(line2.currentLayer);
-	text_layer_destroy(line2.nextLayer);
-	text_layer_destroy(line3.currentLayer);
-	text_layer_destroy(line3.nextLayer);
-	layer_destroy(scroll);
+  
 }
 int main(void) {
   prv_init();

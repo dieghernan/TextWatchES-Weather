@@ -22,14 +22,29 @@
             "DateFormat",
             "WeatherCondNight",
             "HourSunset",
-            "HourSunrise"
+            "HourSunrise",
+            "NightTheme",
+            "BackgroundColorNight",
+            "ForegroundColorNight",
+            "UpSlider",
+            "DisplayTemp",
+            "EmailPMKEY",
+            "PINPMKEY",
+            "WeatherProv"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
+                    "characterRegex": "[a-z]",
+                    "file": "fonts/ConsSymb.ttf",
+                    "name": "FONT_SYMBOL_16",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "fonts/weatherfontcustom2.ttf",
-                    "name": "FONT_WICON_22",
+                    "name": "FONT_WICON_26",
                     "targetPlatforms": null,
                     "type": "font"
                 },
