@@ -11,7 +11,7 @@
 
 ![banner](store/BannerTime.png)
 
-# Take your pick
+## Take your pick
 * Date format: Day Month / Month Day
 * Language
   * Spanish
@@ -26,12 +26,9 @@
     * [Yahoo.com](https://www.yahoo.com/?ilc=401) _No API Key required (at this moment)_
     * [Wunderground](https://www.wunderground.com/?apiref=fb6856330e74c168)
     * [OpenWeatherMap](https://openweathermap.org/)
- * Implementation of [pmkey.xyz](https://www.pmkey.xyz)    
-
-# Screenshots
-![](store/ScrShClass.gif) ![](store/ScrShTime.gif) ![](store/ScrShRound.gif) 
-
-![banner](store/BannerClass.png)
+ * Implementation of [pmkey.xyz](https://www.pmkey.xyz)
+ 
+ ![banner](store/BannerClass.png)
 
 # Attributions
 ## Fonts: 
@@ -50,9 +47,10 @@
 ## Others
 
 * [Master Key](https://www.pmkey.xyz) is a service for Pebble users. Get a unique PIN and add API Keys for your favorite online services. Please check [www.pmkey.xyz](https://www.pmkey.xyz) for more info.
-
 * [wackyneighbor](https://github.com/wackyneighbor) project [DC TextWatch Deluxe](https://github.com/wackyneighbor/DC_Text_Watch_Deluxe)
 
+# Screenshots
+![](store/ScrShClass.gif) ![](store/ScrShTime.gif) ![](store/ScrShRound.gif) 
 
 # License
 Developed under license [MIT](https://github.com/dieghernan/TextWatchES_Weather/blob/master/MIT%20License).
