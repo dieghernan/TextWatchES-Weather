@@ -16,27 +16,44 @@
             "ForegroundColor",
             "BackgroundColor",
             "WeatherTemp",
-            "WeatherCond",
+            "WeatherCondDay",
             "WeatherUnit",
             "Lang",
-            "DateFormat"
+            "DateFormat",
+            "WeatherCondNight",
+            "HourSunset",
+            "HourSunrise",
+            "NightTheme",
+            "BackgroundColorNight",
+            "ForegroundColorNight",
+            "UpSlider",
+            "DisplayTemp",
+            "EmailPMKEY",
+            "PINPMKEY",
+            "WeatherProv"
         ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "characterRegex": "[a-z]",
+                    "file": "fonts/ConsSymb.ttf",
+                    "name": "FONT_SYMBOL_16",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/weatherfontcustom2.ttf",
+                    "name": "FONT_WICON_26",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
                 {
                     "file": "images/menu_icon_spanish_text_watch.png",
                     "menuIcon": true,
                     "name": "iconmenu",
                     "targetPlatforms": null,
                     "type": "bitmap"
-                },
-                {
-                    "characterRegex": "[a-z ]",
-                    "file": "fonts/weatherfontcustom.ttf",
-                    "name": "FONT_WEATHERFONT_24",
-                    "targetPlatforms": null,
-                    "type": "font"
                 },
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
@@ -63,6 +80,12 @@
                     "type": "font"
                 },
                 {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_30",
@@ -85,6 +108,12 @@
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
+                },
+                {
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_16",
+                    "targetPlatforms": null,
+                    "type": "font"
                 }
             ]
         },
@@ -100,5 +129,5 @@
             "watchface": true
         }
     },
-    "version": "4.0.0"
+    "version": "5.0.0"
 }

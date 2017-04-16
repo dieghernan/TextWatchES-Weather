@@ -7,9 +7,20 @@
 typedef struct ClaySettings {
   GColor BackgroundColor;
   GColor ForegroundColor;
+  GColor BackgroundColorNight;
+  GColor ForegroundColorNight;
+  
+  bool NightTheme;
   bool WeatherUnit;
   int LangKey;
   int DateFormat;
+  bool IsNightNow;
+  bool GPSOn;
+  bool DisplayTemp;
+  bool BTOn;
+  int HourSunrise;
+  int HourSunset;
+  int UpSlider;
     
     
 } __attribute__((__packed__)) ClaySettings;

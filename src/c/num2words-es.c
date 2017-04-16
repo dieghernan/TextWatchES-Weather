@@ -157,18 +157,18 @@ const char* const MIN_ES2[]={
 
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_ES[] = {
-"Ene ",
-"Feb ",
-"Mar ",
-"Abr ",
-"May ",
-"Jun ",
-"Jul ",
-"Ago ",
-"Sep ",
-"Oct ",
-"Nov ",
-"Dic ",
+"Ene",
+"Feb",
+"Mar",
+"Abr",
+"May",
+"Jun",
+"Jul",
+"Ago",
+"Sep",
+"Oct",
+"Nov",
+"Dic",
 };
 	
 const char* const DAYS_ES[] = {
