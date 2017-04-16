@@ -224,49 +224,12 @@ function locationError(err) {
 }
 
 function getWeatherAtInit() {
-// Get keys from pmkey
-  var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
-  var email=settings.EmailPMKEY;
-  var pin=settings.PINPMKEY;
-   //Request API from pmkey.xyz
-  var urlpmk='https://pmkey.xyz/search/?email='+email+"&pin="+pin;
-  console.log("Url PMKEY is "+ urlpmk);
-    xhrRequest(encodeURI(urlpmk),'GET',
-             function(responseText){
-               var jsonpmk=JSON.parse(responseText);
-               var wuKey=jsonpmk.keys.weather.wu;
-               var owmKey=jsonpmk.keys.weather.owm;
-               
-               localStorage.setItem("wuKey", wuKey);
-               localStorage.setItem("owmKey", owmKey);
-             }            
-            ); 
-  
-  var weatherprov=settings.WeatherProv;
-  if (weatherprov=="yahoo"){
     console.log("Requesting weather from Yahoo");
       navigator.geolocation.getCurrentPosition(
         locationSuccessYahoo,
         locationError,
         {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
       );
-  }
-  else if(weatherprov=="owm") {
-    console.log("Ready from OWM");
-    navigator.geolocation.getCurrentPosition(
-        locationSuccessOWM,
-        locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
-      );
-  }
-  else if (weatherprov=="wu"){
-    console.log("Ready from WU");
-     navigator.geolocation.getCurrentPosition(
-        locationSuccessWU,
-        locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
-      );
-   }
   }
 
 
