@@ -57,6 +57,7 @@ static bool PoppedDownAtInit;
 GRect bounds;
 static int offsetpebble, s_loop,s_countdown;
 
+
 ///////////////////////////
 //////Init Configuration///
 ///////////////////////////
@@ -114,16 +115,8 @@ void request_watchjs(){
   app_message_outbox_send(); 
 }
 
-///BT Connection
-static void bluetooth_callback(bool connected) {
-   settings.BTOn=connected;
- }
-static void onreconnection(bool before, bool now){
-  if (!before && now){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "BT reconnected, requesting weather");
-    request_watchjs();  
-  }  
-}
+
+
 
 static GColor ColorSelect(bool isactive, bool gpsstate, bool isnight, GColor ColorDay, GColor ColorNight){
   if (isactive && isnight && gpsstate){
@@ -419,6 +412,19 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int s_hours=t->tm_hour;
   int s_minutes=t->tm_min;
   
+  //BT: Evaluate reconnection
+  bool CheckBT=connection_service_peek_pebble_app_connection();
+  if (!settings.BTOn &&  CheckBT ){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "BT reconnected");
+    settings.BTOn=true;
+    // Update weather info
+    request_watchjs(); 
+  } 
+ //Update toggle
+  settings.BTOn=CheckBT;
+  
+ 
+  
    APP_LOG(APP_LOG_LEVEL_DEBUG, "Tick at %d", t->tm_min);
     s_loop=0;
   if (s_countdown==0){
@@ -435,35 +441,27 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int nowthehouris=s_hours*100+s_minutes;
   if (settings.HourSunrise<=nowthehouris && nowthehouris<=settings.HourSunset){
     settings.IsNightNow=false;  
-     APP_LOG(APP_LOG_LEVEL_DEBUG, "Day");
     }
   else {
     settings.IsNightNow=true;
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Night");
   }
     // Extra catch on sunrise and sunset
   if (nowthehouris==settings.HourSunrise || nowthehouris==settings.HourSunset){
       s_countdown=1;
-  }
-  
+  } 
     if (settings.GPSOn && settings.NightTheme){
     //Extra catch around 1159 to gather information of today
-     if (nowthehouris==1159 && s_countdown>5) {s_countdown=1;};
-    // Change Color of background	
-    layer_mark_dirty(back_layer);
-    window_set_background_color(s_main_window,ColorSelect(settings.NightTheme, settings.IsNightNow, settings.GPSOn,settings.BackgroundColor, settings.BackgroundColorNight));
+      if (nowthehouris==1159 && s_countdown>5) {s_countdown=1;};
+      // Change Color of background	
+      layer_mark_dirty(back_layer);
+      window_set_background_color(s_main_window,ColorSelect(settings.NightTheme, settings.IsNightNow, settings.GPSOn,settings.BackgroundColor, settings.BackgroundColorNight));
       text_layer_set_text_color(line1.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-	text_layer_set_text_color(line1.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-	text_layer_set_text_color(line2.currentLayer,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-	text_layer_set_text_color(line2.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-	text_layer_set_text_color(line3.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-	text_layer_set_text_color(line3.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
-
-  }
-  
-  
-  
-	
+	    text_layer_set_text_color(line1.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	    text_layer_set_text_color(line2.currentLayer,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	    text_layer_set_text_color(line2.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	    text_layer_set_text_color(line3.currentLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+	    text_layer_set_text_color(line3.nextLayer, ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
+  }	
 	// Update text time
 	display_time(t,0);
   
@@ -503,7 +501,7 @@ if(s_countdown== 0 || s_countdown==5) {
     }  
 	}
   
-    if (!settings.GPSOn){
+  if (!settings.GPSOn){
     if (settings.DisplayTemp ){
       if (settings.UpSlider>15){
         if(s_countdown % 15 == 0){
@@ -520,14 +518,6 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
      // Colors
   graphics_context_set_text_color(ctx,ColorSelect(settings.NightTheme, settings.GPSOn, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight)); 
 
-  
-    //For weather and loc check wheter the app is connected
-  //If it was disconnected fetch new values
-  onreconnection(settings.BTOn, connection_service_peek_pebble_app_connection());
-
-  // Update connection toggle
-  bluetooth_callback(connection_service_peek_pebble_app_connection()); 
-  
   
   time_t now = time(NULL);
   struct tm *t   = localtime(&now);
@@ -697,26 +687,22 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
   if (bg_color_t) {
     settings.BackgroundColor = GColorFromHEX(bg_color_t->value->int32);
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached BK");
-	}
+  }
 
   Tuple *nbg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColorNight);
   if (nbg_color_t) {
     settings.BackgroundColorNight = GColorFromHEX(nbg_color_t->value->int32);
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached BK Night");
 	}
   
   // Foreground Color
  	Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
   if (fg_color_t) {
     settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached FG");
   }  
   Tuple *nfg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColorNight);
   if (nfg_color_t) {
      settings.ForegroundColorNight = GColorFromHEX(nfg_color_t->value->int32);
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"Cached FG Night");
-	} 
+ 	} 
  // Get display handlers
   Tuple *frequpdate=dict_find(iter, MESSAGE_KEY_UpSlider);
   if (frequpdate){
@@ -842,27 +828,7 @@ static void prv_window_load(Window *window) {
 }
 // Window Unload event
 static void prv_window_unload(Window *window) {
-  layer_destroy(back_layer); 
-  text_layer_destroy(line1.currentLayer);
-	text_layer_destroy(line1.nextLayer);
-	text_layer_destroy(line2.currentLayer);
-	text_layer_destroy(line2.nextLayer);
-	text_layer_destroy(line3.currentLayer);
-	text_layer_destroy(line3.nextLayer);
-	layer_destroy(scroll);
-  window_destroy(s_main_window);
-  
-  fonts_unload_custom_font(Bold);
-  fonts_unload_custom_font(BoldReduced1);
-  fonts_unload_custom_font(BoldReduced2);
-  fonts_unload_custom_font(Light);
-  fonts_unload_custom_font(LightReduced1);
-  fonts_unload_custom_font(LightReduced2);
-  fonts_unload_custom_font(FontCond);
-  fonts_unload_custom_font(FontSymbol);
-  fonts_unload_custom_font(FontDate); 
-  fonts_unload_custom_font(FontWDay); 
-  
+  layer_destroy(back_layer);   
 }
 static void prv_init(void) {
   prv_load_settings();
@@ -895,8 +861,8 @@ static void prv_init(void) {
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
   FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
-  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
-  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
+  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_15));
+  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_15));
   FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
     
   window_stack_push(s_main_window, true);
@@ -941,10 +907,8 @@ static void prv_init(void) {
 	display_time(t,1);
 	// Register for minute ticks
 	tick_timer_service_subscribe(MINUTE_UNIT, time_timer_tick);
-  
-  connection_service_subscribe((ConnectionHandlers) {
-    .pebble_app_connection_handler = bluetooth_callback
-  });
+
+
 	
   // initialize PoppedDown indicators
 	PoppedDownNow = false;
@@ -971,9 +935,16 @@ static void prv_init(void) {
 	}
 }
 static void prv_deinit(void) {
+	window_destroy(s_main_window);
 	tick_timer_service_unsubscribe();
 	app_message_deregister_callbacks();    //Destroy the callbacks for clean up
-  
+	text_layer_destroy(line1.currentLayer);
+	text_layer_destroy(line1.nextLayer);
+	text_layer_destroy(line2.currentLayer);
+	text_layer_destroy(line2.nextLayer);
+	text_layer_destroy(line3.currentLayer);
+	text_layer_destroy(line3.nextLayer);
+	layer_destroy(scroll);  
 }
 int main(void) {
   prv_init();

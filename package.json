@@ -56,9 +56,15 @@
                     "type": "bitmap"
                 },
                 {
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_15",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -74,21 +80,22 @@
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_15",
                     "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
+                    "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
@@ -104,15 +111,9 @@
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_16",
-                    "targetPlatforms": null,
                     "type": "font"
                 }
             ]
