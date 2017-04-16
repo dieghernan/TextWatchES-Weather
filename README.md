@@ -1,6 +1,8 @@
 ![banner](store/BannerRound.png)
 
-**TextWatch Clime** upgrades the classic TextWatch watchface adding a bunch of new capabilities. **TextWatch Clime** is available for all the Classic, Time and Pebble 2 models.
+**TextWatch Clima** upgrades the classic TextWatch watchface adding a bunch of new capabilities. 
+
+**Available for all the Classic, Time and Pebble 2 models**
 
 #### [Download from Pebble Appstore](https://apps.getpebble.com/en_US/application/58a94da90dfc32d35b0002f8)
 
