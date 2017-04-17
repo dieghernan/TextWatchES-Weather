@@ -828,44 +828,30 @@ static void prv_window_load(Window *window) {
 }
 // Window Unload event
 static void prv_window_unload(Window *window) {
-  layer_destroy(back_layer);   
+  layer_destroy(back_layer);  
+  window_destroy(s_main_window);
+  text_layer_destroy(line1.currentLayer);
+	text_layer_destroy(line1.nextLayer);
+	text_layer_destroy(line2.currentLayer);
+	text_layer_destroy(line2.nextLayer);
+	text_layer_destroy(line3.currentLayer);
+	text_layer_destroy(line3.nextLayer);
+	layer_destroy(scroll); 
+  fonts_unload_custom_font(FontCond);
+  fonts_unload_custom_font(Bold);
+  fonts_unload_custom_font(BoldReduced1);
+  fonts_unload_custom_font(BoldReduced2);
+  fonts_unload_custom_font(Light);
+  fonts_unload_custom_font(LightReduced1);
+  fonts_unload_custom_font(LightReduced2);
+  fonts_unload_custom_font(FontWDay);
+  fonts_unload_custom_font(FontDate);
+  fonts_unload_custom_font(FontSymbol);  
 }
-static void prv_init(void) {
-  prv_load_settings();
-  
-  //Starting loop at 0
-  s_loop=0;
-  s_countdown=settings.UpSlider;
-  //Clean vars
-  strcpy(tempstring, "");
-  strcpy(condstringday, "");
-  strcpy(condstringnight, "");
-  
-  
-    // Listen for AppMessages
-  app_message_register_inbox_received(prv_inbox_received_handler);
-  app_message_open(256, 256);
 
-  // Configure main window
-	s_main_window = window_create();
-	window_set_window_handlers(s_main_window, (WindowHandlers) {
-		.load = prv_window_load,
-		.unload = prv_window_unload,
-	});
+void main_window_push() {
+  s_main_window = window_create();      
   
-  // Load fonts
-  Bold=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_39));
-  BoldReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_34));
-  BoldReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_30));
-  Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
-  LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
-  LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
-  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
-  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
-  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
-  FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
-    
-  window_stack_push(s_main_window, true);
   Layer *root = window_get_root_layer(s_main_window);
 	
   //Set bounds and offsets
@@ -898,9 +884,48 @@ static void prv_init(void) {
 	layer_add_child(scroll, (Layer *)line2.nextLayer);
 	layer_add_child(scroll, (Layer *)line3.currentLayer);
 	layer_add_child(scroll, (Layer *)line3.nextLayer);
- 
+  
+  // Configure main window
+		window_set_window_handlers(s_main_window, (WindowHandlers) {
+		.load = prv_window_load,
+		.unload = prv_window_unload,
+	});
+  
+    
+  window_stack_push(s_main_window, true);
+}
 
 
+static void prv_init(void) {
+  prv_load_settings();
+  
+  //Starting loop at 0
+  s_loop=0;
+  s_countdown=settings.UpSlider;
+  //Clean vars
+  strcpy(tempstring, "");
+  strcpy(condstringday, "");
+  strcpy(condstringnight, "");
+  
+  
+    // Listen for AppMessages
+  app_message_register_inbox_received(prv_inbox_received_handler);
+  app_message_open(256, 256);
+  
+    // Load fonts
+  Bold=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_39));
+  BoldReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_34));
+  BoldReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_30));
+  Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
+  LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
+  LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
+  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
+  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
+  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
+  FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
+
+   main_window_push();
+  
  	// Configure text time on init
 	time_t now = time(NULL);
 	struct tm *t = localtime(&now);
@@ -935,16 +960,9 @@ static void prv_init(void) {
 	}
 }
 static void prv_deinit(void) {
-	window_destroy(s_main_window);
+
 	tick_timer_service_unsubscribe();
-	app_message_deregister_callbacks();    //Destroy the callbacks for clean up
-	text_layer_destroy(line1.currentLayer);
-	text_layer_destroy(line1.nextLayer);
-	text_layer_destroy(line2.currentLayer);
-	text_layer_destroy(line2.nextLayer);
-	text_layer_destroy(line3.currentLayer);
-	text_layer_destroy(line3.nextLayer);
-	layer_destroy(scroll);  
+	app_message_deregister_callbacks();    //Destroy the callbacks for clean up 
 }
 int main(void) {
   prv_init();

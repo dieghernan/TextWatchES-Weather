@@ -36,11 +36,11 @@
         "resources": {
             "media": [
                 {
-                    "characterRegex": "[a-z]",
-                    "file": "fonts/ConsSymb.ttf",
-                    "name": "FONT_SYMBOL_16",
+                    "file": "images/menu_icon_spanish_text_watch.png",
+                    "menuIcon": true,
+                    "name": "iconmenu",
                     "targetPlatforms": null,
-                    "type": "font"
+                    "type": "bitmap"
                 },
                 {
                     "file": "fonts/weatherfontcustom2.ttf",
@@ -49,16 +49,15 @@
                     "type": "font"
                 },
                 {
-                    "file": "images/menu_icon_spanish_text_watch.png",
-                    "menuIcon": true,
-                    "name": "iconmenu",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
                     "targetPlatforms": null,
-                    "type": "bitmap"
+                    "type": "font"
                 },
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -74,21 +73,21 @@
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
+                    "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
@@ -104,14 +103,15 @@
                 {
                     "characterRegex": "[a-z' UV\u00f6\u00fc]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_16",
+                    "characterRegex": "[a-z]",
+                    "file": "fonts/ConsSymb.ttf",
+                    "name": "FONT_SYMBOL_16",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -129,5 +129,5 @@
             "watchface": true
         }
     },
-    "version": "5.1.0"
+    "version": "5.2.0"
 }
