@@ -31,6 +31,13 @@ module.exports = [
             { 
               "label": "German - Deutsch",
               "value": "3" 
+            },
+            { 
+              "label": "French - Français",
+              "value": "4" 
+            },
+            {"label":"Portuguese (Brazil) - Português",
+             "value": "5"              
             }
           ]
         },

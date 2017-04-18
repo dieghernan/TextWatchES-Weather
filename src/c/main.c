@@ -6,6 +6,8 @@
 #include "num2words-es.h"
 #include "num2words-en.h"
 #include "num2words-de.h"
+#include "num2words-fr.h"
+#include "num2words-br.h"
 
 
 ///////////////////////////
@@ -86,8 +88,93 @@ static void prv_default_settings() {
 ///////////////////////////
 
 ///////////////////////////
+//////Lang Selector     ///
+///////////////////////////
+
+void writetimeto3words(int hour_i,int minute_i,int linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
+   if (lang_i==1){        //Spanish
+    time_to_3words_ES(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+  }
+  else if (lang_i==2){   //English
+    time_to_3words_EN(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+  }
+  else if (lang_i==3){   //German
+    time_to_3words_DE(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+  }
+   else if (lang_i==4){  //French
+    time_to_3words_FR(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+  }  
+  else if (lang_i==5){  //PortugueseBR
+    time_to_3words_BR(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);  }  
+}
+
+void popatinitlang(int min, int leninit, int Lang){
+  
+  if (Lang==1){        // Spanish
+    PopatInit_ES(min, &leninit);}
+  else if (Lang==2){  //English
+    PopatInit_EN(min, &leninit);
+  }
+  else if (Lang==3){  //German
+    PopatInit_DE(min, &leninit);
+  }
+  else if (Lang==4){  //French
+    PopatInit_FR(min, &leninit);
+  }  
+  else if (Lang==5){  //Portuguese
+    PopatInit_BR(min, &leninit);
+  }  
+}
+
+void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char * itermon, int Lang){
+    if (Lang==1){        //Spanish
+    WriteDate_ES(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==2){  //English
+    WriteDate_EN(week , Mon ,Day, iterwd ,iterdat,itermon);                              
+  }
+  else if (Lang==3){  //German
+    WriteDate_DE(week , Mon ,Day, iterwd ,iterdat,itermon);                       
+  }
+  else if (Lang==4){  //French
+    WriteDate_FR(week , Mon ,Day, iterwd ,iterdat,itermon);                             
+  }
+  else if (Lang==5){  //Portuguese - BR
+    WriteDate_BR(week , Mon ,Day, iterwd ,iterdat,itermon);                           
+  }  
+}
+
+
+
+
+void animationslan(int minute_2,int LenB, int LenN, int LenA, int Lang_2){
+ //Different based on Language
+  if (Lang_2==1){        //Spanish
+    Animations_ES(minute_2, &LenB, &LenN, &LenA);
+  }
+  else if (Lang_2==2){      //English
+    Animations_EN(minute_2, &LenB, &LenN, &LenA);                        
+  }
+  else if (Lang_2==3){      //German
+    Animations_DE(minute_2, &LenB, &LenN, &LenA);                       
+  }
+  else if (Lang_2==4){      //French
+    Animations_FR(minute_2, &LenB, &LenN, &LenA);                     
+  }
+  else if (Lang_2==5){  //PortugueseBR
+     Animations_BR(minute_2, &LenB, &LenN, &LenA);
+  }
+}
+
+///////////////////////////
+//////End Lang Selector///
+///////////////////////////
+
+///////////////////////////
 //////Define Function  ///
 ///////////////////////////
+
+
 
 
 
@@ -290,10 +377,7 @@ if (linr==linb){
     int width2=sizetext2.w;
       if (width2>evlimit ){
       text_layer_set_font(linelayer,LightReduced2);
-
-  
-     
-    }    
+      }    
     }
   }
   
@@ -304,13 +388,10 @@ if (linr==linb){
   else if (linr==3){
     offsetline=74;
   }
-  
-  
+    
     //Adjust vertical alignment
  	  verticalAlignTextLayer(linelayer, offsetpebble+offsetline);
-  
-  
-};
+  };
 
 
 
@@ -380,15 +461,9 @@ void display_time(struct tm *t, int atinit) {
   int LineToPutinBold=0;
 
   // Language settings
-  if (settings.LangKey==1){        //Spanish
-    time_to_3words_ES(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
-  }
-  else if (settings.LangKey==2){   //English
-    time_to_3words_EN(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
-  }
-  else if (settings.LangKey==3){   //German
-    time_to_3words_DE(t->tm_hour, t->tm_min,&LineToPutinBold, textLine1, textLine2, textLine3);
-  };
+  writetimeto3words(t->tm_hour, t->tm_min, LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);  
+  ;
+
     
  
 
@@ -470,16 +545,9 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int Lnow=0;
   int LAft=0;
   
-  //Different based on Language
-  if (settings.LangKey==1){        //Spanish
-    Animations_ES(t->tm_min, &LBef, &Lnow, &LAft);
-  }
-  else if (settings.LangKey==2){      //English
-    Animations_EN(t->tm_min, &LBef, &Lnow, &LAft);                         
-  }
-  else if (settings.LangKey==3){      //German
-    Animations_DE(t->tm_min, &LBef, &Lnow, &LAft);                         
-  }
+  // Animations
+  animationslan(t->tm_min, LBef, Lnow, LAft,settings.LangKey);
+  
   
  	// Recenter screen if last time was 3 lines, but new time is 2 lines
 	// Don't do this if time was just initialized already centered
@@ -529,17 +597,9 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   char Month_END[BUFFER_SIZE];
   
   // Set language
-  if (settings.LangKey==1){        //Spanish
-    WriteDate_ES(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);
-  }
-  else if (settings.LangKey==2){  //English
-    WriteDate_EN(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
-  }
-  else if (settings.LangKey==3){  //German
-    WriteDate_DE(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END);                               
-  }
   
-  
+  writedatelang(t->tm_wday, t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END,settings.LangKey);
+
   //Draw day of the week
   GRect WDay_rect=GRect(bounds2layer.origin.x,bounds2layer.origin.y,bounds2layer.size.w,bounds2layer.size.h);
   graphics_draw_text(ctx, WeekDay_END, FontWDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
@@ -567,7 +627,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   //Draw Rect for temp
   GRect temprect=GRect(WDay_rect.origin.x,
                        WDay_rect.origin.y+offsety,
-                       WDay_rect.size.w/2-20-offsetx,
+                       WDay_rect.size.w/2-25-offsetx/3,
                        WDay_rect.size.h);  
   //Draw Rect for cond
   GRect condrect=GRect(WDay_rect.size.w/2+25+offsetx,
@@ -642,21 +702,15 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
 	struct tm *t   = localtime(&now);
   // Content of line 3 now
   int LenBeforeSave=0;
-  if (LangBefore==1){      //Spanish
-    PopatInit_ES(t->tm_min, &LenBeforeSave);}
-  else if (LangBefore==2){  //English
-    PopatInit_EN(t->tm_min, &LenBeforeSave);
-  }
+  popatinitlang(t->tm_min, LenBeforeSave, LangBefore);
+  
+  
+  
   // Adjust animations to fit the change of language - study how long will be line 3 after change language
-  int LenAfterSave=0;
-  if (settings.LangKey==1){
-    PopatInit_ES(t->tm_min, &LenAfterSave);}
-  else if (settings.LangKey==2){
-    PopatInit_EN(t->tm_min, &LenAfterSave);
-  }
-  else if (settings.LangKey==3){
-    PopatInit_DE(t->tm_min, &LenAfterSave);
-  }
+  int LenAfterSave=0;  
+  popatinitlang(t->tm_min, LenAfterSave, settings.LangKey);
+  
+
   //Update text if language has changed
   //Adjust position using animations
   if (ChangeLang>0){
@@ -825,47 +879,39 @@ static void prv_window_load(Window *window) {
   back_layer = layer_create(GRect(0,bounds.size.h-45,bounds.size.w, 45));
 	layer_set_update_proc(back_layer, back_update_proc);
 	layer_add_child(window_layer, back_layer);  
+  
+  
+   	// Configure text time on init
+	time_t now = time(NULL);
+	struct tm *t = localtime(&now);
+	display_time(t,1);
 }
 // Window Unload event
 static void prv_window_unload(Window *window) {
-  layer_destroy(back_layer);   
+  layer_destroy(back_layer);  
+  window_destroy(s_main_window);
+  text_layer_destroy(line1.currentLayer);
+	text_layer_destroy(line1.nextLayer);
+	text_layer_destroy(line2.currentLayer);
+	text_layer_destroy(line2.nextLayer);
+	text_layer_destroy(line3.currentLayer);
+	text_layer_destroy(line3.nextLayer);
+	layer_destroy(scroll); 
+  fonts_unload_custom_font(FontCond);
+  fonts_unload_custom_font(Bold);
+  fonts_unload_custom_font(BoldReduced1);
+  fonts_unload_custom_font(BoldReduced2);
+  fonts_unload_custom_font(Light);
+  fonts_unload_custom_font(LightReduced1);
+  fonts_unload_custom_font(LightReduced2);
+  fonts_unload_custom_font(FontWDay);
+  fonts_unload_custom_font(FontDate);
+  fonts_unload_custom_font(FontSymbol);  
 }
-static void prv_init(void) {
-  prv_load_settings();
-  
-  //Starting loop at 0
-  s_loop=0;
-  s_countdown=settings.UpSlider;
-  //Clean vars
-  strcpy(tempstring, "");
-  strcpy(condstringday, "");
-  strcpy(condstringnight, "");
-  
-  
-    // Listen for AppMessages
-  app_message_register_inbox_received(prv_inbox_received_handler);
-  app_message_open(256, 256);
 
-  // Configure main window
-	s_main_window = window_create();
-	window_set_window_handlers(s_main_window, (WindowHandlers) {
-		.load = prv_window_load,
-		.unload = prv_window_unload,
-	});
+void main_window_push() {
+  s_main_window = window_create();      
   
-  // Load fonts
-  Bold=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_39));
-  BoldReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_34));
-  BoldReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_30));
-  Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
-  LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
-  LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
-  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
-  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_15));
-  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_15));
-  FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
-    
-  window_stack_push(s_main_window, true);
   Layer *root = window_get_root_layer(s_main_window);
 	
   //Set bounds and offsets
@@ -898,32 +944,66 @@ static void prv_init(void) {
 	layer_add_child(scroll, (Layer *)line2.nextLayer);
 	layer_add_child(scroll, (Layer *)line3.currentLayer);
 	layer_add_child(scroll, (Layer *)line3.nextLayer);
- 
+  
+  // Configure main window
+		window_set_window_handlers(s_main_window, (WindowHandlers) {
+		.load = prv_window_load,
+		.unload = prv_window_unload,
+	});
+  
+    
+  window_stack_push(s_main_window, true);
+}
 
 
- 	// Configure text time on init
-	time_t now = time(NULL);
-	struct tm *t = localtime(&now);
-	display_time(t,1);
+static void prv_init(void) {
+  prv_load_settings();
+  
+  //Starting loop at 0
+  s_loop=0;
+  s_countdown=settings.UpSlider;
+  //Clean vars
+  strcpy(tempstring, "");
+  strcpy(condstringday, "");
+  strcpy(condstringnight, "");
+  
+  
+    // Listen for AppMessages
+  app_message_register_inbox_received(prv_inbox_received_handler);
+  app_message_open(256, 256);
+  
+    // Load fonts
+  Bold=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_39));
+  BoldReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_34));
+  BoldReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_30));
+  Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
+  LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
+  LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
+  FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
+  FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
+  FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
+  FontSymbol =fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SYMBOL_16));
+
+   main_window_push();
+  
+
 	// Register for minute ticks
 	tick_timer_service_subscribe(MINUTE_UNIT, time_timer_tick);
 
 
 	
   // initialize PoppedDown indicators
+  time_t now = time(NULL);
+	struct tm *t = localtime(&now);
 	PoppedDownNow = false;
 	PoppedDownAtInit = false;
 	// If initial display of time is only 2 lines of text, display centered
   // Based on languague on init
    int LenInit_END=0;
-  if (settings.LangKey==1){        // Spanish
-    PopatInit_ES(t->tm_min, &LenInit_END);}
-  else if (settings.LangKey==2){  //English
-    PopatInit_EN(t->tm_min, &LenInit_END);
-  }
-  else if (settings.LangKey==3){  //German
-    PopatInit_DE(t->tm_min, &LenInit_END);
-  }
+  
+  popatinitlang(t->tm_min, LenInit_END, settings.LangKey);
+  
+
   
   // Check Line3 at init
 	if(LenInit_END == 0 ){
@@ -935,16 +1015,9 @@ static void prv_init(void) {
 	}
 }
 static void prv_deinit(void) {
-	window_destroy(s_main_window);
+
 	tick_timer_service_unsubscribe();
-	app_message_deregister_callbacks();    //Destroy the callbacks for clean up
-	text_layer_destroy(line1.currentLayer);
-	text_layer_destroy(line1.nextLayer);
-	text_layer_destroy(line2.currentLayer);
-	text_layer_destroy(line2.nextLayer);
-	text_layer_destroy(line3.currentLayer);
-	text_layer_destroy(line3.nextLayer);
-	layer_destroy(scroll);  
+	app_message_deregister_callbacks();    //Destroy the callbacks for clean up 
 }
 int main(void) {
   prv_init();
