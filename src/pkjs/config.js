@@ -38,7 +38,10 @@ module.exports = [
             },
             {"label":"Portuguese (Brazil) - Português",
              "value": "5"              
-            }
+            },
+            {"label":"Italian - Italiano",
+             "value": "6"              
+            },
           ]
         },
       {

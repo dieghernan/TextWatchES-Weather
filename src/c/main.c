@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "main.h"
-#define BUFFER_SIZE 44
+#define BUFFER_SIZE 80
 
 //Include languages
 #include "num2words-es.h"
@@ -8,6 +8,7 @@
 #include "num2words-de.h"
 #include "num2words-fr.h"
 #include "num2words-br.h"
+#include "num2words-it.h"
 
 
 ///////////////////////////
@@ -44,6 +45,7 @@ static GFont FontCond;
 static GFont Bold;
 static GFont BoldReduced1;
 static GFont BoldReduced2;
+static GFont BoldReduced3;
 static GFont Light;
 static GFont LightReduced1;
 static GFont LightReduced2;
@@ -91,39 +93,46 @@ static void prv_default_settings() {
 //////Lang Selector     ///
 ///////////////////////////
 
-void writetimeto3words(int hour_i,int minute_i,int linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
-   if (lang_i==1){        //Spanish
-    time_to_3words_ES(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
+  if (lang_i==1){        //Spanish
+    time_to_3words_ES(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
   else if (lang_i==2){   //English
-    time_to_3words_EN(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+    time_to_3words_EN(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
   else if (lang_i==3){   //German
-    time_to_3words_DE(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+    time_to_3words_DE(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
    else if (lang_i==4){  //French
-    time_to_3words_FR(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);
+    time_to_3words_FR(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }  
   else if (lang_i==5){  //PortugueseBR
-    time_to_3words_BR(hour_i , minute_i,&linebold_i ,line1_i, line2_i, line3_i);  }  
+    time_to_3words_BR(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i); 
+  }
+  else if (lang_i==6){  //Italian
+    time_to_3words_IT(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i); 
+  }
 }
 
-void popatinitlang(int min, int leninit, int Lang){
+void popatinitlang(int min, int * leninit, int Lang){
   
   if (Lang==1){        // Spanish
-    PopatInit_ES(min, &leninit);}
+    PopatInit_ES(min, leninit);}
   else if (Lang==2){  //English
-    PopatInit_EN(min, &leninit);
+    PopatInit_EN(min, leninit);
   }
   else if (Lang==3){  //German
-    PopatInit_DE(min, &leninit);
+    PopatInit_DE(min, leninit);
   }
   else if (Lang==4){  //French
-    PopatInit_FR(min, &leninit);
+    PopatInit_FR(min, leninit);
   }  
   else if (Lang==5){  //Portuguese
-    PopatInit_BR(min, &leninit);
+    PopatInit_BR(min, leninit);
   }  
+  else if (Lang==6){  //Italian
+    PopatInit_IT(min, leninit);
+  }
 }
 
 void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char * itermon, int Lang){
@@ -139,30 +148,34 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
   else if (Lang==4){  //French
     WriteDate_FR(week , Mon ,Day, iterwd ,iterdat,itermon);                             
   }
-  else if (Lang==5){  //Portuguese - BR
+  else if (Lang==5){  //Portuguese - BR    
     WriteDate_BR(week , Mon ,Day, iterwd ,iterdat,itermon);                           
+  }  
+  
+  else if (Lang==6){  //Italian
+    WriteDate_IT(week , Mon ,Day, iterwd ,iterdat,itermon);                           
   }  
 }
 
-
-
-
-void animationslan(int minute_2,int LenB, int LenN, int LenA, int Lang_2){
+void animationslan(int minute_2,int* LenB1, int* LenN1, int *LenA1, int Lang_2){
  //Different based on Language
   if (Lang_2==1){        //Spanish
-    Animations_ES(minute_2, &LenB, &LenN, &LenA);
+    Animations_ES(minute_2, LenB1, LenN1, LenA1);
   }
   else if (Lang_2==2){      //English
-    Animations_EN(minute_2, &LenB, &LenN, &LenA);                        
+    Animations_EN(minute_2, LenB1, LenN1, LenA1);                       
   }
   else if (Lang_2==3){      //German
-    Animations_DE(minute_2, &LenB, &LenN, &LenA);                       
+    Animations_DE(minute_2, LenB1, LenN1, LenA1);                     
   }
   else if (Lang_2==4){      //French
-    Animations_FR(minute_2, &LenB, &LenN, &LenA);                     
+    Animations_FR(minute_2, LenB1, LenN1, LenA1);                    
   }
   else if (Lang_2==5){  //PortugueseBR
-     Animations_BR(minute_2, &LenB, &LenN, &LenA);
+     Animations_BR(minute_2, LenB1, LenN1, LenA1);
+  }  
+  else if (Lang_2==6){  //Italian
+     Animations_IT(minute_2, LenB1, LenN1, LenA1);
   }
 }
 
@@ -363,14 +376,14 @@ if (linr==linb){
    
     if (width2>evlimit ){
       text_layer_set_font(linelayer,BoldReduced2);
- 
-
-    
+      GSize sizetext3=text_layer_get_content_size(linelayer);
+      int width3=sizetext3.w;
+      if (width3>evlimit){
+        text_layer_set_font(linelayer, BoldReduced3);        
+      }
     }    
   }
-}
-
-  else {
+}  else {
     if (width>evlimit){
     text_layer_set_font(linelayer,LightReduced1);
     GSize sizetext2=text_layer_get_content_size(linelayer);
@@ -461,9 +474,9 @@ void display_time(struct tm *t, int atinit) {
   int LineToPutinBold=0;
 
   // Language settings
-  writetimeto3words(t->tm_hour, t->tm_min, LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);  
+  writetimeto3words(t->tm_hour, t->tm_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);  
   ;
-
+APP_LOG(APP_LOG_LEVEL_DEBUG, "line in bold is %d", LineToPutinBold);
     
  
 
@@ -546,7 +559,7 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int LAft=0;
   
   // Animations
-  animationslan(t->tm_min, LBef, Lnow, LAft,settings.LangKey);
+  animationslan(t->tm_min, &LBef, &Lnow, &LAft,settings.LangKey);
   
   
  	// Recenter screen if last time was 3 lines, but new time is 2 lines
@@ -702,13 +715,13 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
 	struct tm *t   = localtime(&now);
   // Content of line 3 now
   int LenBeforeSave=0;
-  popatinitlang(t->tm_min, LenBeforeSave, LangBefore);
+  popatinitlang(t->tm_min, &LenBeforeSave, LangBefore);
   
   
   
   // Adjust animations to fit the change of language - study how long will be line 3 after change language
   int LenAfterSave=0;  
-  popatinitlang(t->tm_min, LenAfterSave, settings.LangKey);
+  popatinitlang(t->tm_min, &LenAfterSave, settings.LangKey);
   
 
   //Update text if language has changed
@@ -901,6 +914,7 @@ static void prv_window_unload(Window *window) {
   fonts_unload_custom_font(Bold);
   fonts_unload_custom_font(BoldReduced1);
   fonts_unload_custom_font(BoldReduced2);
+  fonts_unload_custom_font(BoldReduced3);
   fonts_unload_custom_font(Light);
   fonts_unload_custom_font(LightReduced1);
   fonts_unload_custom_font(LightReduced2);
@@ -976,6 +990,7 @@ static void prv_init(void) {
   Bold=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_39));
   BoldReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_34));
   BoldReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_30));
+  BoldReduced3=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_20));
   Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
@@ -1001,7 +1016,7 @@ static void prv_init(void) {
   // Based on languague on init
    int LenInit_END=0;
   
-  popatinitlang(t->tm_min, LenInit_END, settings.LangKey);
+  popatinitlang(t->tm_min, &LenInit_END, settings.LangKey);
   
 
   
