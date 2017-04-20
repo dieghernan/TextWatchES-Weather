@@ -19,6 +19,10 @@
   * Spanish
   * English
   * German (thanks to [rodher](https://github.com/rodher))
+  * French
+  * Italian
+  * Portuguese
+  * Norwegian
   * _More at request_
  * Weather: Current conditions on °c or °f.
  * Night theme displayed between sunset and sunrise
