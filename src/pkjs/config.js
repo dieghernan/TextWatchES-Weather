@@ -21,7 +21,7 @@ module.exports = [
           "label": "Language",
           "options": [
                         { 
-              "label": "Spanish - Español",
+              "label": "Spanish",
               "value": "1" 
             },
             { 
@@ -29,18 +29,21 @@ module.exports = [
               "value": "2" 
             },
             { 
-              "label": "German - Deutsch",
+              "label": "German",
               "value": "3" 
             },
             { 
-              "label": "French - Français",
+              "label": "French",
               "value": "4" 
             },
-            {"label":"Portuguese (Brazil) - Português",
+            {"label":"Portuguese (Brazil)",
              "value": "5"              
             },
-            {"label":"Italian - Italiano",
+            {"label":"Italian",
              "value": "6"              
+            },
+            {"label":"Norwegian",
+             "value": "7"              
             },
           ]
         },

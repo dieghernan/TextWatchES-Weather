@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "test",
+    "name": "textwatch-clima",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "test",
+        "displayName": "TextWatch Clima",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -50,23 +50,14 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z .' A-Z \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_16",
                     "targetPlatforms": null,
-                    "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_34",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -2,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
                     "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
@@ -74,21 +65,31 @@
                     "type": "font"
                 },
                 {
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
+                    "name": "FONT_GLIGHT_34",
                     "targetPlatforms": null,
+                    "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_30",
+                    "targetPlatforms": null,
+                    "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_20",
+                    "name": "FONT_GBOLD_22",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
@@ -96,7 +97,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_34",
                     "targetPlatforms": null,
@@ -104,7 +105,7 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-]",
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
                     "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
@@ -133,7 +134,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "90e12cc1-ba3d-483f-ae82-19d02b9c2d77",
+        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
         "watchapp": {
             "watchface": true
         }
