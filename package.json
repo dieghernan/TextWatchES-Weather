@@ -50,16 +50,9 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z .' A-Z \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -75,9 +68,16 @@
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z .' A-Z 0-9 \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
+                    "targetPlatforms": null,
                     "type": "font"
                 },
                 {
@@ -139,5 +139,5 @@
             "watchface": true
         }
     },
-    "version": "6.0.0"
+    "version": "6.1.0"
 }
