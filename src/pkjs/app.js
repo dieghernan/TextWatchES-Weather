@@ -224,13 +224,44 @@ function locationError(err) {
 }
 
 function getWeatherAtInit() {
+  console.log("init now");
+  var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
+  var weatherprov=settings.WeatherProv;
+
+  if (weatherprov=="yahoo"){
+    console.log("Requesting weather from Yahoo");
+      navigator.geolocation.getCurrentPosition(
+        locationSuccessYahoo,
+        locationError,
+        {timeout: 5000, maximumAge: 60000}
+      );
+  }
+  else if(weatherprov=="owm") {
+    console.log("Ready from OWM");
+    navigator.geolocation.getCurrentPosition(
+        locationSuccessOWM,
+        locationError,
+        {timeout: 5000, maximumAge: 60000}
+      );
+  }
+  else if (weatherprov=="wu"){
+    console.log("Ready from WU");
+     navigator.geolocation.getCurrentPosition(
+        locationSuccessWU,
+        locationError,
+        {timeout: 5000, maximumAge: 60000}
+      );
+   }
+  
+  else {
     console.log("Requesting weather from Yahoo");
       navigator.geolocation.getCurrentPosition(
         locationSuccessYahoo,
         locationError,
         {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
-      );
+      );    
   }
+}
 
 
 function getWeatherNow() {
@@ -284,7 +315,15 @@ function getWeatherNow() {
         locationError,
         {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
       );
-   }  
+   }
+   else {
+    console.log("Requesting weather from Yahoo");
+      navigator.geolocation.getCurrentPosition(
+        locationSuccessYahoo,
+        locationError,
+        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+      );    
+  }
 }
 
 
