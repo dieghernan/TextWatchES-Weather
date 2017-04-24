@@ -1,16 +1,7 @@
 #include <pebble.h>
 #include "num2words-es.h"
 #include "string.h"
-
-#define true 1
-#define false 0
-
-// Options
-#define DEBUG false
 #include <stddef.h>
-#include <string.h>
-
-
 static const char* const HOUR_ES[] = {
   "doce",
   "una",
@@ -27,91 +18,16 @@ static const char* const HOUR_ES[] = {
   "doce",
   "una"
 };
-static const char* const MIN_ES1[]={
-"en punto",
-"y uno",
-"y dos",
-"y tres",
-"y cuatro",
-"y cinco",
-"y seis",
-"y siete",
-"y ocho",
-"y nueve",
-"y diez",
-"y once",
-"y doce",
-"y trece",
-"y catorce",
-"y cuarto",
+static const char* const MIN_AUX_ES[]={
+"",
 "dieci",
-"dieci",
-"dieci",
-"dieci",
-"veinte",
 "veinti",
-"veinti",
-"veinti",
-"veinti",
-"veinti",
-"veinti",
-"veinti",
-"veinti",
-"veinti",
-"y media",
 "treinta",
-"treinta",
-"treinta",
-"treinta",
-"treinta",
-"treinta",
-"treinta",
-"treinta",
-"treinta",
-"menos",
 "cuarenta",
-"cuarenta",
-"cuarenta",
-"cuarenta",
-"menos",
-"cuarenta",
-"cuarenta",
-"cuarenta",
-"cuarenta",
-"menos",
-"cincuenta",
-"cincuenta",
-"cincuenta",
-"cincuenta",
-"menos",
-"cincuenta",
-"cincuenta",
-"cincuenta",
 "cincuenta"
 };
-
-const char* const MIN_ES2[]={
-  "",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"seis",
-"siete",
-"ocho",
-"nueve",
-"",
+static const char* const MIN_ES1[]={
+"en punto",
 "uno",
 "dos",
 "tres",
@@ -121,41 +37,13 @@ const char* const MIN_ES2[]={
 "siete",
 "ocho",
 "nueve",
-"",
-"y uno",
-"y dos",
-"y tres",
-"y cuatro",
-"y cinco",
-"y seis",
-"y siete",
-"y ocho",
-"y nueve",
-"veinte ",
-"y uno",
-"y dos",
-"y tres",
-"y cuatro",
-"cuarto ",
-"y seis",
-"y siete",
-"y ocho",
-"y nueve",
-"diez ",
-"y uno",
-"y dos",
-"y tres",
-"y cuatro",
-"cinco ",
-"y seis",
-"y siete",
-"y ocho",
-"y nueve",
-"en punto"
+"diez",
+"once",
+"doce",
+"trece",
+"catorce",
+"cuarto"
 };
-
-
-//Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_ES[] = {
 "Ene",
 "Feb",
@@ -170,44 +58,6 @@ const char* const MONTHS_ES[] = {
 "Nov",
 "Dic",
 };
-	
-const char* const DAYS_ES[] = {
-"",
-"1",
-"2",
-"3",
-"4",
-"5",
-"6",
-"7",
-"8",
-"9",
-"10",
-"11",
-"12",
-"13",
-"14",
-"15",
-"16",
-"17",
-"18",
-"19",
-"20",
-"21",
-"22",
-"23",
-"24",
-"25",
-"26",
-"27",
-"28",
-"29",
-"30",
-"31",
-};
-//End_StrMonthDat
-
-
 const char* const WEEKDAY_ES[] = {
 "Dom",
 "Lun",
@@ -217,12 +67,8 @@ const char* const WEEKDAY_ES[] = {
 "Vie",
 "Sab",
 };
-//End_Weekday
-
-
 void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-
-  //hour - line1
+    //hour - line1
    //shift 1 hour the label for this minutes
   if ( minutes>35 && minutes % 5 == 0) {hours=(hours+1);                                                                
   }
@@ -230,47 +76,73 @@ void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *
   strcpy(line1, HOUR_ES[hours]);
   //minute 
   //optimized for spanish
-  strcpy(line2,MIN_ES1[minutes]);
-  strcpy(line3,MIN_ES2[minutes]);
-  
+  // First do exceptions
+  if (minutes==0 || minutes==20 || minutes==30 ){    
+    if (minutes==0){
+      strcpy(line2, MIN_ES1[0]);
+    }
+    else if (minutes==20){
+      strcpy(line2,"y veinte");
+    }
+    else if (minutes==30){
+      strcpy(line2,"y media");
+    }
+    strcpy(line3,"");
+  }
+  else if (minutes>35 && minutes % 5 == 0){
+    strcpy(line2,"menos");
+    if (minutes==40){
+      strcpy(line3,"veinte");
+    }
+    else {
+      strcpy(line3,MIN_ES1[60-minutes]);
+    }
+  }
+  else if (minutes<16){
+    strcpy(line2,"y ");
+    strcat(line2,MIN_ES1[minutes]);    
+    strcpy(line3,"");    
+  }
+  else if (minutes<60){
+    strcpy(line2,MIN_AUX_ES[minutes/10]);
+    if (minutes<30){
+      strcpy(line3,MIN_ES1[minutes%10]);
+    }
+    else{
+      strcpy(line3,"y ");
+      strcat(line3,MIN_ES1[minutes % 10]);      
+    }  
+  }
   //line to mark bold
-  // in spanish the hour is always in the first line
- 
-  *LineBold=1; 
-  
+  // in spanish the hour is always in the first line 
+  *LineBold=1;   
 }
-
+int Len_ES(int min){
+  if (min<16 || min==20 || min==30){
+    return 0;
+  }
+  else return 10;  
+}
 void PopatInit_ES(int minute, int *lenatinit){
-*lenatinit=strlen(MIN_ES2[minute]);
+*lenatinit=Len_ES(minute);
 }
-
 void WriteDate_ES(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
-
   strcpy(iterweekday, WEEKDAY_ES[WD]);
-  strcpy(iterdate, DAYS_ES[Dy]);
+  snprintf(iterdate, sizeof(iterdate), "%d", Dy);
   strcpy(itermonth, MONTHS_ES[Mnth]);
 }
-
 void Animations_ES(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-
- //Len Before
- if (Minute==0){	
-	    *LenBefore=strlen(MIN_ES2[59]);		
+*LenNow=Len_ES(Minute);  
+if (Minute==0){	
+	    *LenBefore=Len_ES(59);		
 	    }
 else { 
-	    *LenBefore=strlen(MIN_ES2[Minute-1]);
-      }
-
-
-// Len Now
-*LenNow=strlen(MIN_ES2[Minute]);
-
-//Len After
- if (Minute==59){	
-	*LenAfter=strlen(MIN_ES2[0]);
-	}
-	
+	    *LenBefore=Len_ES(Minute-1);
+}
+if (Minute==59){	
+	*LenAfter=Len_ES(0);
+	}	
 else { 
-	*LenAfter=strlen(MIN_ES2[Minute+1]);
+	*LenAfter=Len_ES(Minute+1);
   }
 }

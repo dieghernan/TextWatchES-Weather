@@ -45,6 +45,9 @@ module.exports = [
             {"label":"Norwegian",
              "value": "7"              
             },
+            {"label":"Danish",
+             "value": "8"              
+            },
           ]
         },
       {
@@ -181,6 +184,11 @@ module.exports = [
     "type": "submit",
     "defaultValue":"Ok"
   },
+  {
+      "type": "heading",
+      "defaultValue": "Version v6.2 ",
+      "size":6
+  } ,
   {
       "type": "heading",
       "defaultValue": "Made in Madrid, Spain",

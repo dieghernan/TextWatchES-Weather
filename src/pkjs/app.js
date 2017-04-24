@@ -2,11 +2,6 @@ var Clay = require('pebble-clay');
 var clayConfig = require('./config');
 var clay = new Clay(clayConfig);
 
-
-
-
-
-
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
@@ -15,8 +10,6 @@ var xhrRequest = function (url, type, callback) {
   xhr.open(type, url);
   xhr.send();
 };
-
-
 // Request for WU
 function locationSuccessWU(pos){
   var keyAPI=localStorage.getItem('wuKey');
@@ -171,21 +164,13 @@ function locationSuccessYahoo(pos) {
     function(responseText) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
-      console.log("units are " + units );
-      
       var temperature = Math.round(json.query.results.channel.item.condition.temp) +"°" + units;
-      console.log("Temperature is " + temperature);
-   
       // Conditions item.condition.code
       var conditions = Math.round(json.query.results.channel.item.condition.code);      
-      console.log("Conditions are " + conditions);
-      
       var condparsed=parseyahoo(conditions);
       
       var conday=parseday(condparsed);
       var condnight=parsenight(condparsed);
-      
-      console.log("Parsed day"+conday+" parsed night "+condnight)    ;
       
         // Sunrise
       var risebase=json.query.results.channel.astronomy.sunrise;
@@ -193,9 +178,7 @@ function locationSuccessYahoo(pos) {
    
     //Sunset
       var setbase=json.query.results.channel.astronomy.sunset;
-      var sunsethhmm=gettime(setbase);
-      
-      
+      var sunsethhmm=gettime(setbase);      
       
       // Assemble dictionary using our keys
       var dictionary = {
@@ -217,14 +200,10 @@ function locationSuccessYahoo(pos) {
     }      
   );
 }
-
 function locationError(err) {
-  console.log("Error requesting location!");
-  
+  console.log("Error requesting location!");  
 }
-
 function getWeatherAtInit() {
-  console.log("init now");
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
   var weatherprov=settings.WeatherProv;
 
@@ -258,12 +237,10 @@ function getWeatherAtInit() {
       navigator.geolocation.getCurrentPosition(
         locationSuccessYahoo,
         locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+        {timeout: 5000, maximumAge: 60000}
       );    
   }
 }
-
-
 function getWeatherNow() {
  // Get keys from pmkey
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
@@ -281,9 +258,7 @@ function getWeatherNow() {
                var jsonpmk=JSON.parse(responseText);
                var wuKey=jsonpmk.keys.weather.wu;
                var owmKey=jsonpmk.keys.weather.owm;
-               
                console.log("Success retrieving keys from pmkey.xyz. wu="+wuKey+" owm="+owmKey);
-               
                localStorage.setItem("wuKey", wuKey);
                localStorage.setItem("owmKey", owmKey);
              }            
@@ -297,7 +272,7 @@ function getWeatherNow() {
       navigator.geolocation.getCurrentPosition(
         locationSuccessYahoo,
         locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+        {timeout: 5000, maximumAge: 60000}
       );
   }
   else if(weatherprov=="owm") {
@@ -305,7 +280,7 @@ function getWeatherNow() {
     navigator.geolocation.getCurrentPosition(
         locationSuccessOWM,
         locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+      {timeout: 5000, maximumAge: 60000}
       );
   }
   else if (weatherprov=="wu"){
@@ -313,7 +288,7 @@ function getWeatherNow() {
      navigator.geolocation.getCurrentPosition(
         locationSuccessWU,
         locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+       {timeout: 5000, maximumAge: 60000}
       );
    }
    else {
@@ -321,11 +296,10 @@ function getWeatherNow() {
       navigator.geolocation.getCurrentPosition(
         locationSuccessYahoo,
         locationError,
-        {enableHighAccuracy:true,timeout: 15000, maximumAge: 1000}
+         {timeout: 5000, maximumAge: 60000}
       );    
   }
 }
-
 
 // Events to answer
 // Listen for when the watchface is opened
@@ -333,9 +307,36 @@ Pebble.addEventListener('ready',
   function(e) {
     console.log("PebbleKit JS ready!");
     localStorage.setItem("OKAPI", 0);
-    // Get the initial weather if requested
-
-    getWeatherAtInit();
+    
+    var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
+    var distemp = settings.DisplayTemp;
+    console.log("Distemp Clay is "+distemp);
+    
+    if (distemp){
+      // Get the initial weather if requested
+      console.log("Request weather at init");
+    getWeatherAtInit();      
+    }
+    else {
+      console.log("Weather not requested");
+      // Assemble dictionary using our keys
+      var dictionary = {
+        "WeatherTemp": "",
+        "WeatherCondDay": "",
+        "WeatherCondNight":"",
+        "HourSunset": 700,
+        "HourSunrise":1700
+      };
+      // Send to Pebble
+      Pebble.sendAppMessage(dictionary,
+        function(e) {
+          console.log("Sending default keys");
+        },
+        function(e) {
+          console.log("Error sending default keys");
+        }
+      );      
+    }
   }
 );
 
@@ -541,7 +542,6 @@ else if (condcode==961) return 1; //Condcode is violent storm - icon is day-stor
 else if (condcode==962) return 2; //Condcode is hurricane - icon is hurricane
 else return 26;  
 }
-
 // Function to translate wu
 function parsewu(condcode){
   if (condcode=='chanceflurries') return 7; //Condcode is Chance of Flurries - icon is snowflake-cold
@@ -573,11 +573,6 @@ function parsewu(condcode){
   else if (condcode=='partlycloudy') return 19; //Condcode is Scattered Clouds - icon is sunny-overcast
   else return 26; 
 }
-
-
-
-
-
 function parseday(condnum){
   if (condnum===0) return "a";  //tornado
   else if (condnum===1) return "b";  //day-storm-showers
@@ -607,7 +602,6 @@ function parseday(condnum){
   else if (condnum===25) return "z";  //thermometer
   else if (condnum===26) return "0";  //na
 }
-
 function parsenight(condnum){
   if (condnum===0) return "a";  //tornado
   else if (condnum===1) return "w";  //night-alt-storm-showers
