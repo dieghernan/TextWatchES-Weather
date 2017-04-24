@@ -96,7 +96,7 @@ void time_to_3words_DE(int hours, int minutes, int *LineBold,char *line1, char *
       strcpy(line3, HOUR_DE[hours]);
     }
     else if (minutes<40) {
-      strcpy(line1,MIN_DE1[10-minutes%10]);
+      strcpy(line1,MIN_DE1[minutes%10]);
       strcpy(line2,"nach halb");
       strcpy(line3, HOUR_DE[hours]);
     }
