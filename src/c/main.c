@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "main.h"
-#define BUFFER_SIZE 44
+#define BUFFER_SIZE 20
 
 //Include languages
 #include "num2words-es.h"
@@ -10,6 +10,7 @@
 #include "num2words-br.h"
 #include "num2words-it.h"
 #include "num2words-nn.h"
+#include "num2words-dk.h"
 
 
 ///////////////////////////
@@ -42,8 +43,6 @@ static char line3Str[2][BUFFER_SIZE];
 char tempstring[44], condstringday[44],condstringnight[44];
 char textbefore1[BUFFER_SIZE], textbefore2[BUFFER_SIZE],textbefore3[BUFFER_SIZE];
 
-
-
 //Fonts
 static GFont FontCond;
 static GFont Bold;
@@ -64,9 +63,6 @@ static bool PoppedDownNow;
 static bool PoppedDownAtInit;
 GRect bounds;
 static int offsetpebble, s_loop,s_countdown;
-
-
-
 
 ///////////////////////////
 //////Init Configuration///
@@ -121,6 +117,9 @@ void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, ch
   else if (lang_i==7){  //Norwegian
     time_to_3words_NN(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i); 
   }
+    else if (lang_i==8){  //Danish
+    time_to_3words_DK(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i); 
+  }
 }
 
 void popatinitlang(int min, int * leninit, int Lang){
@@ -145,6 +144,9 @@ void popatinitlang(int min, int * leninit, int Lang){
   else if (Lang==7){  //Norwegian
     PopatInit_NN(min, leninit);
   }
+  else if (Lang==8){  //Danish
+    PopatInit_DK(min, leninit);
+  }
 }
 
 void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char * itermon, int Lang){
@@ -162,14 +164,16 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
   }
   else if (Lang==5){  //Portuguese - BR    
     WriteDate_BR(week , Mon ,Day, iterwd ,iterdat,itermon);                           
-  }  
-  
+  }    
   else if (Lang==6){  //Italian
     WriteDate_IT(week , Mon ,Day, iterwd ,iterdat,itermon);                           
   }  
   else if (Lang==7){  //Norwegian
     WriteDate_NN(week , Mon ,Day, iterwd ,iterdat,itermon);                           
   }  
+  else if (Lang==8){  //Danish
+    WriteDate_DK(week , Mon ,Day, iterwd ,iterdat,itermon);                           
+  } 
 }
 
 void animationslan(int minute_2,int* LenB1, int* LenN1, int *LenA1, int Lang_2){
@@ -195,6 +199,9 @@ void animationslan(int minute_2,int* LenB1, int* LenN1, int *LenA1, int Lang_2){
   else if (Lang_2==7){  //Norwegian
      Animations_NN(minute_2, LenB1, LenN1, LenA1);
   }
+  else if (Lang_2==8){  //Danish
+     Animations_DK(minute_2, LenB1, LenN1, LenA1);
+  }
 }
 
 ///////////////////////////
@@ -204,13 +211,7 @@ void animationslan(int minute_2,int* LenB1, int* LenN1, int *LenA1, int Lang_2){
 ///////////////////////////
 //////Define Function  ///
 ///////////////////////////
-
-
-
-
-
-static int limit(int nline){
-  
+static int limit(int nline){  
   int isround=PBL_IF_ROUND_ELSE(1, 0);
   if (isround==1){ 
     if (nline==1){return 130;}
@@ -233,9 +234,6 @@ void request_watchjs(){
   app_message_outbox_send(); 
 }
 
-
-
-
 static GColor ColorSelect(bool isactive, bool gpsstate, bool isnight, GColor ColorDay, GColor ColorNight){
   if (isactive && isnight && gpsstate){
     return ColorNight;   
@@ -244,7 +242,6 @@ static GColor ColorSelect(bool isactive, bool gpsstate, bool isnight, GColor Col
     return ColorDay;
   }  
 }
-
 ///////////////////////////
 //////End Function  ///
 ///////////////////////////
@@ -418,13 +415,10 @@ if (linr==linb){
   }
   else if (linr==3){
     offsetline=74;
-  }
-    
+  }   
     //Adjust vertical alignment
  	  verticalAlignTextLayer(linelayer, offsetpebble+offsetline);
   };
-
-
 
 // Update text line
 void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value, int linref, int linbold) {
@@ -449,19 +443,14 @@ void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value, int lin
 }
 
 bool checkupdate(char text1[BUFFER_SIZE],char text2[BUFFER_SIZE]){
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "bef is %s after is %s", text1 ,text2);
     if (strcmp(text1,text2)==0){    
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "no update");
     return false ;    
   }  
    else {
-     APP_LOG(APP_LOG_LEVEL_DEBUG, "need to update"); 
      return true;    
   }  
 }
-
  
-  
 ////////////////////////////
 ////End: Layer updating////
 ////////////////////////////
@@ -476,7 +465,6 @@ void configureLineLayer(TextLayer *textlayer) {
   text_layer_set_text_alignment(textlayer, GTextAlignmentCenter);
 }
 
-
 ////////////////////////////
 ////End: Layer formatting//
 ////////////////////////////
@@ -490,17 +478,11 @@ void display_time(struct tm *t, int atinit) {
 	char textLine1[BUFFER_SIZE];
 	char textLine2[BUFFER_SIZE];
 	char textLine3[BUFFER_SIZE];
-  int LineToPutinBold=0;
-  
-
-  
+  int LineToPutinBold=0;  
 
   // Language settings
   writetimeto3words(t->tm_hour, t->tm_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);  
-  ;
-APP_LOG(APP_LOG_LEVEL_DEBUG, "line in bold is %d", LineToPutinBold);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "fix");
-  
+
   //Update lines
   if (checkupdate(textbefore1,textLine1)) {
 		updateLineTo(&line1, line1Str, textLine1,1,LineToPutinBold);
@@ -511,10 +493,7 @@ APP_LOG(APP_LOG_LEVEL_DEBUG, "line in bold is %d", LineToPutinBold);
 	if (checkupdate(textbefore3,textLine3)) {
 		updateLineTo(&line3, line3Str, textLine3,3,LineToPutinBold);	
   }
-  
-  
-  // Save
-  
+  // Save  
   strcpy(textbefore1, textLine1);
   strcpy(textbefore2, textLine2);
   strcpy(textbefore3, textLine3);
@@ -668,7 +647,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   
   //Draw Rect for temp
   GRect temprect=GRect(WDay_rect.origin.x,
-                       WDay_rect.origin.y+offsety,
+                       WDay_rect.origin.y,
                        WDay_rect.size.w/2-25-offsetx/3,
                        WDay_rect.size.h);  
   //Draw Rect for cond
@@ -822,10 +801,8 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   if (disntheme_t){
     if (disntheme_t->value->int32==0){
       settings.NightTheme=false;
-      APP_LOG(APP_LOG_LEVEL_DEBUG,"NTHeme off");
     }
     else {
-      APP_LOG(APP_LOG_LEVEL_DEBUG,"NTHeme on");
       settings.NightTheme=true;}
   }
   

@@ -1,17 +1,7 @@
 #include <pebble.h>
 #include "num2words-it.h"
-
-
-
-#define true 1
-#define false 0
-
-// Options
-#define DEBUG false
 #include <stddef.h>
 #include <string.h>
-
-
 static const char* const HOUR_IT[] = {
 "mezzanotte",
 "una",
@@ -28,7 +18,6 @@ static const char* const HOUR_IT[] = {
 "mezzogiorno",
 "una"
 };
-
 static const char* const MIN_IT1[]={
 "in punto",
 "e una",
@@ -92,7 +81,6 @@ static const char* const MIN_IT1[]={
 "meno",
 ""
 };
-
 const char* const MIN_IT2[]={
 "",
 "",
@@ -156,8 +144,6 @@ const char* const MIN_IT2[]={
 "una",
 ""
 };
-
-
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_IT[] = {
 "Gen",
@@ -173,44 +159,6 @@ const char* const MONTHS_IT[] = {
 "Nov",
 "Dic"
 };
-	
-const char* const DAYS_IT[] = {
-"",
-"1",
-"2",
-"3",
-"4",
-"5",
-"6",
-"7",
-"8",
-"9",
-"10",
-"11",
-"12",
-"13",
-"14",
-"15",
-"16",
-"17",
-"18",
-"19",
-"20",
-"21",
-"22",
-"23",
-"24",
-"25",
-"26",
-"27",
-"28",
-"29",
-"30",
-"31",
-};
-//End_StrMonthDat
-
-
 const char* const WEEKDAY_IT[] = {
 "Dom",
 "Lun",
@@ -221,10 +169,7 @@ const char* const WEEKDAY_IT[] = {
 "Sab"
 };
 //End_Weekday
-
-
 void time_to_3words_IT(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-
   //hour - line1
    //shift 1 hour the label for this minutes
   if ( minutes>39) {
@@ -237,28 +182,19 @@ void time_to_3words_IT(int hours, int minutes, int *LineBold,char *line1, char *
   //minute 
   //optimized for italian
   strcpy(line2,MIN_IT1[minutes]);
-  strcpy(line3,MIN_IT2[minutes]);
-  
-  //line to mark bold
-  // in italianthe hour is always in the first line
- 
-  *LineBold=1; 
-  
+  strcpy(line3,MIN_IT2[minutes]);  
+  // in italianthe hour is always in the first line 
+  *LineBold=1;   
 }
-
 void PopatInit_IT(int minute, int *lenatinit){
 *lenatinit=strlen(MIN_IT2[minute]);
 }
-
 void WriteDate_IT(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
-
   strcpy(iterweekday, WEEKDAY_IT[WD]);
-  strcpy(iterdate, DAYS_IT[Dy]);
+  snprintf(iterdate, sizeof(iterdate), "%d", Dy);
   strcpy(itermonth, MONTHS_IT[Mnth]);
 }
-
 void Animations_IT(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-
  //Len Before
  if (Minute==0){	
 	    *LenBefore=strlen(MIN_IT2[59]);		
@@ -266,18 +202,13 @@ void Animations_IT(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
 else { 
 	    *LenBefore=strlen(MIN_IT2[Minute-1]);
       }
-
-
 // Len Now
 *LenNow=strlen(MIN_IT2[Minute]);
-
 //Len After
  if (Minute==59){	
 	*LenAfter=strlen(MIN_IT2[0]);
-	}
-	
+	}	
 else { 
 	*LenAfter=strlen(MIN_IT2[Minute+1]);
   }
 }
-
