@@ -4,6 +4,3 @@ void time_to_3words_DK(int hours, int minutes,int *LineBold, char *line1, char *
 void PopatInit_DK(int minute, int *lenatinit);
 void WriteDate_DK(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth );
 void Animations_DK(int Minute, int *LenBefore, int *LenNow, int *LenAfter);
-extern const char* const MONTHS_DK[];
-extern const char* const DAYS_DK[];
-extern const char* const WEEKDAY_DK[];
