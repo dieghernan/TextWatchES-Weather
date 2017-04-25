@@ -3,191 +3,127 @@
 #include "string.h"
 #include <stddef.h>
 static const char* const HOUR_DK[] = {
-"tolv",
-"et",
-"to",
-"tre",
-"fire",
-"fem",
-"seks",
-"syv",
-"otte",
-"ni",
-"ti",
-"elleve",
-"tolv",
-"et"
+  "tolv",
+  "et",
+  "to",
+  "tre",
+  "fire",
+  "fem",
+  "seks",
+  "syv",
+  "otte",
+  "ni",
+  "ti",
+  "elleve",
+  "tolv",
+  "et"
 };
 static const char* const MIN_DK1[]={
-"klokken",
-"et",
-"to",
-"tre",
-"fire",
-"fem",
-"seks",
-"syv",
-"otte",
-"ni",
-"ti",
-"elleve",
-"tolv",
-"tretten",
-"fjorten",
-"kvart",
-"seksten",
-"sytten",
-"atten",
-"nitten",
-"tyve",
-"énog",
-"toog",
-"treog",
-"fireog",
-"femog",
-"seksog",
-"syvog",
-"otteog",
-"niog",
-"halv",
-"niog",
-"otteog",
-"syvog",
-"seksog",
-"femog",
-"fireog",
-"treog",
-"toog",
-"énog",
-"tyve",
-"nitten",
-"atten",
-"sytten",
-"seksten",
-"kvart",
-"fjorten",
-"tretten",
-"tolv",
-"elleve",
-"ti",
-"ni",
-"otte",
-"syv",
-"seks",
-"fem",
-"fire",
-"tre",
-"to",
-"et"
-};
-const char* const MIN_DK2[]={
-"",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"tyve over",
-"",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"tyve i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i",
-"i"
+  "klokken",
+  "et",
+  "to",
+  "tre",
+  "fire",
+  "fem",
+  "seks",
+  "syv",
+  "otte",
+  "ni",
+  "ti",
+  "elleve",
+  "tolv",
+  "tretten",
+  "fjorten",
+  "kvart",
+  "seksten",
+  "sytten",
+  "atten",
+  "nitten",
+  "tyve",
+  "énog",
+  "toog",
+  "treog",
+  "fireog",
+  "femog",
+  "seksog",
+  "syvog",
+  "otteog",
+  "niog"
 };
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_DK[] = {
-"Jan.",
-"Feb.",
-"Mar.",
-"Apr.",
-"Maj.",
-"Jun.",
-"Jul.",
-"Aug.",
-"Sep.",
-"Okt.",
-"Nov.",
-"Dec."
+  "Jan.",
+  "Feb.",
+  "Mar.",
+  "Apr.",
+  "Maj.",
+  "Jun.",
+  "Jul.",
+  "Aug.",
+  "Sep.",
+  "Okt.",
+  "Nov.",
+  "Dec."
 };
 const char* const WEEKDAY_DK[] = {
-"Sø.",
-"Ma.",
-"Ti.",
-"On.",
-"To.",
-"Fr.",
-"Lø."
+  "Sø.",
+  "Ma.",
+  "Ti.",
+  "On.",
+  "To.",
+  "Fr.",
+  "Lø."
 };
 //End_Weekday
 void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
   //hour - line1
   //shift 1 hour the label for this minutes
-  if ( minutes>15) {hours=(hours+1);                                                                
-  }
+  if ( minutes>=30) {hours=(hours+1);}
   hours=hours % 12;
-  if (minutes==0 || minutes==30){
-    strcpy(line1,MIN_DK1[minutes]);
+  // Exceptions first
+  if (minutes==0 ||  minutes==30){
+    if (minutes==0){
+      strcpy(line1, MIN_DK1[0]);
+    }
+    else {
+      strcpy(line1,"halv");      
+    }
     strcpy(line2,HOUR_DK[hours]);
-    strcpy(line3,MIN_DK2[minutes]); 
-    *LineBold=2;
+    strcpy(line3, "");
+    *LineBold=2;    
   }
   else {
-    strcpy(line1,MIN_DK1[minutes]);
-    strcpy(line2,MIN_DK2[minutes]);
-    strcpy(line3, HOUR_DK[hours]); 
-    *LineBold=3; 
+    if (minutes<=20){
+      strcpy(line1, MIN_DK1[minutes]);
+      strcpy(line2, "over");
+      strcpy(line3,HOUR_DK[hours]);
+    }
+    else if (minutes<=30){
+      strcpy(line1, MIN_DK1[minutes]);
+      strcpy(line2, "tyve over");
+      strcpy(line3,HOUR_DK[hours]);
+    }
+    else if (minutes<40){
+      strcpy(line1, MIN_DK1[60-minutes]);
+      strcpy(line2, "tyve i");
+      strcpy(line3,HOUR_DK[hours]);      
+    }
+    else {
+      strcpy(line1, MIN_DK1[60-minutes]);
+      strcpy(line2, "i");
+      strcpy(line3,HOUR_DK[hours]);
+    }
+    *LineBold=3;
   }
 }
+int Len_DK(int min){
+  if (min==0 || min==30){
+    return 0;
+  }
+  else return 10;
+}
 void PopatInit_DK(int minute, int *lenatinit){
-*lenatinit=strlen(MIN_DK2[minute]);
+  *lenatinit=Len_DK(minute);
 }
 void WriteDate_DK(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_DK[WD]);
@@ -195,20 +131,17 @@ void WriteDate_DK(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
   strcpy(itermonth, MONTHS_DK[Mnth]);
 }
 void Animations_DK(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
- //Len Before
- if (Minute==0){	
-	    *LenBefore=strlen(MIN_DK2[59]);		
-	    }
-else { 
-	    *LenBefore=strlen(MIN_DK2[Minute-1]);
-      }
-// Len Now
-*LenNow=strlen(MIN_DK2[Minute]);
-//Len After
- if (Minute==59){	
-	*LenAfter=strlen(MIN_DK2[0]);
-	}	
-else { 
-	*LenAfter=strlen(MIN_DK2[Minute+1]);
+  *LenNow=Len_DK(Minute);
+  if (Minute==0){	
+    *LenBefore=Len_DK(59);
+  }
+  else {
+    *LenBefore=Len_DK(Minute-1);
+  }
+  if (Minute==59){
+    *LenAfter=Len_DK(0);
+  }
+  else {
+    *LenAfter=Len_DK(Minute+1);
   }
 }
