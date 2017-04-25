@@ -23,6 +23,7 @@
   * Italian
   * Portuguese
   * Norwegian
+  * Danish
   * _More at request_
  * Weather: Current conditions on °c or °f.
  * Night theme displayed between sunset and sunrise
