@@ -181,30 +181,32 @@ void time_to_3words_FR(int hours, int minutes, int *LineBold,char *line1, char *
   // in french the hour is always in the first line 
   *LineBold=1;   
 }
+int Len_FR(int min){
+	if (min<17 || min==20 || min==30){
+		return 0;
+	}
+	else return 10;
+}
 void PopatInit_FR(int minute, int *lenatinit){
-*lenatinit=strlen(MIN_FR2[minute]);
+	*lenatinit=Len_FR(minute);
 }
 void WriteDate_FR(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_FR[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d", Dy);
   strcpy(itermonth, MONTHS_FR[Mnth]);
 }
-
 void Animations_FR(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
- //Len Before
- if (Minute==0){	
-	    *LenBefore=strlen(MIN_FR2[59]);		
-	    }
-else { 
-	    *LenBefore=strlen(MIN_FR2[Minute-1]);
-      }
-// Len Now
-*LenNow=strlen(MIN_FR2[Minute]);
-//Len After
- if (Minute==59){	
-	*LenAfter=strlen(MIN_FR2[0]);
-	}	
-else { 
-	*LenAfter=strlen(MIN_FR2[Minute+1]);
+  *LenNow=Len_FR(Minute);
+  if (Minute==0){	
+    *LenBefore=Len_FR(59);		
+  }
+  else {
+    *LenBefore=Len_FR(Minute-1);
+  }
+  if (Minute==59){	
+    *LenAfter=Len_FR(0);
+  }	
+  else {
+    *LenAfter=Len_FR(Minute+1);
   }
 }
