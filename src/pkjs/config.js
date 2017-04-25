@@ -186,7 +186,7 @@ module.exports = [
   },
   {
       "type": "heading",
-      "defaultValue": "Version v6.2 ",
+      "defaultValue": "Version v6.3 ",
       "size":6
   } ,
   {
