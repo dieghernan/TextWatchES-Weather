@@ -35,7 +35,7 @@ static const char* const MIN_FR1[]={
 	"quatorze",
 	"et quart",
 	"seize"
-}
+};
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_FR[] = {
 	"Jan",
@@ -101,7 +101,7 @@ void time_to_3words_FR(int hours, int minutes, int *LineBold,char *line1, char *
 		}
 		else if (minutes<44){
 			strcpy(line3,"dix-");
-			strcat(line3,,MIN_FR1[50-minutes]);				
+			strcat(line3,MIN_FR1[50-minutes]);				
 		}
 		else if (minutes==45){
 			strcpy(line3,"le quart");

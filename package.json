@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "textwatch-clima",
+    "name": "test12345",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "TextWatch Clima",
+        "displayName": "test12345",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -50,9 +50,16 @@
                     "type": "font"
                 },
                 {
+                    "characterRegex": "[a-z .' A-Z 0-9 \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -68,30 +75,21 @@
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[a-z .' A-Z 0-9 \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
+                    "file": "fonts/Gotham Bold.otf",
+                    "name": "FONT_GBOLD_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_22",
-                    "targetPlatforms": null,
-                    "trackingAdjust": -1,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
-                    "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_30",
+                    "name": "FONT_GBOLD_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
@@ -107,15 +105,17 @@
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_39",
+                    "name": "FONT_GBOLD_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Bold.otf",
-                    "name": "FONT_GBOLD_16",
+                    "name": "FONT_GBOLD_22",
                     "targetPlatforms": null,
+                    "trackingAdjust": -1,
                     "type": "font"
                 },
                 {
@@ -134,7 +134,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
+        "uuid": "c04478ad-bdf6-4ec8-80f2-badd21497150",
         "watchapp": {
             "watchface": true
         }
