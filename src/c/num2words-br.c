@@ -89,7 +89,7 @@ void time_to_3words_BR(int hours, int minutes, int *LineBold,char *line1, char *
     }
     else if (minutes==30){
       strcpy(line2,"e meia");
-      strcpy(line3, "");      
+      strcpy(line3, "");
     }
     else if (minutes==0){
       strcpy(line2, MIN_BR1[minutes]);
