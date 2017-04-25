@@ -43,12 +43,7 @@ static const char* const MIN_DK1[]={
   "énog",
   "toog",
   "treog",
-  "fireog",
-  "femog",
-  "seksog",
-  "syvog",
-  "otteog",
-  "niog"
+  "fireog"
 };
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_DK[] = {
@@ -78,7 +73,7 @@ const char* const WEEKDAY_DK[] = {
 void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
   //hour - line1
   //shift 1 hour the label for this minutes
-  if ( minutes>=30) {hours=(hours+1);}
+  if ( minutes>=25) {hours=(hours+1);}
   hours=hours % 12;
   // Exceptions first
   if (minutes==0 ||  minutes==30){
@@ -96,23 +91,28 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
     if (minutes<=20){
       strcpy(line1, MIN_DK1[minutes]);
       strcpy(line2, "over");
-      strcpy(line3,HOUR_DK[hours]);
+    }
+    else if (minutes<25){
+      strcpy(line1, MIN_DK1[minutes]);
+      strcpy(line2, "tyve over");      
     }
     else if (minutes<=30){
-      strcpy(line1, MIN_DK1[minutes]);
-      strcpy(line2, "tyve over");
-      strcpy(line3,HOUR_DK[hours]);
+      strcpy(line1,MIN_DK1[30-minutes]);
+      strcpy(line2,"i halv");    
     }
+    else if (minutes<=35){
+      strcpy(line1,MIN_DK1[minutes-30]);
+      strcpy(line2,"over halv");     
+    }     
     else if (minutes<40){
       strcpy(line1, MIN_DK1[60-minutes]);
       strcpy(line2, "tyve i");
-      strcpy(line3,HOUR_DK[hours]);      
     }
     else {
       strcpy(line1, MIN_DK1[60-minutes]);
       strcpy(line2, "i");
-      strcpy(line3,HOUR_DK[hours]);
     }
+    strcpy(line3,HOUR_DK[hours]);
     *LineBold=3;
   }
 }
