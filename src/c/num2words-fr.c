@@ -76,7 +76,7 @@ void time_to_3words_FR(int hours, int minutes, int *LineBold,char *line1, char *
 	}
 	else if (minutes<20){
 		strcpy(line2,"dix");
-		strcpy(line3,MIN_FR1[20-minutes]);
+		strcpy(line3,MIN_FR1[minutes-10]);
 	}
 	else if (minutes==20){
 		strcpy(line2,"vingt");
@@ -84,7 +84,7 @@ void time_to_3words_FR(int hours, int minutes, int *LineBold,char *line1, char *
 	}
 	else if (minutes<30){
 		strcpy(line2,"vingt");
-		strcpy(line3,MIN_FR1[30-minutes]);	
+		strcpy(line3,MIN_FR1[minutes-20]);	
 	}
 	else if (minutes==30){
 		strcpy(line2,"et demie");
