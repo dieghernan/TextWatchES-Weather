@@ -71,20 +71,24 @@ const char* const WEEKDAY_DK[] = {
 };
 //End_Weekday
 void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-  //hour - line1
+  //Clean Line3 at init
+  strcpy(line3, "");
   //shift 1 hour the label for this minutes
   if ( minutes>=25) {hours=(hours+1);}
   hours=hours % 12;
   // Exceptions first
-  if (minutes==0 ||  minutes==30){
+  if (minutes==0 ||  minutes==30 || minutes>40){
     if (minutes==0){
       strcpy(line1, MIN_DK1[0]);
     }
-    else {
+    else if(minutes==30){
       strcpy(line1,"halv");      
     }
+    else {
+      strcpy(line1,"i ");
+      strcpy(line1,MIN_DK1[60-minutes]);      
+    }
     strcpy(line2,HOUR_DK[hours]);
-    strcpy(line3, "");
     *LineBold=2;    
   }
   else {
@@ -104,26 +108,19 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
       strcpy(line1,MIN_DK1[minutes-30]);
       strcpy(line2,"over halv");     
     }     
-    else if (minutes<40){
+    else{
       strcpy(line1, MIN_DK1[60-minutes]);
       strcpy(line2, "tyve i");
-    }
-    else {
-      strcpy(line1, MIN_DK1[60-minutes]);
-      strcpy(line2, "i");
     }
     strcpy(line3,HOUR_DK[hours]);
     *LineBold=3;
   }
 }
 int Len_DK(int min){
-  if (min==0 || min==30){
+  if (min==0 || min==30 || min>40){
     return 0;
   }
   else return 10;
-}
-void PopatInit_DK(int minute, int *lenatinit){
-  *lenatinit=Len_DK(minute);
 }
 void WriteDate_DK(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_DK[WD]);

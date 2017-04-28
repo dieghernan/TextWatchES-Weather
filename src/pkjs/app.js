@@ -122,6 +122,7 @@ function locationSuccessYahoo(pos) {
   console.log("Url is " + urlyahoo);
   // Send request to Yahoo
   xhrRequest(encodeURI(urlyahoo), 'GET', function(responseText) {
+    
     // responseText contains a JSON object with weather info
     var json = JSON.parse(responseText);
     var temperature = Math.round(json.query.results.channel.item.condition.temp) + "°" + units;
@@ -154,35 +155,6 @@ function locationSuccessYahoo(pos) {
 }
 function locationError(err) {
   console.log("Error requesting location!");
-}
-function getWeatherAtInit() {
-  var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
-  var weatherprov = settings.WeatherProv;
-  if (weatherprov == "yahoo") {
-    console.log("Requesting weather from Yahoo");
-    navigator.geolocation.getCurrentPosition(locationSuccessYahoo, locationError, {
-      timeout: 5000,
-      maximumAge: 60000
-    });
-  } else if (weatherprov == "owm") {
-    console.log("Ready from OWM");
-    navigator.geolocation.getCurrentPosition(locationSuccessOWM, locationError, {
-      timeout: 5000,
-      maximumAge: 60000
-    });
-  } else if (weatherprov == "wu") {
-    console.log("Ready from WU");
-    navigator.geolocation.getCurrentPosition(locationSuccessWU, locationError, {
-      timeout: 5000,
-      maximumAge: 60000
-    });
-  } else {
-    console.log("Requesting weather from Yahoo");
-    navigator.geolocation.getCurrentPosition(locationSuccessYahoo, locationError, {
-      timeout: 5000,
-      maximumAge: 60000
-    });
-  }
 }
 function getWeatherNow() {
   // Get keys from pmkey
@@ -241,19 +213,19 @@ Pebble.addEventListener('ready', function(e) {
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
   var distemp = settings.DisplayTemp;
   console.log("Distemp Clay is " + distemp);
-  if (distemp) {
+  if (distemp){
     // Get the initial weather if requested
     console.log("Request weather at init");
-    getWeatherAtInit();
-  } else {
+    getWeatherNow();
+  }  
+  else {
+    //To avoid blank screen on init blank is requested
     console.log("Weather not requested");
     // Assemble dictionary using our keys
     var dictionary = {
       "WeatherTemp": "",
       "WeatherCondDay": "",
-      "WeatherCondNight": "",
-      "HourSunset": 1730,
-      "HourSunrise": 730
+      "WeatherCondNight": ""
     };
     // Send to Pebble
     Pebble.sendAppMessage(dictionary, function(e) {
@@ -261,8 +233,8 @@ Pebble.addEventListener('ready', function(e) {
     }, function(e) {
       console.log("Error sending default keys");
     });
-  }
-});
+  } 
+}                       );
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage', function(e) {
   console.log("AppMessage received!");

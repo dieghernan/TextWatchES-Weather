@@ -68,7 +68,8 @@ const char* const WEEKDAY_ES[] = {
   "Sab",
 };
 void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-  //hour - line1
+  //Clean line3 at init
+  strcpy(line3, "");
   //shift 1 hour the label for this minutes
   if ( minutes>35 && minutes % 5 == 0) {
     hours=(hours+1);
@@ -88,7 +89,6 @@ void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *
     else if (minutes==30){
       strcpy(line2,"y media");
     }
-    strcpy(line3,"");
   }
   else if (minutes>35 && minutes % 5 == 0){
     strcpy(line2,"menos");
@@ -102,7 +102,6 @@ void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *
   else if (minutes<16){
     strcpy(line2,"y ");
     strcat(line2,MIN_ES1[minutes]);
-    strcpy(line3,"");
   }
   else if (minutes<60){
     strcpy(line2,MIN_AUX_ES[minutes/10]);
@@ -124,9 +123,6 @@ int Len_ES(int min){
   }
   else return 10;
 }
-void PopatInit_ES(int minute, int *lenatinit){
-  *lenatinit=Len_ES(minute);
-}
 void WriteDate_ES(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_ES[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d", Dy);
@@ -134,15 +130,15 @@ void WriteDate_ES(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
 }
 void Animations_ES(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
   *LenNow=Len_ES(Minute);
-  if (Minute==0){	
-    *LenBefore=Len_ES(59);		
+  if (Minute==0){
+    *LenBefore=Len_ES(59);
   }
   else {
     *LenBefore=Len_ES(Minute-1);
   }
-  if (Minute==59){	
+  if (Minute==59){
     *LenAfter=Len_ES(0);
-  }	
+  }
   else {
     *LenAfter=Len_ES(Minute+1);
   }

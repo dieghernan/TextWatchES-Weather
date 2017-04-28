@@ -3,191 +3,151 @@
 #include <stddef.h>
 #include <string.h>
 static const char* const HOUR_IT[] = {
-"mezzanotte",
-"una",
-"due",
-"tre",
-"quattro",
-"cinque",
-"sei",
-"sette",
-"otto",
-"nove",
-"dieci",
-"undici",
-"mezzogiorno",
-"una"
+  "mezzanotte",
+  "una",
+  "due",
+  "tre",
+  "quattro",
+  "cinque",
+  "sei",
+  "sette",
+  "otto",
+  "nove",
+  "dieci",
+  "undici",
+  "mezzogiorno",
+  "una"
 };
 static const char* const MIN_IT1[]={
-"in punto",
-"e una",
-"e due",
-"e tre",
-"e quattro",
-"e cinque",
-"e sei",
-"e sette",
-"e otto",
-"e nove",
-"e dieci",
-"e undici",
-"e dodici",
-"e tredici",
-"e quattor",
-"e un quarto",
-"e sedici",
-"e dicias",
-"e dici",
-"e dician",
-"e venti",
-"e ventuno",
-"e ventidue",
-"e ventitré",
-"e venti",
-"e venti",
-"e venti",
-"e venti",
-"e venti",
-"e venti",
-"e mezzo",
-"e trentuno",
-"e trentadue",
-"e trentatré",
-"e trenta",
-"e trenta",
-"e trenta",
-"e trenta",
-"e trenta",
-"e trenta",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-"meno",
-""
+  "in punto",
+  "una",
+  "due",
+  "tre",
+  "quattro",
+  "cinque",
+  "sei",
+  "sette",
+  "otto",
+  "nove",
+  "dieci",
+  "undici",
+  "dodici",
+  "tredici",
+  "quattor",
+  "un quarto",
+  "sedici",
 };
-const char* const MIN_IT2[]={
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"",
-"dici",
-"",
-"",
-"sette",
-"otto",
-"nove",
-"",
-"",
-"",
-"",
-"quattro",
-"cinque",
-"sei",
-"sette",
-"otto",
-"nove",
-"",
-"",
-"",
-"",
-"quattro",
-"cinque",
-"sei",
-"sette",
-"otto",
-"nove",
-"venti",
-"diciannove",
-"diciotto",
-"diciassette",
-"sedici",
-"un quarto",
-"quattordici",
-"tredici",
-"dodici",
-"undici",
-"dieci",
-"nove",
-"otto",
-"sette",
-"sei",
-"cinque",
-"quattro",
-"tre",
-"due",
-"una",
-""
+const char* const MIN_IT_AUX[]={
+  "e dicias",
+  "e dici",
+  "e dician",
+  "e ventuno",
+  "e ventidue",
+  "e ventitré",
+  "e trentuno",
+  "e trentadue",
+  "e trentatré",
 };
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_IT[] = {
-"Gen",
-"Feb",
-"Mar",
-"Apr",
-"Mag",
-"Giu",
-"Lug",
-"Ago",
-"Set",
-"Ott",
-"Nov",
-"Dic"
+  "Gen",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mag",
+  "Giu",
+  "Lug",
+  "Ago",
+  "Set",
+  "Ott",
+  "Nov",
+  "Dic"
 };
 const char* const WEEKDAY_IT[] = {
-"Dom",
-"Lun",
-"Mar",
-"Mer",
-"Gio",
-"Ven",
-"Sab"
+  "Dom",
+  "Lun",
+  "Mar",
+  "Mer",
+  "Gio",
+  "Ven",
+  "Sab"
 };
 //End_Weekday
 void time_to_3words_IT(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-  //hour - line1
-   //shift 1 hour the label for this minutes
-  if ( minutes>39) {
-    hours=(hours+1);                                                                
-  }
+  //Clean line 3 at init
+  strcpy(line3, "");
+  //shift 1 hour the label for this minutes
+  if ( minutes>39) {hours=(hours+1);}
   if (hours>13){
-  hours=hours % 12;
+    hours=hours % 12;
   }
+  // in italian the hour is always in the first line
+  *LineBold=1;
   strcpy(line1, HOUR_IT[hours]);
-  //minute 
-  //optimized for italian
-  strcpy(line2,MIN_IT1[minutes]);
-  strcpy(line3,MIN_IT2[minutes]);  
-  // in italianthe hour is always in the first line 
-  *LineBold=1;   
-}
-void PopatInit_IT(int minute, int *lenatinit){
-*lenatinit=strlen(MIN_IT2[minute]);
+  //minute optimized for italian
+  //Exceptions first
+  if (minutes==0){
+    strcpy(line2, MIN_IT1[0]);
+  }
+  else if (minutes==30){
+    strcpy(line2, "e mezzo");
+  }
+  else if (minutes==14){
+    strcpy(line2, "e quattor");
+    strcpy(line3, "dici"); 
+  }
+  else if (minutes>=17 && minutes<=19){
+    strcpy(line2, MIN_IT_AUX[minutes-17]);
+    strcpy(line3, MIN_IT1[minutes%10]); 
+  }
+  else if (minutes>=21 && minutes <=23){
+    strcpy(line2, MIN_IT_AUX[minutes-18]);
+  }
+  else if (minutes>=31 && minutes <=33){
+    strcpy(line2, MIN_IT_AUX[minutes-25]);
+  }
+  else if (minutes<20){
+    strcpy(line2,"e ");
+    strcat(line2, MIN_IT1[minutes]); 
+  }
+  else if (minutes==20){
+    strcpy(line2,"e venti");
+  }
+  else if (minutes<30){
+    strcpy(line2,"e venti");
+    strcpy(line3,MIN_IT1[minutes%10]);
+  }
+  else if (minutes<40){
+    strcpy(line2,"e trenta");
+    strcpy(line3,MIN_IT1[minutes%10]);
+  }
+  else {
+    strcpy(line2,"meno");
+    if (minutes==40){
+      strcpy(line3,"venti"); 
+    }
+    else if (minutes==41){
+      strcpy(line3,"diciannove");
+    }
+    else if (minutes==42){
+      strcpy(line3,"diciotto");
+    }
+    else if (minutes==43){
+      strcpy(line3,"diciassette");
+    }
+    else if (minutes==46){
+      strcpy(line3,"quattordici"); 
+    }
+    else{
+      strcpy(line3,MIN_IT1[60-minutes]);
+    }
+  }
+} 
+int Len_IT(int min){
+  if (min==14 || min==17 || min==18 || min==19 || min==24 || min==25 || min==26 || min==27 || min==28 || min==29 || min>=34){
+    return 10;
+  }
+  else return 0;
 }
 void WriteDate_IT(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_IT[WD]);
@@ -195,20 +155,17 @@ void WriteDate_IT(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
   strcpy(itermonth, MONTHS_IT[Mnth]);
 }
 void Animations_IT(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
- //Len Before
- if (Minute==0){	
-	    *LenBefore=strlen(MIN_IT2[59]);		
-	    }
-else { 
-	    *LenBefore=strlen(MIN_IT2[Minute-1]);
-      }
-// Len Now
-*LenNow=strlen(MIN_IT2[Minute]);
-//Len After
- if (Minute==59){	
-	*LenAfter=strlen(MIN_IT2[0]);
-	}	
-else { 
-	*LenAfter=strlen(MIN_IT2[Minute+1]);
+  *LenNow=Len_IT(Minute);
+  if (Minute==0){
+    *LenBefore=Len_IT(59);
+  }
+  else {
+    *LenBefore=Len_IT(Minute-1);
+  }
+  if (Minute==59){
+    *LenAfter=Len_IT(0);
+  }
+  else {
+    *LenAfter=Len_IT(Minute+1);
   }
 }
