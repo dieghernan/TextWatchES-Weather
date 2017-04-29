@@ -132,6 +132,16 @@ module.exports = [
       },
       {
         "type": "input",
+        "messageKey": "APIKEY_User",
+        "defaultValue": "",
+        "label": "API Key",
+        "description": "Paste here your API Key. If blank the watch will attempt to request pmkey.xyz",
+        "attributes": {
+          "placeholder": "eg: xxxxxxxxxxxxx"
+        }
+      },
+      {
+        "type": "input",
         "messageKey": "EmailPMKEY",
         "defaultValue": "",
         "label": "pmkey.xyz User",
@@ -167,7 +177,7 @@ module.exports = [
   },
   {
     "type": "heading",
-    "defaultValue": "Version v6.4",
+    "defaultValue": "Version v6.5",
     "size":6
   } ,
   {

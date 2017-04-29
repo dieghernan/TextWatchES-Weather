@@ -32,7 +32,8 @@
             "PINPMKEY",
             "Lang",
             "FuzzyMode",
-            "BatteryBar"
+            "BatteryBar",
+            "APIKEY_User"
         ],
         "projectType": "native",
         "resources": {
@@ -148,5 +149,5 @@
             "watchface": true
         }
     },
-    "version": "6.4.0"
+    "version": "6.5.0"
 }

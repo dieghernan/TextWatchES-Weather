@@ -11,14 +11,16 @@ var xhrRequest = function(url, type, callback) {
 };
 // Request for WU
 function locationSuccessWU(pos) {
-  var keyAPI = localStorage.getItem('wuKey');
   //Request WU
   var lat = pos.coords.latitude;
   var lon = pos.coords.longitude;
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
+  var keyAPIwu = localStorage.getItem('wuKey');
+  var userKeyApi=settings.APIKEY_User;
+  var endapikey=apikeytouse(userKeyApi,keyAPIwu);  
   var units = unitsToString(settings.WeatherUnit);
   // Construct URL
-  var urlWU = "http://api.wunderground.com/api/" + keyAPI + "/conditions/astronomy/q/" + lat + "," + lon + ".json";
+  var urlWU = "http://api.wunderground.com/api/" + endapikey + "/conditions/astronomy/q/" + lat + "," + lon + ".json";
   console.log("WUUrl= " + urlWU);
   xhrRequest(encodeURI(urlWU), 'GET', function(responseText) {
     // responseText contains a JSON object with weather info
@@ -63,10 +65,12 @@ function locationSuccessOWM(pos) {
   var lon = pos.coords.longitude;
   var settings = JSON.parse(localStorage.getItem('clay-settings')) || {};
   var keyAPI = localStorage.getItem('owmKey');
+  var userKeyApi=settings.APIKEY_User;
+  var endapikey=apikeytouse(userKeyApi,keyAPI);
   var units = unitsToString(settings.WeatherUnit);
   var unitsOWM = unitsToStringOWM(settings.WeatherUnit);
   // Construct URL
-  var urlOWM = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + '&appid=' + keyAPI +
+  var urlOWM = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + '&appid=' + endapikey +
     '&units=' + unitsOWM;
   console.log("OWMUrl= " + urlOWM);
   // Send request to OpenWeatherMap
@@ -281,6 +285,17 @@ function gettime(timetoparse) {
     } else {
       return ((hh + 12) * 100) + mm;
     }
+  }
+}
+
+function apikeytouse(APIUser,APIPMKEY){
+  if (APIUser===""){
+    console.log("Using pmkey");
+    return APIPMKEY;
+  }
+  else {
+    console.log("Using Key User");
+    return APIUser;
   }
 }
 // Function to translate Yahoo
