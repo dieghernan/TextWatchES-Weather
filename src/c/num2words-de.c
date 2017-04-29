@@ -66,7 +66,8 @@ const char* const WEEKDAY_DE[] = {
   "Sa."
 };
 void time_to_3words_DE(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-  //hour - line1
+  //Clean line3 at init
+  strcpy(line3, "");
   //shift 1 hour the label for this minutes
   if ( minutes>20) {hours=(hours+1);}
   hours=hours % 12;
@@ -74,36 +75,31 @@ void time_to_3words_DE(int hours, int minutes, int *LineBold,char *line1, char *
   if (minutes==0 ){
     strcpy(line1, HOUR_DE[hours]);
     strcpy(line2,MIN_DE1[minutes]);
-    strcpy(line3,"");
     *LineBold=1;
   }
   else if (minutes==30){
     strcpy(line1,"halb");
     strcpy(line2, HOUR_DE[hours]);
-    strcpy(line3,"");
     *LineBold=2;
   }
   else {
     if (minutes<=20) {
       strcpy(line1,MIN_DE1[minutes]);
       strcpy(line2,"nach");
-      strcpy(line3, HOUR_DE[hours]);
     }
     else if (minutes<=30) {
       strcpy(line1,MIN_DE1[10-minutes%10]);
       strcpy(line2,"vor halb");
-      strcpy(line3, HOUR_DE[hours]);
     }
     else if (minutes<40) {
       strcpy(line1,MIN_DE1[minutes%10]);
       strcpy(line2,"nach halb");
-      strcpy(line3, HOUR_DE[hours]);
     }
     else {
-      strcpy(line1,MIN_DE1[20-minutes%10]);
+      strcpy(line1,MIN_DE1[60-minutes]);
       strcpy(line2,"vor");
-      strcpy(line3, HOUR_DE[hours]);
     }
+    strcpy(line3, HOUR_DE[hours]);
     *LineBold=3;
   }
 }
@@ -113,9 +109,6 @@ int Len_DE(int min){
   }
   else return 10;
 }
-void PopatInit_DE(int minute, int *lenatinit){
-  *lenatinit=Len_DE(minute);
-}
 void WriteDate_DE(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_DE[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d.", Dy);
@@ -123,7 +116,7 @@ void WriteDate_DE(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
 }
 void Animations_DE(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
   *LenNow=Len_DE(Minute);
-  if (Minute==0){	
+  if (Minute==0){
     *LenBefore=Len_DE(59);
   }
   else {

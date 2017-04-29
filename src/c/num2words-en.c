@@ -70,7 +70,8 @@ const char* const WEEKDAY_EN[] = {
   "Sat"
 };
 void time_to_3words_EN(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
-  //hour - line1
+  //Clean Line3 at init
+  strcpy(line3, "");
   //shift 1 hour the label for this minutes
   if ( minutes>35 && minutes % 5 == 0) {hours=(hours+1);}
   hours=hours % 12;
@@ -98,19 +99,21 @@ void time_to_3words_EN(int hours, int minutes, int *LineBold,char *line1, char *
     *LineBold=3;
   }
   else {
-    strcpy(line1, HOUR_EN[hours]);
     if (minutes<13 || minutes==16){
       strcpy(line2, MIN_EN1[minutes]);
-      strcpy(line3, "");
     }
     else if (minutes<20){
       strcpy(line2, MIN_EN1[minutes % 10]);
       strcpy(line3,  MIN_AUX_EN[minutes/10]);
     }
+    else if (minutes==20){
+      strcpy(line2,MIN_AUX_EN[2]);
+    }
     else {
       strcpy(line2,  MIN_AUX_EN[minutes/10]);
       strcpy(line3, MIN_EN1[minutes % 10]);
     }
+    strcpy(line1, HOUR_EN[hours]);
     *LineBold=1;
   }
 }
@@ -120,9 +123,6 @@ int Len_EN(int min){
   }
   else return 10;
 }
-void PopatInit_EN(int minute, int *lenatinit){
-  *lenatinit=Len_EN(minute);
-}
 void WriteDate_EN(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_EN[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d", Dy);
@@ -130,15 +130,15 @@ void WriteDate_EN(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
 }
 void Animations_EN(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
   *LenNow=Len_EN(Minute);
-  if (Minute==0){	
+  if (Minute==0){
     *LenBefore=Len_EN(59);
   }
   else {
     *LenBefore=Len_EN(Minute-1);
   }
-  if (Minute==59){	
+  if (Minute==59){
     *LenAfter=Len_EN(0);
-  }	
+  }
   else {
     *LenAfter=Len_EN(Minute+1);
   }

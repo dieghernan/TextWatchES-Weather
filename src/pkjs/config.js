@@ -1,12 +1,9 @@
 // Clay Config: see https://github.com/pebble/clay
-
-
 module.exports = [
   {
     "type": "heading",
     "defaultValue": "Settings"
   },
-
   {
     "type": "section",
     "items": [
@@ -14,58 +11,43 @@ module.exports = [
         "type": "heading",
         "defaultValue": "General settings"
       },
-         {
-          "type": "select",
-          "messageKey": "Lang",
-          "defaultValue": "1",
-          "label": "Language",
-          "options": [
-                        { 
-              "label": "Spanish",
-              "value": "1" 
-            },
-            { 
-              "label": "English",
-              "value": "2" 
-            },
-            { 
-              "label": "German",
-              "value": "3" 
-            },
-            { 
-              "label": "French",
-              "value": "4" 
-            },
-            {"label":"Portuguese (Brazil)",
-             "value": "5"              
-            },
-            {"label":"Italian",
-             "value": "6"              
-            },
-            {"label":"Norwegian",
-             "value": "7"              
-            },
-            {"label":"Danish",
-             "value": "8"              
-            },
-          ]
-        },
       {
-          "type": "select",
+        "type": "toggle",
+        "messageKey": "FuzzyMode",
+        "label": "Fuzzy Mode",
+        "defaultValue": false
+      },
+      {
+        "type": "select",
+        "messageKey": "Lang",
+        "defaultValue": "1",
+        "label": "Language",
+        "options": [
+          {"label": "Spanish", "value": "1" },
+          {"label": "English", "value": "2" },
+          { "label": "German", "value": "3" },
+          { "label": "French", "value": "4" },
+          {"label":"Portuguese (Brazil)", "value": "5" },
+          {"label":"Italian", "value": "6" },
+          {"label":"Norwegian", "value": "7"},
+          {"label":"Danish", "value": "8" },
+        ] 
+      },
+      { "type": "select",
           "messageKey": "DateFormat",
           "defaultValue": "1",
           "label": "Date Format",
           "options": [
-                        { 
-              "label": "dd mm",
-              "value": "1" 
-            },
-            { 
-              "label": "mm dd",
-              "value": "2" 
-            }
-          ]
-        },
+          { "label": "dd mm", "value": "1" }, 
+          { "label": "mm dd", "value": "2" }
+        ]
+      },
+      {
+        "type": "toggle",
+        "messageKey": "BatteryBar",
+        "label": "Display Battery Level",
+        "defaultValue": false
+      },
       {
         "type": "color",
         "messageKey": "BackgroundColor",
@@ -78,40 +60,39 @@ module.exports = [
         "defaultValue": "0xFFFFFF",
         "label": "Text"
       },
-       {"type": "section",
-      "items": [
-      {
-        "type": "heading",
-        "defaultValue": "Night Theme",
-        "size":4
-      }  ,
-      {
-        "type": "toggle",
-        "messageKey": "NightTheme",
-        "label": "Activate Night Theme",
-        "defaultValue": false,
-        "description": "When activate requires GPS. Theme applied between sunset and sunrise."
-      },
-      {
-        "type": "color",
-        "messageKey": "BackgroundColorNight",
-        "defaultValue": "0xFFFFFF",
-        "label": "Background"
-      },
-      {
-        "type": "color",
-        "messageKey": "ForegroundColorNight",
-        "defaultValue": "0x000055",
-        "label": "Text"
+      {"type": "section",
+       "items": [
+         {
+           "type": "heading",
+           "defaultValue": "Night Theme",
+           "size":4
+         } ,
+         {
+           "type": "toggle",
+           "messageKey": "NightTheme",
+           "label": "Activate Night Theme",
+           "defaultValue": false,
+           "description": "When activate requires GPS. Theme applied between sunset and sunrise."
+         },
+         {
+           "type": "color",
+           "messageKey": "BackgroundColorNight",
+           "defaultValue": "0xFFFFFF",
+           "label": "Background"
+         },
+         {
+           "type": "color",
+           "messageKey": "ForegroundColorNight",
+           "defaultValue": "0x000055",
+           "label": "Text"
+         }
+       ]
       }
-        ]
-       }      
     ]
   },
-  
- {
+  {
     "type": "section",
-    "items": [ 
+    "items": [
       {
         "type": "heading",
         "defaultValue": "Weather Settings"
@@ -120,26 +101,26 @@ module.exports = [
         "type": "toggle",
         "messageKey": "DisplayTemp",
         "label": "Weather",
-        "defaultValue": false      
+        "defaultValue": false
       },
       {
         "type": "toggle",
         "messageKey": "WeatherUnit",
         "label": "Temperature in Fahrenheit",
-        "defaultValue": false      
+        "defaultValue": false
       },
-       {
+      {
         "type": "select",
         "messageKey": "WeatherProv",
         "defaultValue": "yahoo",
         "label": "Weather Provider",
         "description": "WU and OWM requires authentification. See next section",
         "options": [
-          { 
-            "label": "Yahoo", 
+          {
+            "label": "Yahoo",
             "value": "yahoo" 
           },
-          { 
+          {
             "label": "OpenWeatherMap",
             "value": "owm"
           },
@@ -147,7 +128,7 @@ module.exports = [
             "label": "WeatherUnderground",
             "value": "wu"
           }
-        ]        
+        ]
       },
       {
         "type": "input",
@@ -168,7 +149,7 @@ module.exports = [
         "attributes": {
           "placeholder": "eg: 12345"
         }
-      },      
+      },
       {
         "type": "slider",
         "messageKey": "UpSlider",
@@ -179,19 +160,19 @@ module.exports = [
         "max": 120,
         "step": 15}
     ]
- },
- {
+  },
+  {
     "type": "submit",
     "defaultValue":"Ok"
   },
   {
-      "type": "heading",
-      "defaultValue": "Version v6.3 ",
-      "size":6
+    "type": "heading",
+    "defaultValue": "Version v6.4",
+    "size":6
   } ,
   {
-      "type": "heading",
-      "defaultValue": "Made in Madrid, Spain",
-      "size":6
-  }    
+    "type": "heading",
+    "defaultValue": "Made in Madrid, Spain",
+    "size":6
+  }
 ];
