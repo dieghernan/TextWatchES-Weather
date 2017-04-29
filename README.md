@@ -36,6 +36,13 @@
  * Implementation of [pmkey.xyz](https://www.pmkey.xyz)
  
  ![banner](store/BannerClass.png)
+ 
+## Next developments
+* [ ] Fuzzy time
+* [ ] Battery
+* [ ] Option for animations
+* [ ] Option for non pmkey users
+* [ ] More languages (Swedish, Esperanto...) 
 
 # Attributions
 ## Fonts: 
