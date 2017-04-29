@@ -106,6 +106,9 @@ void time_to_3words_EN(int hours, int minutes, int *LineBold,char *line1, char *
       strcpy(line2, MIN_EN1[minutes % 10]);
       strcpy(line3,  MIN_AUX_EN[minutes/10]);
     }
+    else if (minutes==20){
+      strcpy(line2,MIN_AUX_EN[2]);
+    }
     else {
       strcpy(line2,  MIN_AUX_EN[minutes/10]);
       strcpy(line3, MIN_EN1[minutes % 10]);

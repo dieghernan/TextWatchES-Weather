@@ -77,7 +77,7 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
   if ( minutes>=25) {hours=(hours+1);}
   hours=hours % 12;
   // Exceptions first
-  if (minutes==0 ||  minutes==30 || minutes>40){
+  if (minutes==0 ||  minutes==30 || minutes>=40){
     if (minutes==0){
       strcpy(line1, MIN_DK1[0]);
     }
@@ -85,8 +85,8 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
       strcpy(line1,"halv");      
     }
     else {
-      strcpy(line1,"i ");
-      strcpy(line1,MIN_DK1[60-minutes]);      
+      strcpy(line1,MIN_DK1[60-minutes]);  
+      strcat(line1," i");          
     }
     strcpy(line2,HOUR_DK[hours]);
     *LineBold=2;    
@@ -108,7 +108,7 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
       strcpy(line1,MIN_DK1[minutes-30]);
       strcpy(line2,"over halv");     
     }     
-    else{
+    else {
       strcpy(line1, MIN_DK1[60-minutes]);
       strcpy(line2, "tyve i");
     }

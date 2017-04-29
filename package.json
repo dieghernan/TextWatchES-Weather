@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "fuzzy2",
+    "name": "testwatch-clima",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "fuzzy2",
+        "displayName": "TextWatch Clima",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -31,7 +31,8 @@
             "EmailPMKEY",
             "PINPMKEY",
             "Lang",
-            "FuzzyMode"
+            "FuzzyMode",
+            "BatteryBar"
         ],
         "projectType": "native",
         "resources": {
@@ -53,7 +54,21 @@
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_30",
+                    "name": "FONT_GLIGHT_22",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z .' A-Z 0-9 \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_16",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
+                    "file": "fonts/Gotham Light.otf",
+                    "name": "FONT_GLIGHT_39",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
                     "type": "font"
@@ -69,16 +84,9 @@
                 {
                     "characterRegex": "[a-z ' UV\u00f6\u00fc\u00e9\u00fb\u00ea \\-\u00e5\u00f8]",
                     "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_39",
+                    "name": "FONT_GLIGHT_30",
                     "targetPlatforms": null,
                     "trackingAdjust": -2,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[a-z .' A-Z 0-9 \u00e1\u00e9\u00ed\u00f3\u00fa\u00f6\u00fc\u00fb\u00ea \u00e5\u00f8]",
-                    "file": "fonts/Gotham Light.otf",
-                    "name": "FONT_GLIGHT_16",
-                    "targetPlatforms": null,
                     "type": "font"
                 },
                 {
@@ -135,7 +143,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "acd747f4-5366-492d-8270-b0024d48b14f",
+        "uuid": "60d3df55-4a89-44d0-96a4-f3534a7a1de0",
         "watchapp": {
             "watchface": true
         }

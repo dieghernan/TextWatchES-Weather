@@ -43,6 +43,12 @@ module.exports = [
         ]
       },
       {
+        "type": "toggle",
+        "messageKey": "BatteryBar",
+        "label": "Display Battery Level",
+        "defaultValue": false
+      },
+      {
         "type": "color",
         "messageKey": "BackgroundColor",
         "defaultValue": "0x000055",

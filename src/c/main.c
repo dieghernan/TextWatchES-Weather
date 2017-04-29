@@ -41,6 +41,7 @@ static GFont BoldReduced3;
 static GFont Light;
 static GFont LightReduced1;
 static GFont LightReduced2;
+static GFont LightReduced3;
 static GFont FontWDay;
 static GFont FontDate;
 static GFont FontSymbol;
@@ -72,6 +73,7 @@ static void prv_default_settings() {
   settings.DisplayTemp=false;
   settings.BTOn=true;
   settings.FuzzyMode=false;
+  settings.BatteryBar=false;
 }
 //////End Configuration///
 static void bluetooth_callback(bool connected) {  
@@ -338,6 +340,11 @@ void sizeandbold(TextLayer *linelayer, int linr, int linb) {
       int width2=sizetext2.w;
       if (width2>evlimit ){
         text_layer_set_font(linelayer,LightReduced2);
+        GSize sizetext3=text_layer_get_content_size(linelayer);
+        int width3=sizetext3.w;
+        if (width3>evlimit){
+          text_layer_set_font(linelayer, LightReduced3);
+        }
       }
     }
   }
@@ -506,6 +513,13 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   // Colors
   graphics_context_set_text_color(ctx,ColorSelect(settings.NightTheme, true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
   GRect bounds2layer = layer_get_bounds(layer);
+  if (settings.BatteryBar){
+    int battlevel=battery_state_service_peek().charge_percent;
+    graphics_context_set_stroke_color(ctx,ColorSelect(settings.NightTheme, 
+                                                    true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
+    graphics_context_set_stroke_width(ctx, 2);
+    graphics_draw_line(ctx,GPoint(bounds2layer.origin.x, bounds2layer.origin.y),GPoint(bounds2layer.size.w*battlevel/100,bounds2layer.origin.y));  
+  }
   //Translate
   char WeekDay_END[BUFFER_SIZE];
   char Date_END[BUFFER_SIZE];
@@ -677,6 +691,13 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
     }
     else settings.FuzzyMode=true;
   }
+  Tuple *battt=dict_find(iter,MESSAGE_KEY_BatteryBar);
+  if (battt){
+    if (battt->value->int32==0){
+      settings.BatteryBar=false;
+    }
+    else settings.BatteryBar=true;
+  }
   Tuple *disntheme_t=dict_find(iter,MESSAGE_KEY_NightTheme);
   if (disntheme_t){
     if (disntheme_t->value->int32==0){
@@ -763,7 +784,8 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
 static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
-  back_layer = layer_create(GRect(0,bounds.size.h-45,bounds.size.w, 45));
+  int offsetsq=PBL_IF_RECT_ELSE(5, 0 );
+  back_layer = layer_create(GRect(0,bounds.size.h-45+offsetsq,bounds.size.w, 45));
   layer_set_update_proc(back_layer, back_update_proc);
   layer_add_child(window_layer, back_layer);
 }
@@ -786,6 +808,7 @@ static void prv_window_unload(Window *window) {
   fonts_unload_custom_font(Light);
   fonts_unload_custom_font(LightReduced1);
   fonts_unload_custom_font(LightReduced2);
+  fonts_unload_custom_font(LightReduced3);
   fonts_unload_custom_font(FontWDay);
   fonts_unload_custom_font(FontDate);
   fonts_unload_custom_font(FontSymbol);
@@ -795,7 +818,7 @@ void main_window_push() {
   Layer *root = window_get_root_layer(s_main_window);
   //Set bounds and offsets
   bounds = layer_get_bounds(root);
-  offsetpebble= PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2,5);
+  offsetpebble= PBL_IF_ROUND_ELSE((bounds.size.h - 145) / 2-5,5);
   // Create layers
   // Scroll
   scroll = layer_create(bounds);
@@ -872,6 +895,7 @@ static void prv_init(void) {
   Light=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_39));
   LightReduced1=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_34));
   LightReduced2=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_30));
+  LightReduced3=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_22));
   FontCond=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_WICON_26));
   FontWDay=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GBOLD_16));
   FontDate=fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_GLIGHT_16));
