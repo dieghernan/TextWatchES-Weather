@@ -43,7 +43,7 @@
 * [x] Fuzzy time
 * [x] Battery
 * [ ] Option for animations
-* [ ] Option for non pmkey users
+* [x] Option for non pmkey users
 * [ ] More languages (Swedish, Esperanto...) 
 
 # Attributions
