@@ -15,6 +15,7 @@
 
 ## Take your pick
 * Date format: Day Month / Month Day
+* Fuzzy time option
 * Language
   * Spanish
   * English
@@ -25,6 +26,7 @@
   * Norwegian
   * Danish
   * _More at request_
+ * Battery bar display
  * Weather: Current conditions on °c or °f.
  * Night theme displayed between sunset and sunrise
  * On Bluetooth disconnected displays ![BTDis](https://raw.githubusercontent.com/dieghernan/Sfera/master/assets/BTDisconnectIcon.png)
@@ -38,8 +40,8 @@
  ![banner](store/BannerClass.png)
  
 ## Next developments
-* [ ] Fuzzy time
-* [ ] Battery
+* [x] Fuzzy time
+* [x] Battery
 * [ ] Option for animations
 * [ ] Option for non pmkey users
 * [ ] More languages (Swedish, Esperanto...) 
