@@ -52,6 +52,7 @@ static bool PoppedDownNow;
 static bool PoppedDownAtInit;
 GRect bounds;
 static int offsetpebble, s_loop,s_countdown;
+int master_hour, master_min, master_day, master_wday, master_mon;
 //////Init Configuration///
 //Init Clay
 ClaySettings settings;
@@ -83,9 +84,17 @@ static void bluetooth_callback(bool connected) {
 //////Lang Selector ///
 void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
   if (settings.FuzzyMode){
-    minute_i=minute_i/5;
-    minute_i=5*minute_i;
-  }  
+    if (minute_i<=58){
+      minute_i=(minute_i+2)/5;
+      minute_i=5*minute_i;
+    }  
+    else {
+      minute_i=0;
+      hour_i=hour_i+1;
+    }
+  }
+  master_hour=hour_i;
+  master_min=minute_i;    
   if (lang_i==1){ //Spanish
     time_to_3words_ES(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
@@ -412,8 +421,13 @@ void display_time(struct tm *t, int atinit) {
   char textLine2[BUFFER_SIZE];
   char textLine3[BUFFER_SIZE];
   int LineToPutinBold=0;
+  master_hour=t->tm_hour;
+  master_min=t->tm_min;
+  master_day=t->tm_mday;
+  master_wday=t->tm_wday;
+  master_mon=t->tm_mon;
   // Language settings
-  writetimeto3words(t->tm_hour, t->tm_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);
+  writetimeto3words(master_hour ,master_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);
   //Update lines
   if (checkupdate(textbefore1,textLine1)) {
     updateLineTo(&line1, line1Str, textLine1,1,LineToPutinBold);
@@ -427,7 +441,8 @@ void display_time(struct tm *t, int atinit) {
   // Save
   strcpy(textbefore1, textLine1);
   strcpy(textbefore2, textLine2);
-  strcpy(textbefore3, textLine3);}
+  strcpy(textbefore3, textLine3);
+}
 // Update graphics when timer ticks
 static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   if (units_changed & MINUTE_UNIT ) {
@@ -479,7 +494,7 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   int Lnow=0;
   int LAft=0;
   // Animations
-  animationslan(t->tm_min, &LBef, &Lnow, &LAft,settings.LangKey);
+  animationslan(master_min, &LBef, &Lnow, &LAft,settings.LangKey);
   // Recenter screen if last time was 3 lines, but new time is 2 lines
   // Don't do this if time was just initialized already centered
   if(LBef>0 && Lnow==0 ){
@@ -514,7 +529,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   graphics_context_set_text_color(ctx,ColorSelect(settings.NightTheme, true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
   GRect bounds2layer = layer_get_bounds(layer);
   if (settings.BatteryBar){
-    int battlevel=battery_state_service_peek().charge_percent;
+    int battlevel=5*(battery_state_service_peek().charge_percent/5);
     graphics_context_set_stroke_color(ctx,ColorSelect(settings.NightTheme, 
                                                     true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
     graphics_context_set_stroke_width(ctx, 2);
@@ -524,10 +539,8 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   char WeekDay_END[BUFFER_SIZE];
   char Date_END[BUFFER_SIZE];
   char Month_END[BUFFER_SIZE];
-  time_t now = time(NULL);
-  struct tm *t = localtime(&now);
   // Set language
-  writedatelang(t->tm_wday ,t->tm_mon, t->tm_mday, WeekDay_END, Date_END,Month_END,settings.LangKey);
+  writedatelang(master_wday ,master_mon,master_day, WeekDay_END, Date_END,Month_END,settings.LangKey);
   //Draw day of the week
   GRect WDay_rect=GRect(bounds2layer.origin.x,bounds2layer.origin.y,bounds2layer.size.w,bounds2layer.size.h);
   graphics_draw_text(ctx, WeekDay_END, FontWDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
@@ -623,10 +636,10 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
   int Del1=0;
   int Del2=0;
   int LenBeforeSave=0;
-  animationslan(t->tm_min, &Del1, &LenBeforeSave, &Del2,LangBefore);
+  animationslan(master_min, &Del1, &LenBeforeSave, &Del2,LangBefore);
   // Adjust animations to fit the change of language - study how long will be line 3 after change language
   int LenAfterSave=0;
-  animationslan(t->tm_min, &Del1, &LenAfterSave, &Del2,settings.LangKey);
+  animationslan(master_min, &Del1, &LenAfterSave, &Del2,settings.LangKey);
   //Update text if language has changed
   //Adjust position using animations
   if (ChangeLang>0){
