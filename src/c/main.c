@@ -82,10 +82,6 @@ static void bluetooth_callback(bool connected) {
 }
 //////Lang Selector ///
 void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
-  if (settings.FuzzyMode){
-    minute_i=minute_i/5;
-    minute_i=5*minute_i;
-  }  
   if (lang_i==1){ //Spanish
     time_to_3words_ES(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
