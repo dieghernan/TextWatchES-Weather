@@ -11,12 +11,12 @@ module.exports = [
         "type": "heading",
         "defaultValue": "General settings"
       },
-      {
-        "type": "toggle",
-        "messageKey": "FuzzyMode",
-        "label": "Fuzzy Mode",
-        "defaultValue": false
-      },
+      //{
+        //"type": "toggle",
+        //"messageKey": "FuzzyMode",
+        //"label": "Fuzzy Mode",
+        //"defaultValue": false
+      //},
       {
         "type": "select",
         "messageKey": "Lang",
@@ -177,7 +177,7 @@ module.exports = [
   },
   {
     "type": "heading",
-    "defaultValue": "Version v6.5",
+    "defaultValue": "Version v6.6",
     "size":6
   } ,
   {

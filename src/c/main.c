@@ -50,9 +50,11 @@ PropertyAnimation *scroll_down;
 PropertyAnimation *scroll_up;
 static bool PoppedDownNow;
 static bool PoppedDownAtInit;
+static bool AtInit;
+bool PopUpNow=false;
 GRect bounds;
 static int offsetpebble, s_loop,s_countdown;
-int master_hour, master_min, master_day, master_wday, master_mon;
+static int mast_hour, mast_min, mast_mon, mast_wday, mast_day;
 //////Init Configuration///
 //Init Clay
 ClaySettings settings;
@@ -83,18 +85,6 @@ static void bluetooth_callback(bool connected) {
 }
 //////Lang Selector ///
 void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, char *line2_i, char *line3_i, int lang_i){
-  if (settings.FuzzyMode){
-    if (minute_i<=58){
-      minute_i=(minute_i+2)/5;
-      minute_i=5*minute_i;
-    }  
-    else {
-      minute_i=0;
-      hour_i=hour_i+1;
-    }
-  }
-  master_hour=hour_i;
-  master_min=minute_i;    
   if (lang_i==1){ //Spanish
     time_to_3words_ES(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
@@ -240,7 +230,7 @@ void makeScrollUpNow(){
     to.origin.y = 0;
   }
   scroll_down = property_animation_create_layer_frame((Layer *)scroll, &from, &to);
-  animation_set_duration(property_animation_get_animation(scroll_down), 400);
+  animation_set_duration(property_animation_get_animation(scroll_down), 800);
   animation_set_curve(property_animation_get_animation(scroll_down), AnimationCurveEaseOut);
   animation_schedule(property_animation_get_animation(scroll_down));
   // reset PoppedDown indicator
@@ -280,12 +270,21 @@ void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
   rect.origin.x -= bounds.size.w;
   line->nextAnimation = property_animation_create_layer_frame((Layer *)next, NULL, &rect);
   animation_set_duration(property_animation_get_animation(line->nextAnimation), 400);
+  if (PopUpNow){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Delay nextLine");
+    animation_set_delay(property_animation_get_animation(line->nextAnimation), 1000);
+  }
+  
   animation_set_curve(property_animation_get_animation(line->nextAnimation), AnimationCurveEaseOut);
   animation_schedule(property_animation_get_animation(line->nextAnimation));
   GRect rect2 = layer_get_frame((Layer *)current);
   rect2.origin.x -= bounds.size.w;
   line->currentAnimation = property_animation_create_layer_frame((Layer *)current, NULL, &rect2);
   animation_set_duration(property_animation_get_animation(line->currentAnimation), 400);
+  if (PopUpNow){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Delay nextLine");
+    animation_set_delay(property_animation_get_animation(line->currentAnimation), 1000);
+  }
   animation_set_curve(property_animation_get_animation(line->currentAnimation), AnimationCurveEaseOut);
   animation_set_handlers(property_animation_get_animation(line->currentAnimation), (AnimationHandlers) {
     .stopped = (AnimationStoppedHandler)animationStoppedHandler},
@@ -421,13 +420,35 @@ void display_time(struct tm *t, int atinit) {
   char textLine2[BUFFER_SIZE];
   char textLine3[BUFFER_SIZE];
   int LineToPutinBold=0;
-  master_hour=t->tm_hour;
-  master_min=t->tm_min;
-  master_day=t->tm_mday;
-  master_wday=t->tm_wday;
-  master_mon=t->tm_mon;
+  mast_hour=t->tm_hour;
+  mast_min=t->tm_min;
+  mast_mon=t->tm_mon;
+  mast_day=t->tm_mday;
+  mast_wday=t->tm_wday;
   // Language settings
-  writetimeto3words(master_hour ,master_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);
+  writetimeto3words(mast_hour, mast_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);
+   // Set Up and Down animations
+  int LBef=strlen(textbefore3);
+  int Lnow=strlen(textLine3);
+  // Animations
+  //  animationslan(mast_min, &LBef, &Lnow, &LAft,settings.LangKey);
+  // Recenter screen if last time was 3 lines, but new time is 2 lines
+  // Don't do this if time was just initialized already centered
+  if(LBef>0 && Lnow==0 ){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Pop DOWN LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
+    if(PoppedDownNow == false){
+      makeScrollDown();
+    }
+  }
+  else if (!AtInit){
+    // Prepare for next time being 3 lines, if current time is 2 lines
+    if(LBef==0 && Lnow > 0 ){
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Pop UP LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
+      PopUpNow=true;
+      makeScrollUpNow();
+    }
+  }
+  AtInit=false;
   //Update lines
   if (checkupdate(textbefore1,textLine1)) {
     updateLineTo(&line1, line1Str, textLine1,1,LineToPutinBold);
@@ -438,16 +459,22 @@ void display_time(struct tm *t, int atinit) {
   if (checkupdate(textbefore3,textLine3)) {
     updateLineTo(&line3, line3Str, textLine3,3,LineToPutinBold);
   }
-  // Save
+    // Save
   strcpy(textbefore1, textLine1);
   strcpy(textbefore2, textLine2);
   strcpy(textbefore3, textLine3);
+  PopUpNow=false;
 }
 // Update graphics when timer ticks
 static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
   if (units_changed & MINUTE_UNIT ) {
     layer_mark_dirty(back_layer);
   }
+  mast_hour=t->tm_hour;
+  mast_min=t->tm_min;
+  mast_mon=t->tm_mon;
+  mast_day=t->tm_mday;
+  mast_wday=t->tm_wday;
   //BT: Evaluate reconnection
   bool CheckBT=connection_service_peek_pebble_app_connection();
   if (!settings.BTOn &&  CheckBT ){
@@ -488,24 +515,7 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
     TextColorFormatting();
   }
   // Update text time
-  display_time(t,0);
-  // Set Up and Down animations
-  int LBef=0;
-  int Lnow=0;
-  int LAft=0;
-  // Animations
-  animationslan(master_min, &LBef, &Lnow, &LAft,settings.LangKey);
-  // Recenter screen if last time was 3 lines, but new time is 2 lines
-  // Don't do this if time was just initialized already centered
-  if(LBef>0 && Lnow==0 ){
-    if(PoppedDownNow == false){
-      makeScrollDown();
-    }
-  }
-  // Prepare for next time being 3 lines, if current time is 2 lines
-  if(Lnow==0 && LAft > 0 ){
-    makeScrollUp(t);
-  }
+  display_time(t,0);  
   if(s_countdown== 0 || s_countdown==5) {
     if (settings.DisplayTemp ){
       APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather at %d", t->tm_min);
@@ -529,7 +539,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   graphics_context_set_text_color(ctx,ColorSelect(settings.NightTheme, true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
   GRect bounds2layer = layer_get_bounds(layer);
   if (settings.BatteryBar){
-    int battlevel=5*(battery_state_service_peek().charge_percent/5);
+    int battlevel=battery_state_service_peek().charge_percent;
     graphics_context_set_stroke_color(ctx,ColorSelect(settings.NightTheme, 
                                                     true, settings.IsNightNow, settings.ForegroundColor, settings.ForegroundColorNight));
     graphics_context_set_stroke_width(ctx, 2);
@@ -540,7 +550,7 @@ static void back_update_proc(Layer *layer, GContext *ctx) {
   char Date_END[BUFFER_SIZE];
   char Month_END[BUFFER_SIZE];
   // Set language
-  writedatelang(master_wday ,master_mon,master_day, WeekDay_END, Date_END,Month_END,settings.LangKey);
+  writedatelang(mast_wday,mast_mon,mast_day, WeekDay_END, Date_END,Month_END,settings.LangKey);
   //Draw day of the week
   GRect WDay_rect=GRect(bounds2layer.origin.x,bounds2layer.origin.y,bounds2layer.size.w,bounds2layer.size.h);
   graphics_draw_text(ctx, WeekDay_END, FontWDay, WDay_rect, GTextOverflowModeFill, GTextAlignmentCenter, NULL);
@@ -636,10 +646,10 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
   int Del1=0;
   int Del2=0;
   int LenBeforeSave=0;
-  animationslan(master_min, &Del1, &LenBeforeSave, &Del2,LangBefore);
+  animationslan(t->tm_min, &Del1, &LenBeforeSave, &Del2,LangBefore);
   // Adjust animations to fit the change of language - study how long will be line 3 after change language
   int LenAfterSave=0;
-  animationslan(master_min, &Del1, &LenAfterSave, &Del2,settings.LangKey);
+  animationslan(t->tm_min, &Del1, &LenAfterSave, &Del2,settings.LangKey);
   //Update text if language has changed
   //Adjust position using animations
   if (ChangeLang>0){
@@ -648,13 +658,13 @@ static void prv_save_settings(int ChangeLang, int LangBefore) {
       makeScrollUpNow() ;
     }
     // Display time
-    display_time(t,1);
+    display_time(t,0);
     if (LenBeforeSave>0 && LenAfterSave == 0){
       // Pop down if before were 3 lines and now 2 lines
       makeScrollDown();
     }
   }
-  display_time(t,1);
+  display_time(t,0);
 }
 // Handle the response from AppMessage
 static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
@@ -859,10 +869,10 @@ void main_window_push() {
   layer_add_child(scroll, (Layer *)line3.currentLayer);
   layer_add_child(scroll, (Layer *)line3.nextLayer);
   TextColorFormatting();
-  text_layer_set_text(line1.currentLayer, "Loading...");
   // Configure text time on init
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
+  AtInit=true;
   display_time(t,1);
   // initialize PoppedDown indicators
   PoppedDownNow = false;
@@ -872,7 +882,7 @@ void main_window_push() {
   int LenInit_END=0;
   int Del1=0;
   int Del2=0;
-  animationslan(t->tm_min, &Del1, &LenInit_END, &Del2, settings.LangKey);
+  animationslan(mast_min, &Del1, &LenInit_END, &Del2, settings.LangKey);
   // Check Line3 at init
   if(LenInit_END == 0 ){
     makePopDown();
@@ -880,6 +890,7 @@ void main_window_push() {
     // starting place
     PoppedDownNow = true;
     PoppedDownAtInit = true;
+    AtInit=false;
   }
   // Configure main window
   window_set_window_handlers(s_main_window, (WindowHandlers) {
