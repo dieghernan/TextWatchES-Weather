@@ -48,10 +48,8 @@ static GFont FontSymbol;
 //Others
 PropertyAnimation *scroll_down;
 PropertyAnimation *scroll_up;
-static bool PoppedDownNow;
-static bool PoppedDownAtInit;
 static bool AtInit;
-bool PopUpNow=false;
+static bool PopUpNow=false;
 GRect bounds;
 static int offsetpebble, s_loop,s_countdown;
 static int mast_hour, mast_min, mast_mon, mast_wday, mast_day;
@@ -136,33 +134,6 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
     WriteDate_DK(week , Mon ,Day, iterwd ,iterdat,itermon);
   }
 }
-void animationslan(int minute_2,int* LenB1, int* LenN1, int *LenA1, int Lang_2){
-  //Different based on Language
-  if (Lang_2==1){ //Spanish
-    Animations_ES(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==2){ //English
-    Animations_EN(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==3){ //German
-    Animations_DE(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==4){ //French
-    Animations_FR(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==5){ //PortugueseBR
-    Animations_BR(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==6){ //Italian
-    Animations_IT(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==7){ //Norwegian
-    Animations_NN(minute_2, LenB1, LenN1, LenA1);
-  }
-  else if (Lang_2==8){ //Danish
-    Animations_DK(minute_2, LenB1, LenN1, LenA1);
-  }
-}
 //////End Lang Selector///
 //////Define Function ///
 static int limit(int nline){
@@ -197,26 +168,6 @@ static GColor ColorSelect(bool isactive, bool gpsstate, bool isnight, GColor Col
 }
 //////End Function ///
 ////Init: Animations procs//
-void makeScrollUp(struct tm *t){
-  GRect from = layer_get_bounds((Layer *)scroll);
-  GRect to = layer_get_bounds((Layer *)scroll);
-  GRect rect = layer_get_bounds((Layer *)scroll);
-  if(rect.origin.y == 21){
-    from.origin.y = 0;
-    to.origin.y = -21;
-  }
-  else {
-    from.origin.y = 21;
-    to.origin.y = 0;
-  }
-  scroll_down = property_animation_create_layer_frame((Layer *)scroll, &from, &to);
-  animation_set_duration(property_animation_get_animation(scroll_down), 800);
-  animation_set_delay(property_animation_get_animation(scroll_down), (59000-1000*t->tm_sec));
-  animation_set_curve(property_animation_get_animation(scroll_down), AnimationCurveEaseOut);
-  animation_schedule(property_animation_get_animation(scroll_down));
-  // reset PoppedDown indicator
-  PoppedDownNow = false;
-}
 void makeScrollUpNow(){
   GRect from = layer_get_bounds((Layer *)scroll);
   GRect to = layer_get_bounds((Layer *)scroll);
@@ -232,14 +183,13 @@ void makeScrollUpNow(){
   scroll_down = property_animation_create_layer_frame((Layer *)scroll, &from, &to);
   animation_set_duration(property_animation_get_animation(scroll_down), 800);
   animation_set_curve(property_animation_get_animation(scroll_down), AnimationCurveEaseOut);
-  animation_schedule(property_animation_get_animation(scroll_down));
-  // reset PoppedDown indicator
-  PoppedDownNow = false;
+  animation_schedule(property_animation_get_animation(scroll_down)); 
 }
 void makeScrollDown(){
   GRect from = layer_get_bounds((Layer *)scroll);
   GRect to = layer_get_bounds((Layer *)scroll);
-  if(PoppedDownAtInit == true){
+  GRect rect = layer_get_bounds((Layer *)scroll);
+  if(rect.origin.y == 21){
     from.origin.y = -21;
     to.origin.y = 0;
   }
@@ -251,7 +201,7 @@ void makeScrollDown(){
   animation_set_duration(property_animation_get_animation(scroll_down), 800);
   animation_set_delay(property_animation_get_animation(scroll_down), 600);
   animation_set_curve(property_animation_get_animation(scroll_down), AnimationCurveEaseOut);
-  animation_schedule(property_animation_get_animation(scroll_down));
+  animation_schedule(property_animation_get_animation(scroll_down));  
 }
 // Text Animation handler
 void animationStoppedHandler(struct Animation *animation, bool finished, void *context) {
@@ -271,7 +221,6 @@ void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
   line->nextAnimation = property_animation_create_layer_frame((Layer *)next, NULL, &rect);
   animation_set_duration(property_animation_get_animation(line->nextAnimation), 400);
   if (PopUpNow){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Delay nextLine");
     animation_set_delay(property_animation_get_animation(line->nextAnimation), 1000);
   }
   
@@ -282,7 +231,6 @@ void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
   line->currentAnimation = property_animation_create_layer_frame((Layer *)current, NULL, &rect2);
   animation_set_duration(property_animation_get_animation(line->currentAnimation), 400);
   if (PopUpNow){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Delay nextLine");
     animation_set_delay(property_animation_get_animation(line->currentAnimation), 1000);
   }
   animation_set_curve(property_animation_get_animation(line->currentAnimation), AnimationCurveEaseOut);
@@ -414,7 +362,7 @@ void configureLineLayer(TextLayer *textlayer) {
 ////End: Layer formatting//
 ///// Init: Updating time and date////
 // Update screen based on new time
-void display_time(struct tm *t, int atinit) {
+void display_time(struct tm *t) {
   // The current time text will be stored in the following 3 strings
   char textLine1[BUFFER_SIZE];
   char textLine2[BUFFER_SIZE];
@@ -431,22 +379,19 @@ void display_time(struct tm *t, int atinit) {
   int LBef=strlen(textbefore3);
   int Lnow=strlen(textLine3);
   // Animations
-  //  animationslan(mast_min, &LBef, &Lnow, &LAft,settings.LangKey);
-  // Recenter screen if last time was 3 lines, but new time is 2 lines
-  // Don't do this if time was just initialized already centered
-  if(LBef>0 && Lnow==0 ){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Pop DOWN LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
-    if(PoppedDownNow == false){
-      makeScrollDown();
-    }
+  if (AtInit){
+    if (Lnow==0){
+      makePopDown();
+    }    
   }
-  else if (!AtInit){
-    // Prepare for next time being 3 lines, if current time is 2 lines
-    if(LBef==0 && Lnow > 0 ){
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "Pop UP LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
-      PopUpNow=true;
-      makeScrollUpNow();
-    }
+  else if(LBef>0 && Lnow==0 ){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Scroll Down LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
+    makeScrollDown();
+  }
+  else if(LBef==0 && Lnow > 0 ){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Scroll UP LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
+    PopUpNow=true;
+    makeScrollUpNow();
   }
   AtInit=false;
   //Update lines
@@ -515,7 +460,7 @@ static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
     TextColorFormatting();
   }
   // Update text time
-  display_time(t,0);  
+  display_time(t);  
   if(s_countdown== 0 || s_countdown==5) {
     if (settings.DisplayTemp ){
       APP_LOG(APP_LOG_LEVEL_DEBUG, "Update weather at %d", t->tm_min);
@@ -638,33 +583,8 @@ static void prv_load_settings() {
   persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 // Save the settings to persistent storage
-static void prv_save_settings(int ChangeLang, int LangBefore) {
+static void prv_save_settings() {
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
-  time_t now = time(NULL);
-  struct tm *t = localtime(&now);
-  // Content of line 3 now
-  int Del1=0;
-  int Del2=0;
-  int LenBeforeSave=0;
-  animationslan(t->tm_min, &Del1, &LenBeforeSave, &Del2,LangBefore);
-  // Adjust animations to fit the change of language - study how long will be line 3 after change language
-  int LenAfterSave=0;
-  animationslan(t->tm_min, &Del1, &LenAfterSave, &Del2,settings.LangKey);
-  //Update text if language has changed
-  //Adjust position using animations
-  if (ChangeLang>0){
-    if (LenBeforeSave==0 && LenAfterSave != 0){
-      // Scroll up if before were 2 lines and after 3 lines
-      makeScrollUpNow() ;
-    }
-    // Display time
-    display_time(t,0);
-    if (LenBeforeSave>0 && LenAfterSave == 0){
-      // Pop down if before were 3 lines and now 2 lines
-      makeScrollDown();
-    }
-  }
-  display_time(t,0);
 }
 // Handle the response from AppMessage
 static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
@@ -775,13 +695,11 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   }  
   //End data gathered
   // Store language applied before refreshing
-  int LangBefSave=settings.LangKey;
   // Language
   Tuple *lang_t=dict_find(iter, MESSAGE_KEY_Lang);
   if (lang_t){
     settings.LangKey=atoi(lang_t->value->cstring);
   };
-  int LangAftSave=settings.LangKey;
   // Date format
   Tuple *dateformat_t=dict_find(iter,MESSAGE_KEY_DateFormat);
   if (dateformat_t){
@@ -790,16 +708,11 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   //Update colors
   TextColorFormatting();
   layer_mark_dirty(back_layer);
-  // Mark if language has changed
-  int LangChanged=0;
-  if (LangAftSave != LangBefSave )
-  {LangChanged=1;
-  }
-  // Update date
-  // layer_set_update_proc(back_layer, back_update_proc);
-  layer_mark_dirty(back_layer);
+  time_t now = time(NULL);
+  struct tm *t = localtime(&now);
+  display_time(t);
   // Save the new settings to persistent storage
-  prv_save_settings(LangChanged,LangBefSave);
+  prv_save_settings();
 }
 ////End: Handle Settings and Weather////
 ////Init: Creating Watchface/////
@@ -873,25 +786,7 @@ void main_window_push() {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
   AtInit=true;
-  display_time(t,1);
-  // initialize PoppedDown indicators
-  PoppedDownNow = false;
-  PoppedDownAtInit = false;
-  // If initial display of time is only 2 lines of text, display centered
-  // Based on languague on init
-  int LenInit_END=0;
-  int Del1=0;
-  int Del2=0;
-  animationslan(mast_min, &Del1, &LenInit_END, &Del2, settings.LangKey);
-  // Check Line3 at init
-  if(LenInit_END == 0 ){
-    makePopDown();
-    // signal that this has been done, so an extra animation isn't triggered, and the down animation knows the right
-    // starting place
-    PoppedDownNow = true;
-    PoppedDownAtInit = true;
-    AtInit=false;
-  }
+  display_time(t);
   // Configure main window
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = prv_window_load,

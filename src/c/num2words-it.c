@@ -143,29 +143,8 @@ void time_to_3words_IT(int hours, int minutes, int *LineBold,char *line1, char *
     }
   }
 } 
-int Len_IT(int min){
-  if (min==14 || min==17 || min==18 || min==19 || min==24 || min==25 || min==26 || min==27 || min==28 || min==29 || min>=34){
-    return 10;
-  }
-  else return 0;
-}
 void WriteDate_IT(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_IT[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d", Dy);
   strcpy(itermonth, MONTHS_IT[Mnth]);
-}
-void Animations_IT(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-  *LenNow=Len_IT(Minute);
-  if (Minute==0){
-    *LenBefore=Len_IT(59);
-  }
-  else {
-    *LenBefore=Len_IT(Minute-1);
-  }
-  if (Minute==59){
-    *LenAfter=Len_IT(0);
-  }
-  else {
-    *LenAfter=Len_IT(Minute+1);
-  }
 }

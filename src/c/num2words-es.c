@@ -117,29 +117,8 @@ void time_to_3words_ES(int hours, int minutes, int *LineBold,char *line1, char *
   // in spanish the hour is always in the first line
   *LineBold=1;
 }
-int Len_ES(int min){
-  if (min<16 || min==20 || min==30){
-    return 0;
-  }
-  else return 10;
-}
 void WriteDate_ES(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_ES[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d", Dy);
   strcpy(itermonth, MONTHS_ES[Mnth]);
-}
-void Animations_ES(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-  *LenNow=Len_ES(Minute);
-  if (Minute==0){
-    *LenBefore=Len_ES(59);
-  }
-  else {
-    *LenBefore=Len_ES(Minute-1);
-  }
-  if (Minute==59){
-    *LenAfter=Len_ES(0);
-  }
-  else {
-    *LenAfter=Len_ES(Minute+1);
-  }
 }

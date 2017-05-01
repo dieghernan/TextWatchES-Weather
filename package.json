@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "testanim",
+    "name": "testanim4",
     "pebble": {
         "capabilities": [
             "location",
             "configurable"
         ],
-        "displayName": "testanim",
+        "displayName": "testanim4",
         "enableMultiJS": true,
         "messageKeys": [
             "ForegroundColor",
@@ -144,10 +144,10 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "90542147-85a2-4593-b2e0-8992225df7c5",
+        "uuid": "1313abfd-002c-47a1-9a34-0278c5794961",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "6.6.0"
+    "version": "7.0.0"
 }

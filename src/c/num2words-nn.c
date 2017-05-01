@@ -104,24 +104,3 @@ void WriteDate_NN(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, c
   snprintf(iterdate, sizeof(iterdate), "%d.", Dy);
   strcpy(itermonth, MONTHS_NN[Mnth]);
 }
-int Len_NN(int min){
-  if (min==0 || min==30){
-    return 0;
-  }
-  else return 10;
-}
-void Animations_NN(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-  *LenNow=Len_NN(Minute);
-  if (Minute==0){
-    *LenBefore=Len_NN(59);
-  }
-  else {
-    *LenBefore=Len_NN(Minute-1);
-  }
-  if (Minute==59){
-    *LenAfter=Len_NN(0);
-  }
-  else {
-    *LenAfter=Len_NN(Minute+1);
-  }
-}
