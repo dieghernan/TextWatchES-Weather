@@ -11,12 +11,18 @@ module.exports = [
         "type": "heading",
         "defaultValue": "General settings"
       },
-      //{
-        //"type": "toggle",
-        //"messageKey": "FuzzyMode",
-        //"label": "Fuzzy Mode",
-        //"defaultValue": false
-      //},
+      {
+        "type": "toggle",
+        "messageKey": "FuzzyMode",
+        "label": "Fuzzy Mode",
+        "defaultValue": false
+      },
+      {
+        "type": "toggle",
+        "messageKey": "AnimMode",
+        "label": "Animations",
+        "defaultValue": true
+      },
       {
         "type": "select",
         "messageKey": "Lang",
