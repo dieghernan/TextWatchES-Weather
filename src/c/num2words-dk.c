@@ -116,29 +116,8 @@ void time_to_3words_DK(int hours, int minutes, int *LineBold,char *line1, char *
     *LineBold=3;
   }
 }
-int Len_DK(int min){
-  if (min==0 || min==30 || min>40){
-    return 0;
-  }
-  else return 10;
-}
 void WriteDate_DK(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
   strcpy(iterweekday, WEEKDAY_DK[WD]);
   snprintf(iterdate, sizeof(iterdate), "%d.", Dy);
   strcpy(itermonth, MONTHS_DK[Mnth]);
-}
-void Animations_DK(int Minute, int *LenBefore, int *LenNow, int *LenAfter){
-  *LenNow=Len_DK(Minute);
-  if (Minute==0){	
-    *LenBefore=Len_DK(59);
-  }
-  else {
-    *LenBefore=Len_DK(Minute-1);
-  }
-  if (Minute==59){
-    *LenAfter=Len_DK(0);
-  }
-  else {
-    *LenAfter=Len_DK(Minute+1);
-  }
 }
