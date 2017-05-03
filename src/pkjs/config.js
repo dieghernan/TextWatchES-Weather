@@ -37,6 +37,8 @@ module.exports = [
           {"label":"Italian", "value": "6" },
           {"label":"Norwegian", "value": "7"},
           {"label":"Danish", "value": "8" },
+          {"label":"Swedish", "value": "9" },
+          {"label":"Esperanto", "value": "10" }        
         ] 
       },
       { "type": "select",
