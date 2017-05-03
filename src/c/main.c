@@ -13,6 +13,7 @@
 #include "num2words-se.h"
 #include "num2words-eo.h"
 #include "num2words-nl.h"
+#include "num2words-cat.h"
 // 1. Define structures////
 // Struct Line
 typedef struct {
@@ -120,6 +121,9 @@ void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, ch
   else if (lang_i==11){ //Dutch
     time_to_3words_NL(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
+  else if (lang_i==12){ //Catalan
+    time_to_3words_CAT(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
 }
 void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char * itermon, int Lang){
   if (Lang==1){ //Spanish
@@ -154,6 +158,9 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
   }
   else if (Lang==11){ //Esperanto
     WriteDate_NL(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==12){ //Catalan
+    WriteDate_CAT(week , Mon ,Day, iterwd ,iterdat,itermon);
   }
 }
 //////End Lang Selector///

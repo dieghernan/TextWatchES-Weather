@@ -40,6 +40,7 @@ module.exports = [
           {"label":"Swedish", "value": "9"},
           {"label":"Esperanto", "value": "10"},
           {"label":"Dutch", "value": "11"},
+          {"label":"Catalan", "value": "12"},
         ] 
       },
       { "type": "select",
