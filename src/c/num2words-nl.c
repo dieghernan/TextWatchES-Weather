@@ -19,22 +19,22 @@ static const char* const HOUR_NL[] = {
   "één"
 };
 static const char* const MIN_NL1[]={
-  "klokka er",
-  "ett",
-  "to",
-  "tre",
-  "fire",
-  "fem",
-  "seks",
-  "sju",
-  "åtte",
-  "ni",
-  "ti",
-  "elleve",
-  "tolv",
-  "tretten",
-  "fjorten",
-  "kvart"
+  "uur",
+  "één",
+  "twee",
+  "drie",
+  "vier",
+  "vijf",
+  "zes",
+  "zeven",
+  "acht",
+  "negen",
+  "tien",
+  "elf",
+  "twaalf",
+  "dertien",
+  "veertien",
+  "kwart"
 };
 //Init_StrMonthDat: Create strings for Months and Days
 const char* const MONTHS_NL[] = {
