@@ -9,13 +9,13 @@
 # Features
 * Exact hour in natural language
 * Autofit to screen
-* Animation on text
 
 ![banner](store/BannerTime.png)
 
 ## Take your pick
 * Date format: Day Month / Month Day
 * Fuzzy time option
+* Animation on text
 * Language
   * Spanish
   * English
@@ -25,6 +25,10 @@
   * Portuguese
   * Norwegian
   * Danish
+  * Swedish
+  * Esperanto
+  * Dutch
+  * Catalan
   * _More at request_
  * Battery bar display
  * Weather: Current conditions on °c or °f.
