@@ -16,6 +16,7 @@ typedef struct ClaySettings {
   bool DisplayTemp;
   bool BTOn;
   bool FuzzyMode;
+  bool AnimMode;
   bool BatteryBar;
   int HourSunrise;
   int HourSunset;

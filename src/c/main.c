@@ -10,6 +10,10 @@
 #include "num2words-it.h"
 #include "num2words-nn.h"
 #include "num2words-dk.h"
+#include "num2words-se.h"
+#include "num2words-eo.h"
+#include "num2words-nl.h"
+#include "num2words-cat.h"
 // 1. Define structures////
 // Struct Line
 typedef struct {
@@ -75,6 +79,7 @@ static void prv_default_settings() {
   settings.BTOn=true;
   settings.FuzzyMode=false;
   settings.BatteryBar=false;
+  settings.AnimMode=true;
 }
 //////End Configuration///
 static void bluetooth_callback(bool connected) {  
@@ -107,6 +112,18 @@ void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, ch
   else if (lang_i==8){ //Danish
     time_to_3words_DK(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
+  else if (lang_i==9){ //Swedish
+    time_to_3words_SE(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
+  else if (lang_i==10){ //Esperanto
+    time_to_3words_EO(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
+  else if (lang_i==11){ //Dutch
+    time_to_3words_NL(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
+  else if (lang_i==12){ //Catalan
+    time_to_3words_CAT(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
 }
 void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char * itermon, int Lang){
   if (Lang==1){ //Spanish
@@ -132,6 +149,18 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
   }
   else if (Lang==8){ //Danish
     WriteDate_DK(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==9){ //Swedish
+    WriteDate_SE(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==10){ //Esperanto
+    WriteDate_EO(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==11){ //Esperanto
+    WriteDate_NL(week , Mon ,Day, iterwd ,iterdat,itermon);
+  }
+  else if (Lang==12){ //Catalan
+    WriteDate_CAT(week , Mon ,Day, iterwd ,iterdat,itermon);
   }
 }
 //////End Lang Selector///
@@ -239,10 +268,37 @@ void makeAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
                          current);
   animation_schedule(property_animation_get_animation(line->currentAnimation));
 }
+
+void NoAnimationsForLayers(Line *line, TextLayer *current, TextLayer *next) {
+  if (line->nextAnimation != NULL)
+    property_animation_destroy(line->nextAnimation);
+  if (line->currentAnimation != NULL)
+    property_animation_destroy(line->currentAnimation);
+  GRect rect = layer_get_frame((Layer *)next);
+  rect.origin.x -= bounds.size.w;
+  line->nextAnimation = property_animation_create_layer_frame((Layer *)next, NULL, &rect);
+  animation_set_duration(property_animation_get_animation(line->nextAnimation), 0);
+  animation_set_curve(property_animation_get_animation(line->nextAnimation), AnimationCurveEaseOut);
+  animation_schedule(property_animation_get_animation(line->nextAnimation));
+  GRect rect2 = layer_get_frame((Layer *)current);
+  rect2.origin.x -= bounds.size.w;
+  line->currentAnimation = property_animation_create_layer_frame((Layer *)current, NULL, &rect2);
+  animation_set_duration(property_animation_get_animation(line->currentAnimation), 0);
+  animation_set_curve(property_animation_get_animation(line->currentAnimation), AnimationCurveEaseOut);
+  animation_set_handlers(property_animation_get_animation(line->currentAnimation), (AnimationHandlers) {
+    .stopped = (AnimationStoppedHandler)animationStoppedHandler},
+                         current);
+  animation_schedule(property_animation_get_animation(line->currentAnimation));
+}
 // Pop down to center before initial display when only 2 lines of text
 void makePopDown(){
   GRect rect = layer_get_bounds((Layer *)scroll);
   rect.origin.y = 21;
+  layer_set_bounds(scroll, rect);
+}
+void makePopUp(){
+  GRect rect = layer_get_bounds((Layer *)scroll);
+  rect.origin.y = 0;
   layer_set_bounds(scroll, rect);
 }
 ////End: Animations procs//
@@ -315,6 +371,26 @@ void sizeandbold(TextLayer *linelayer, int linr, int linb) {
   verticalAlignTextLayer(linelayer, offsetpebble+offsetline);
 };
 // Update text line
+void updateLineStatic(Line *line, char lineStr[2][BUFFER_SIZE], char *value, int linref, int linbold) {
+  TextLayer *next, *current;
+  GRect rect = layer_get_frame((Layer *)line->currentLayer);
+  current = (rect.origin.x == 0) ? line->currentLayer : line->nextLayer;
+  next = (current == line->currentLayer) ? line->nextLayer : line->currentLayer;
+  // Update correct text only
+  if (current == line->currentLayer) {
+    memset(lineStr[1], 0, BUFFER_SIZE);
+    memcpy(lineStr[1], value, strlen(value));
+    text_layer_set_text(next, lineStr[1]);
+  }
+  else {
+    memset(lineStr[0], 0, BUFFER_SIZE);
+    memcpy(lineStr[0], value, strlen(value));
+    text_layer_set_text(next, lineStr[0]);
+  }
+  sizeandbold(next,linref,linbold);
+  text_layer_set_text(current, "");
+  NoAnimationsForLayers(line, current, next);
+}
 void updateLineTo(Line *line, char lineStr[2][BUFFER_SIZE], char *value, int linref, int linbold) {
   TextLayer *next, *current;
   GRect rect = layer_get_frame((Layer *)line->currentLayer);
@@ -362,6 +438,45 @@ void configureLineLayer(TextLayer *textlayer) {
 ////End: Layer formatting//
 ///// Init: Updating time and date////
 // Update screen based on new time
+void display_static(){
+  // The current time text will be stored in the following 3 strings
+  char textLine1[BUFFER_SIZE];
+  char textLine2[BUFFER_SIZE];
+  char textLine3[BUFFER_SIZE];
+  int LineToPutinBold=0;
+  // Language settings
+  writetimeto3words(mast_hour, mast_min, &LineToPutinBold, textLine1, textLine2, textLine3,settings.LangKey);
+   // Set Up and Down animations
+  int LBef=strlen(textbefore3);
+  int Lnow=strlen(textLine3);
+  // Animations
+  if (AtInit){
+    if (Lnow==0){
+      makePopDown();
+    }    
+  }
+  else if(LBef>0 && Lnow==0 ){
+    makePopDown();    
+  }
+  else if(LBef==0 && Lnow > 0 ){
+    makePopUp();   
+  }
+  AtInit=false;
+  //Update lines
+  if (checkupdate(textbefore1,textLine1)) {
+    updateLineStatic(&line1, line1Str, textLine1,1,LineToPutinBold);
+  }
+  if (checkupdate(textbefore2,textLine2)) {
+    updateLineStatic(&line2, line2Str, textLine2,2,LineToPutinBold);
+  }
+  if (checkupdate(textbefore3,textLine3)) {
+    updateLineStatic(&line3, line3Str, textLine3,3,LineToPutinBold);
+  }
+    // Save
+  strcpy(textbefore1, textLine1);
+  strcpy(textbefore2, textLine2);
+  strcpy(textbefore3, textLine3);
+}
 void display_animated(){
   // The current time text will be stored in the following 3 strings
   char textLine1[BUFFER_SIZE];
@@ -380,11 +495,9 @@ void display_animated(){
     }    
   }
   else if(LBef>0 && Lnow==0 ){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Scroll Down LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
     makeScrollDown();
   }
   else if(LBef==0 && Lnow > 0 ){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Scroll UP LB %d SB %s LN %d SN %s", LBef,textbefore3,Lnow,textLine3);
     PopUpNow=true;
     makeScrollUpNow();
   }
@@ -429,7 +542,12 @@ void timetoclock(bool isfuzzy){
   mast_mon=t->tm_mon;
   mast_day=t->tm_mday;
   mast_wday=t->tm_wday;
-  display_animated();
+  if (settings.AnimMode){
+    display_animated();
+  }
+  else {
+    display_static();
+  }
 }
 // Update graphics when timer ticks
 static void time_timer_tick(struct tm *t, TimeUnits units_changed) {
@@ -648,6 +766,13 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
       settings.FuzzyMode=false;
     }
     else settings.FuzzyMode=true;
+  }
+  Tuple *anim_t=dict_find(iter,MESSAGE_KEY_AnimMode);
+  if (anim_t){
+    if (anim_t->value->int32==0){
+      settings.AnimMode=false;
+    }
+    else settings.AnimMode=true;
   }
   Tuple *battt=dict_find(iter,MESSAGE_KEY_BatteryBar);
   if (battt){
