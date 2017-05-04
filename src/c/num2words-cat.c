@@ -2,6 +2,7 @@
 #include "num2words-cat.h"
 #include "string.h"
 #include <stddef.h>
+//Mixed system: http://www.comunicaciodigital.com/rellotge_catala/quarts_mixt.htm
 static const char* const HOUR_CAT[] = {
   "dotze",
   "una",
@@ -20,127 +21,23 @@ static const char* const HOUR_CAT[] = {
 };
 static const char* const MIN_CAT1[]={
   "en punt",
-  "tocades",
-  "tocades",
-  "ben tocades",
-  "gairebé",
-  "i cinc",
-  "vora",
-  "mig quart",
-  "mig quart",
-  "gairebé",
-  "i deu",
-  "vora",
-  "vora",
-  "vora",
-  "gairebé",
-  "un quart",
-  "un quart",
-  "un quart",
-  "un quart",
-  "gairebé un",
-  "un quart",
-  "vora un",
-  "un quart",
-  "un quart",
-  "gairebé un",
-  "un quart",
-  "vora",
-  "vora",
-  "vora",
-  "gairebé",
-  "dos quarts",
-  "dos quarts",
-  "dos quarts",
-  "dos quarts",
-  "gairebé dos",
-  "dos quarts",
-  "vora dos",
-  "dos quarts",
-  "dos quarts",
-  "gairebé dos",
-  "dos quarts",
-  "vora",
-  "vora",
-  "vora",
-  "gairebé",
-  "tres quarts",
-  "tres quarts",
-  "tres quarts",
-  "tres quarts",
-  "gairebé tres",
-  "tres quarts",
-  "vora tres",
-  "tres quarts",
-  "tres quarts",
-  "gairebé tres",
-  "tres quarts",
-  "vora",
-  "vora",
-  "vora",
-  "a punt"
+  "un",
+  "dos",
+  "tres",
+  "quatre",
+  "cinc",
+  "sis",
+  "mig",
+  "vuit",
+  "nou",
+  "deu"
 };
-static const char* const MIN_CAT2[]={
-  "",
-  "",
-  "",
-  "",
-  "i cinc",
-  "",
-  "mig quart",
-  "",
-  "",
-  "i deu",
-  "",
-  "un quart",
-  "un quart",
-  "un quart",
-  "un quart",
-  "",
-  "tocat",
-  "tocat",
-  "ben tocat",
-  "quart i cinc",
-  "i cinc",
-  "quart i mig",
-  "i mig",
-  "i mig",
-  "quart i deu",
-  "i deu",
-  "dos quarts",
-  "dos quarts",
-  "dos quarts",
-  "dos quarts",
-  "",
-  "tocats",
-  "tocats",
-  "ben tocats",
-  "quarts i cinc",
-  "i cinc",
-  "quarts i mig",
-  "i mig",
-  "i mig",
-  "quarts i deu",
-  "i deu",
-  "tres quarts",
-  "tres quarts",
-  "tres quarts",
-  "tres quarts",
-  "",
-  "tocats",
-  "tocats",
-  "ben tocats",
-  "quarts i cinc",
-  "i cinc",
-  "quarts i mig",
-  "i mig",
-  "i mig",
-  "quarts i deu",
-  "i deu",
-  "",
-  "",
-  "",
-  "de tocar"
+static const char* const MIN_AUX_CAT[]={
+  "a ",
+  "i ",
+  " per",
+  " quarts",
+  " quart"
 };
 const char* const MONTHS_CAT[] = {
   "Gen",
@@ -154,96 +51,119 @@ const char* const MONTHS_CAT[] = {
   "Set",
   "Oct",
   "Nov",
-  "Des",
+  "Des"
 };
 const char* const WEEKDAY_CAT[] = {
-  "Dg.",
-  "Dl.",
-  "Dt.",
-  "Dc.",
-  "Dj.",
-  "Dv.",
-  "Ds."
+  "dg",
+  "dl",
+  "dt",
+  "dc",
+  "dj",
+  "dv",
+  "ds"
 };
+void hour_l(int h, char* linehour){
+  if (h==1){
+    strcpy(linehour,"la ");
+  }
+  else {
+    strcpy(linehour, "las ");
+  }
+  strcat(linehour,HOUR_CAT[h]);
+}
+void hour_d(int h, char* linehour){
+  if (h==1 || h==11){
+    strcpy(linehour,"d'");
+  }
+  else {
+    strcpy(linehour, "de ");
+  }
+  strcat(linehour,HOUR_CAT[h]);
+}
 void time_to_3words_CAT(int hours, int minutes, int *LineBold,char *line1, char *line2, char *line3){
   //Clean lines at init
   strcpy(line1,"");
   strcpy(line2,"");
   strcpy(line3,"");
-  if (minutes <= 5 || minutes==9 || minutes==10) {
-    hours = hours+0;
-  }
-  else {
+  if (minutes > 10 || minutes==7) {
     hours=hours+1;
   }
   hours=hours % 12;
-  // Hours first
-  if (minutes<=5 || minutes==10){
-    if (hours==1){
-      strcpy(line1,"la ");
-    }
-    else {
-      strcpy(line1,"las ");
-    }
-    strcat(line1,HOUR_CAT[hours]);
+  // Put minutes under 11
+  if (minutes==7){
+    strcpy(line1,MIN_CAT1[7]);
+    strcat(line1,MIN_AUX_CAT[4]);
+    hour_d(hours,line2);
+    *LineBold=2;
+  }
+  else if (minutes==0){
+    hour_l(hours,line1);
     *LineBold=1;
+    strcpy(line2, MIN_CAT1[minutes]);
   }
-  else if (minutes==4 || minutes ==9 || minutes==56 || minutes==57 || minutes==58){
-    if (hours==1){
-      strcpy(line2,"la ");
-    }
-    else {
-      strcpy(line2,"las ");
-    }
-    strcat(line2,HOUR_CAT[hours]);
-    *LineBold=2;
-  }
-  else if (minutes==59){
-    if (hours==1){
-      strcpy(line3,"la ");
-    }
-    else {
-      strcpy(line3,"las ");
-    }
-    strcat(line3,HOUR_CAT[hours]);
-    *LineBold=3;
-  }
-  else if (minutes==7 || minutes==8 || minutes==15 || minutes==30 || minutes==45){
-    if (hours==1 || hours==11){strcpy(line2,"d'");}
-    else {strcpy(line2,"de ");}
-    strcat(line2,HOUR_CAT[hours]);
-    *LineBold=2;
+  else if (minutes<=10){
+    hour_l(hours,line1);
+    *LineBold=1;
+    strcpy(line2,MIN_AUX_CAT[1]);
+    strcat(line2, MIN_CAT1[minutes]);
   }
   else {
-    if (hours==1 || hours==11){strcpy(line3,"d'");}
-    else {strcpy(line3,"de ");}
-    strcat(line3,HOUR_CAT[hours]);
-    *LineBold=3;
-  }
-  // First part of minute
-  if (minutes==0 || minutes==5 || minutes==10){
-    strcpy(line2,MIN_CAT1[minutes]);
-  }
-  else if (minutes>=1 || minutes <=3){
-    if (minutes<3){
-      if (hours==1) strcpy(line2,"tocada");
-      else strcpy(line2,"tocades");
+    //Line1
+    if((60-minutes)%15 >=1 && (60-minutes)%15 <=4 ){
+      strcpy(line1,MIN_CAT1[(60-minutes)%15]);
+      strcat(line1,MIN_AUX_CAT[2]);
     }
-    else{
-      if (hours==1) strcpy(line2,"ben tocada");
-      else strcpy(line2,"ben tocades");
+    else {
+      strcpy(line1,MIN_CAT1[minutes/15]);
+      if ((minutes/15)==1){
+        strcat(line1,MIN_AUX_CAT[4]);
+      }
+      else {
+        strcat(line1,MIN_AUX_CAT[3]);
+      }
     }
-  }
-  // if empty in line1 put minute
-  else if (strlen(line1)==0){
-    strcpy(line1,MIN_CAT1[minutes]);
-  }
-  //Last part of minute
-  if (strlen(line2)==0){
-    strcpy(line2,MIN_CAT2[minutes]);
-  }
-  else if (strlen(line3)==0){
-    strcpy(line3,MIN_CAT2[minutes]);
+    //Line 2
+    if (minutes>=56){
+      *LineBold=2;
+      strcpy(line2,MIN_AUX_CAT[0]);
+      if (hours==1){
+        strcat(line2,"la ");
+      }
+      else {
+        strcat(line2,"las ");
+      }
+      strcat(line2,HOUR_CAT[hours]);
+    }
+    else if (minutes%15==5 || minutes%15==7 || minutes%15==10){
+      strcpy(line2,MIN_AUX_CAT[1]);
+      strcat(line2,MIN_CAT1[minutes%15]);
+    }
+    else if(minutes%15>10){
+      strcpy(line2,MIN_AUX_CAT[0]);
+      strcat(line2,MIN_CAT1[(minutes/15)+1]);
+      if (minutes<=15){
+        strcat(line2,MIN_AUX_CAT[4]);
+      }
+      else {
+        strcat(line2,MIN_AUX_CAT[3]);
+      }
+    }
+    else {
+      *LineBold=2;
+      hour_d(hours,line2);
+    }
+    //Line3
+    if (minutes>=56 || minutes%15==0){
+      strcpy(line3,"");
+    }
+    else if (minutes%15==5 || minutes%15==7 || minutes%15>=10){
+      *LineBold=3;      
+      hour_d(hours, line3);
+    }
+    else {
+      strcpy(line3, MIN_AUX_CAT[1]);
+      strcat(line3,MIN_CAT1[minutes%15]);
+    }
   }
 }
 void WriteDate_CAT(int WD, int Mnth, int Dy, char *iterweekday, char *iterdate, char *itermonth ){
