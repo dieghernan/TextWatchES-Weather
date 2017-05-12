@@ -46,9 +46,9 @@
 ## Next developments
 * [x] Fuzzy time
 * [x] Battery
-* [ ] Option for animations
+* [x] Option for animations
 * [x] Option for non pmkey users
-* [ ] More languages (Swedish, Esperanto...) 
+* [x] More languages (Swedish, Esperanto...) 
 
 # Attributions
 ## Fonts: 
