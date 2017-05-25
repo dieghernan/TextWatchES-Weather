@@ -36,6 +36,7 @@ module.exports = [
           {"label":"Portuguese (Brazil)", "value": "5" },
           {"label":"Italian", "value": "6" },
           {"label":"Norwegian", "value": "7"},
+          {"label":"Norwegian (colloquial)", "value": "71"},
           {"label":"Danish", "value": "8"},
           {"label":"Swedish", "value": "9"},
           {"label":"Esperanto", "value": "10"},
@@ -187,7 +188,7 @@ module.exports = [
   },
   {
     "type": "heading",
-    "defaultValue": "Version v7.0",
+    "defaultValue": "Version v7.1",
     "size":6
   } ,
   {

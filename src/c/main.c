@@ -109,6 +109,9 @@ void writetimeto3words(int hour_i,int minute_i,int *linebold_i,char *line1_i, ch
   else if (lang_i==7){ //Norwegian
     time_to_3words_NN(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
+  else if (lang_i==71){ //Norwegian Colloquial
+    time_to_3words_NN2(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
+  }
   else if (lang_i==8){ //Danish
     time_to_3words_DK(hour_i , minute_i,linebold_i ,line1_i, line2_i, line3_i);
   }
@@ -144,7 +147,7 @@ void writedatelang(int week,int Mon,int Day, char* iterwd,char * iterdat, char *
   else if (Lang==6){ //Italian
     WriteDate_IT(week , Mon ,Day, iterwd ,iterdat,itermon);
   }
-  else if (Lang==7){ //Norwegian
+  else if (Lang==7 || Lang==71){ //Norwegian
     WriteDate_NN(week , Mon ,Day, iterwd ,iterdat,itermon);
   }
   else if (Lang==8){ //Danish
