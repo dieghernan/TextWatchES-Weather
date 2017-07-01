@@ -73,7 +73,7 @@ void time_to_3words_DE(int hours, int minutes, int *LineBold,char *line1, char *
   hours=hours % 12;
   // Exceptions first
   if (minutes==0 ){
-    if(((hours==1)||(hours==13)){
+    if((hours==1)||(hours==13)){
       //exact one o clock without s at the end - ein Uhr
       strcpy(line1, "ein");
     }
