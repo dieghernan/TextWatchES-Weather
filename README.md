@@ -6,7 +6,7 @@
 
 #### [Download from Pebble Appstore](https://apps.getpebble.com/en_US/application/58a94da90dfc32d35b0002f8)
 
-[![paypal](https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/dieghernan/0.99)
+[![paypal](https://www.paypalobjects.com/en_US/ES/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAYBMD7APLZFN)
 
 # Features
 * Exact hour in natural language
