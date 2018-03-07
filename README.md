@@ -74,6 +74,26 @@
 # Screenshots
 ![](store/ScrShClass.gif) ![](store/ScrShTime.gif) ![](store/ScrShRound.gif) 
 
+# Do you ❤️ this watchface? There are more!
+
+<table align="center">
+ <tr valign="middle">
+  <td align="center"><a href="https://dieghernan.github.io/Bzel/"><img src="https://raw.githubusercontent.com/dieghernan/Bzel/master/store/BannerBzel.png" width="120" ></a></td>
+  <td align="left" valign="middle"><b>Bzel</b> intregates the bezel into your watchface</td>
+  <td align="center" valign="middle"><a href="https://apps.getpebble.com/applications/59280895b67f9f43f80004c9">Download</a></td>
+ </tr>
+ <tr valign="middle">
+  <td align="center"><a href="https://dieghernan.github.io/7egment/"><img src="https://raw.githubusercontent.com/dieghernan/7egment/master/store/Banner.png" width="120" ></a></td>
+  <td align="left" valign="middle"><b>7egment</b> Retro inspired watchface</td>
+  <td align="center" valign="middle"><a href="https://apps.getpebble.com/applications/591ead370dfc32aacf000204">Download</a></td>
+ </tr>
+ <tr valign="middle">
+  <td align="center"><a href="https://dieghernan.github.io/Sfera/"><img src="https://raw.githubusercontent.com/dieghernan/Sfera/master/assets/SferaBanner.png" width="120" ></a></td>
+  <td align="left" valign="middle"><b>Sfera</b> Clean time and weather watchface (Pebble Time Round only)</td>
+  <td align="center" valign="middle"><a href="https://apps.getpebble.com/applications/58c2f7110dfc32a52a00081f">Download</a></td>
+ </tr>    
+</table>
+
 # License
 Developed under license [MIT](https://github.com/dieghernan/TextWatchES_Weather/blob/master/MIT%20License).
 
